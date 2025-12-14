@@ -1,0 +1,48 @@
+<section class="form-input">
+  <label 
+    [for]="inputId" 
+    class="form-input__label"
+    [class.form-input__label--required]="required"
+  >
+    {{ label }}
+    @if (required) {
+      <span class="form-input__required" aria-label="Campo obligatorio">*</span>
+    }
+  </label>
+  
+  <input 
+    [id]="inputId"
+    [type]="type"
+    [name]="name"
+    [placeholder]="placeholder"
+    [required]="required"
+    [disabled]="disabled"
+    [value]="value"
+    [attr.aria-describedby]="helpText || errorMessage ? inputId + '-help' : null"
+    [attr.aria-invalid]="errorMessage ? 'true' : null"
+    class="form-input__field"
+    [class.form-input__field--error]="errorMessage"
+    (input)="onInputChange($event)"
+    (blur)="onInputBlur($event)"
+    (focus)="onInputFocus($event)"
+  >
+  
+  @if (helpText && !errorMessage) {
+    <small 
+      [id]="inputId + '-help'" 
+      class="form-input__help"
+    >
+      {{ helpText }}
+    </small>
+  }
+  
+  @if (errorMessage) {
+    <small 
+      [id]="inputId + '-help'" 
+      class="form-input__error"
+      role="alert"
+    >
+      {{ errorMessage }}
+    </small>
+  }
+</section>

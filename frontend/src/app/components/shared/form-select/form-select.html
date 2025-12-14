@@ -1,0 +1,49 @@
+<section class="form-select" 
+     [class.form-select--error]="errorMessage" 
+     [class.form-select--disabled]="disabled">
+  
+  <label [for]="inputId" class="form-select__label">
+    {{ label }}
+    <span *ngIf="required" class="form-select__required" aria-label="Campo obligatorio">*</span>
+  </label>
+  
+  <section class="form-select__wrapper">
+    <select
+      [id]="inputId"
+      [name]="name"
+      [required]="required"
+      [disabled]="disabled"
+      [value]="value"
+      (change)="onSelectionChange($event)"
+      (blur)="onBlur()"
+      class="form-select__field"
+      [attr.aria-describedby]="(errorMessage || helpText) ? inputId + '-description' : null"
+      [attr.aria-invalid]="errorMessage ? 'true' : 'false'">
+      
+      <option value="" disabled selected>{{ placeholder }}</option>
+      <option 
+        *ngFor="let option of options" 
+        [value]="option.value"
+        [disabled]="option.disabled || false">
+        {{ option.label }}
+      </option>
+    </select>
+    
+    <svg class="form-select__icon" width="12" height="8" viewBox="0 0 12 8" fill="none">
+      <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </section>
+  
+  <span *ngIf="helpText && !errorMessage" 
+        [id]="inputId + '-description'" 
+        class="form-select__help">
+    {{ helpText }}
+  </span>
+  
+  <span *ngIf="errorMessage" 
+        [id]="inputId + '-description'" 
+        class="form-select__error"
+        role="alert">
+    {{ errorMessage }}
+  </span>
+</section>

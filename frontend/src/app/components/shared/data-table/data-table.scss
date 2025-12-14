@@ -1,0 +1,192 @@
+@use '../../../styles/00-settings/variables' as *;
+
+.data-table {
+  width: 100%;
+  overflow: hidden;
+
+  // Contenedor con scroll horizontal
+  &__wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    // Ocultar scrollbar en navegadores webkit
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: var(--color-background);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  // Tabla principal
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background-color: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+
+    &--striped {
+      .data-table__body .data-table__row:nth-child(even) {
+        background-color: var(--color-background);
+      }
+    }
+
+    &--hoverable {
+      .data-table__body .data-table__row:hover {
+        background-color: rgba(var(--color-primary-rgb), 0.05);
+        cursor: pointer;
+      }
+    }
+  }
+
+  // Encabezado
+  &__head {
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  &__header {
+    padding: var(--spacing-md) var(--spacing-sm);
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--color-border);
+    white-space: nowrap;
+
+    &--sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color var(--transition-base);
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  &__sort-icon {
+    margin-left: var(--spacing-xs);
+    opacity: 0.7;
+    font-size: 12px;
+  }
+
+  // Cuerpo de la tabla
+  &__body {
+    background-color: white;
+  }
+
+  &__row {
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__cell {
+    padding: var(--spacing-md) var(--spacing-sm);
+    text-align: left;
+    font-size: var(--font-size-base);
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-accent);
+    color: white;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  // Vista de cards (mobile)
+  &__cards {
+    display: none;
+  }
+
+  &__card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  &__card-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__card-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+  }
+
+  &__card-value {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    text-align: right;
+  }
+
+  // Responsive: Cards en mobile
+  &--cards {
+    @media (max-width: 768px) {
+      .data-table__wrapper {
+        display: none;
+      }
+
+      .data-table__cards {
+        display: block;
+      }
+    }
+  }
+
+  // Responsive: Scroll horizontal en mobile
+  &--scroll {
+    .data-table__cards {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .data-table__wrapper {
+        display: block;
+      }
+
+      .data-table__table {
+        min-width: 600px;
+      }
+    }
+  }
+}

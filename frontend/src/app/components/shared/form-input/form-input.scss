@@ -1,0 +1,111 @@
+// Form Input Component
+
+.form-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  width: 100%;
+
+  &__label {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    line-height: 1.4;
+
+    &--required {
+      font-weight: var(--font-weight-semibold);
+    }
+  }
+
+  &__required {
+    color: var(--color-error);
+    font-weight: var(--font-weight-bold);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  &__field {
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-2);
+    font-size: var(--font-size-md);
+    font-family: inherit;
+    color: var(--color-text);
+    background-color: var(--color-secundary);
+    border: 2px solid var(--color-neutral-300);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    outline: none;
+
+    &::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 0.7;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-neutral-400);
+    }
+
+    &:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(0, 217, 95, 0.1);
+    }
+
+    &:disabled {
+      background-color: var(--color-neutral-100);
+      color: var(--color-text-secondary);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    &--error {
+      border-color: var(--color-error);
+
+      &:focus {
+        border-color: var(--color-error);
+        box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+      }
+    }
+  }
+
+  &__help {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  &__error {
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.4;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::before {
+      content: '⚠';
+      font-size: 1rem;
+    }
+  }
+}
+
+// Animaciones de entrada
+.form-input__field {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

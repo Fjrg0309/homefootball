@@ -1,0 +1,72 @@
+// Sidebar
+
+@use '../00-settings/variables' as *;
+@use '../01-tools/mixins' as *;
+
+.sidebar {
+  width: 100%;
+  background-color: var(--color-secundary);
+  
+  // Padding consistente (base-8)
+  padding: var(--spacing-4);
+  
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  
+  // Transiciones para efectos de hover o estado
+  transition: box-shadow var(--transition-base) var(--transition-ease);
+
+  @media (max-width: 48rem) {
+    padding: var(--spacing-3);
+  }
+
+  &__container {
+    width: 100%;
+  }
+
+  // Título de sección en sidebar
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin-bottom: var(--spacing-3);
+    padding-bottom: var(--spacing-2);
+    border-bottom: 0.125rem solid var(--color-neutral-200);
+  }
+
+  // Lista de items en sidebar
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    padding: var(--spacing-2) 0;
+    border-bottom: 0.0625rem solid var(--color-neutral-100);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__link {
+    display: block;
+    color: var(--color-text);
+    text-decoration: none;
+    padding: var(--spacing-2);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base) var(--transition-ease);
+
+    &:hover {
+      background-color: var(--color-neutral-100);
+      color: var(--color-accent);
+    }
+
+    &--active {
+      background-color: rgba(0, 217, 95, 0.1);
+      color: var(--color-accent);
+      font-weight: var(--font-weight-semibold);
+    }
+  }
+}

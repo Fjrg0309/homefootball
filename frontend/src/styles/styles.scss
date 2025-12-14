@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+// STYLES.SCSS - Entry Point
+
+// Settings
+@use '00-settings/variables' as *;
+@use '00-settings/css-variables';
+
+// Tools
+@use '01-tools/mixins' as *;
+
+// Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+// CSS Layers
+@layer reset, base, layout, components, utilities;
+
+// Reset
+@layer reset {
+  @import '02-generic/reset';
+}
+
+// Elements
+@layer base {
+  @import '03-elements/elements';
+}
+
+// Layout
+@layer layout {
+  @import '04-layout/layouts';
+}
+
+// Components
+@layer components {
+  @import 'components/header';
+  @import 'components/main';
+  @import 'components/footer';
+  @import 'components/sidebar';
+  @import 'components/buttons';
+}
+
+// Utilities
+@layer utilities {
+  @import 'utilities/helpers';
+}

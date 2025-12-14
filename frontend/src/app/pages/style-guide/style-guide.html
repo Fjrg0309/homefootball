@@ -1,0 +1,341 @@
+<app-header></app-header>
+
+<section class="style-guide">
+  <section class="style-guide__container">
+    <header class="style-guide__header">
+      <h1 class="style-guide__title">Style Guide</h1>
+      <p class="style-guide__description">
+        Biblioteca de componentes UI con todas sus variantes, tamaños y estados.
+      </p>
+    </header>
+
+    <!-- SECCIÓN: BOTONES -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Botones</h2>
+      
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Variantes</h3>
+        <section class="style-guide__row">
+          <app-button variant="primary">Primary</app-button>
+          <app-button variant="secondary">Secondary</app-button>
+          <app-button variant="ghost">Ghost</app-button>
+          <app-button variant="danger">Danger</app-button>
+        </section>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Tamaños</h3>
+        <section class="style-guide__row">
+          <app-button size="sm">Small</app-button>
+          <app-button size="md">Medium</app-button>
+          <app-button size="lg">Large</app-button>
+        </section>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Estados</h3>
+        <section class="style-guide__row">
+          <app-button>Normal</app-button>
+          <app-button [disabled]="true">Disabled</app-button>
+        </section>
+      </section>
+    </section>
+
+    <!-- SECCIÓN: CARDS -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Cards</h2>
+      
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Card Vertical</h3>
+        <section class="style-guide__grid">
+          <app-card
+            imageSrc="https://via.placeholder.com/400x200"
+            imageAlt="Placeholder"
+            title="Card con imagen"
+            description="Esta es una tarjeta vertical con imagen, título y descripción.">
+            <app-button size="sm">Ver más</app-button>
+          </app-card>
+
+          <app-card
+            title="Card sin imagen"
+            description="Esta tarjeta no tiene imagen, solo contenido textual.">
+            <app-button variant="secondary" size="sm">Acción</app-button>
+          </app-card>
+        </section>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Card Horizontal</h3>
+        <app-card
+          [horizontal]="true"
+          imageSrc="https://via.placeholder.com/200x200"
+          title="Card horizontal"
+          description="La imagen aparece a la izquierda y el contenido a la derecha.">
+          <app-button variant="ghost" size="sm">Leer más</app-button>
+        </app-card>
+      </section>
+    </section>
+
+    <!-- SECCIÓN: FORMULARIOS -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Formularios</h2>
+      
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Input</h3>
+        <section class="style-guide__form-row">
+          <app-form-input
+            label="Input normal"
+            placeholder="Escribe algo...">
+          </app-form-input>
+
+          <app-form-input
+            label="Input requerido"
+            [required]="true"
+            placeholder="Campo obligatorio">
+          </app-form-input>
+
+          <app-form-input
+            label="Input con error"
+            errorMessage="Este campo es obligatorio"
+            placeholder="Con error">
+          </app-form-input>
+
+          <app-form-input
+            label="Input deshabilitado"
+            [disabled]="true"
+            placeholder="No editable">
+          </app-form-input>
+        </section>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Textarea</h3>
+        <app-form-textarea
+          label="Comentario"
+          placeholder="Escribe tu comentario aquí..."
+          helpText="Máximo 500 caracteres">
+        </app-form-textarea>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Select</h3>
+        <app-form-select
+          label="Competición"
+          [options]="selectOptions"
+          placeholder="Selecciona una liga">
+        </app-form-select>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Checkbox</h3>
+        <section class="style-guide__form-row">
+          <app-form-checkbox
+            label="Acepto los términos y condiciones">
+          </app-form-checkbox>
+
+          <app-form-checkbox
+            label="Checkbox deshabilitado"
+            [disabled]="true">
+          </app-form-checkbox>
+        </section>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Radio Group</h3>
+        <app-form-radio-group
+          label="Género"
+          [options]="radioOptions">
+        </app-form-radio-group>
+
+        <app-form-radio-group
+          label="Radio inline"
+          [options]="radioOptions"
+          [inline]="true">
+        </app-form-radio-group>
+      </section>
+    </section>
+
+    <!-- SECCIÓN: FEEDBACK -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Feedback</h2>
+      
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Alerts</h3>
+        <section class="style-guide__stack">
+          <app-alert variant="success">
+            ¡Operación completada exitosamente!
+          </app-alert>
+
+          <app-alert variant="error">
+            Hubo un error al procesar tu solicitud.
+          </app-alert>
+
+          <app-alert variant="warning">
+            Esta acción no se puede deshacer.
+          </app-alert>
+
+          <app-alert variant="info">
+            Recuerda guardar tus cambios antes de salir.
+          </app-alert>
+
+          <app-alert variant="success" [dismissible]="true">
+            Alerta con botón de cerrar.
+          </app-alert>
+        </section>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Badges</h3>
+        <section class="style-guide__row">
+          <app-badge variant="primary">Primary</app-badge>
+          <app-badge variant="secondary">Secondary</app-badge>
+          <app-badge variant="success">Success</app-badge>
+          <app-badge variant="warning">Warning</app-badge>
+          <app-badge variant="danger">Danger</app-badge>
+          <app-badge variant="info">Info</app-badge>
+        </section>
+
+        <h4 class="style-guide__subsection-subtitle">Tamaños</h4>
+        <section class="style-guide__row">
+          <app-badge size="sm">Small</app-badge>
+          <app-badge size="md">Medium</app-badge>
+          <app-badge size="lg">Large</app-badge>
+        </section>
+
+        <h4 class="style-guide__subsection-subtitle">Rounded (contadores)</h4>
+        <section class="style-guide__row">
+          <app-badge variant="danger" [rounded]="true">99+</app-badge>
+          <app-badge variant="secondary" [rounded]="true">5</app-badge>
+          <app-badge variant="info" [rounded]="true">1</app-badge>
+        </section>
+      </section>
+    </section>
+
+    <!-- SECCIÓN: TIPOGRAFÍA -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Tipografía</h2>
+      
+      <section class="style-guide__subsection">
+        <h1>Heading 1</h1>
+        <h2>Heading 2</h2>
+        <h3>Heading 3</h3>
+        <h4>Heading 4</h4>
+        <h5>Heading 5</h5>
+        <h6>Heading 6</h6>
+        <p>Párrafo de texto normal. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p><strong>Texto en negrita</strong> y <em>texto en cursiva</em></p>
+      </section>
+    </section>
+
+    <!-- SECCIÓN: COLORES -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Colores</h2>
+      
+      <section class="style-guide__colors">
+        <article class="style-guide__color-item">
+          <figure class="style-guide__color-box" style="background-color: #363871;"></figure>
+          <span>Primary</span>
+          <code>#363871</code>
+        </article>
+        <article class="style-guide__color-item">
+          <figure class="style-guide__color-box" style="background-color: #00D95F;"></figure>
+          <span>Action</span>
+          <code>#00D95F</code>
+        </article>
+        <article class="style-guide__color-item">
+          <figure class="style-guide__color-box" style="background-color: #4CAF50;"></figure>
+          <span>Success</span>
+          <code>#4CAF50</code>
+        </article>
+        <article class="style-guide__color-item">
+          <figure class="style-guide__color-box" style="background-color: #FF9800;"></figure>
+          <span>Warning</span>
+          <code>#FF9800</code>
+        </article>
+        <article class="style-guide__color-item">
+          <figure class="style-guide__color-box" style="background-color: #D32F2F;"></figure>
+          <span>Error</span>
+          <code>#D32F2F</code>
+        </article>
+        <article class="style-guide__color-item">
+          <figure class="style-guide__color-box" style="background-color: #2196F3;"></figure>
+          <span>Info</span>
+          <code>#2196F3</code>
+        </article>
+      </section>
+    </section>
+
+    <!-- SECCIÓN: TABLA -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Tabla Responsive</h2>
+      
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Tabla con Cards en Mobile</h3>
+        <p class="style-guide__description">En mobile se convierte en cards, en desktop muestra tabla completa.</p>
+        <app-data-table
+          [columns]="tableColumns"
+          [data]="tableData"
+          [responsive]="'cards'"
+          [striped]="true"
+          [hoverable]="true">
+        </app-data-table>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Tabla con Scroll Horizontal</h3>
+        <p class="style-guide__description">Mantiene la tabla en todos los tamaños con scroll horizontal en mobile.</p>
+        <app-data-table
+          [columns]="tableColumns"
+          [data]="tableData"
+          [responsive]="'scroll'"
+          [striped]="false"
+          [hoverable]="true">
+        </app-data-table>
+      </section>
+    </section>
+
+    <!-- SECCIÓN: PAGINACIÓN -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">Paginación</h2>
+      
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Paginación Completa</h3>
+        <p class="style-guide__description">Con botones de primera/última página y anterior/siguiente.</p>
+        <app-pagination
+          [currentPage]="currentPage"
+          [totalPages]="totalPages"
+          [maxVisiblePages]="5"
+          [showFirstLast]="true"
+          [showPrevNext]="true"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Paginación Simple</h3>
+        <p class="style-guide__description">Solo números de página con anterior/siguiente.</p>
+        <app-pagination
+          [currentPage]="3"
+          [totalPages]="10"
+          [maxVisiblePages]="7"
+          [showFirstLast]="false"
+          [showPrevNext]="true"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Paginación Mínima</h3>
+        <p class="style-guide__description">Solo números de página.</p>
+        <app-pagination
+          [currentPage]="2"
+          [totalPages]="5"
+          [maxVisiblePages]="5"
+          [showFirstLast]="false"
+          [showPrevNext]="false"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      </section>
+    </section>
+  </section>
+</section>

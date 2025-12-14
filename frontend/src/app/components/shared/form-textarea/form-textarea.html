@@ -1,0 +1,38 @@
+<section class="form-textarea" 
+     [class.form-textarea--error]="errorMessage" 
+     [class.form-textarea--disabled]="disabled">
+  
+  <label [for]="inputId" class="form-textarea__label">
+    {{ label }}
+    <span *ngIf="required" class="form-textarea__required" aria-label="Campo obligatorio">*</span>
+  </label>
+  
+  <textarea
+    [id]="inputId"
+    [name]="name"
+    [placeholder]="placeholder"
+    [required]="required"
+    [disabled]="disabled"
+    [rows]="rows"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onBlur($event)"
+    (focus)="onFocus($event)"
+    class="form-textarea__field"
+    [attr.aria-describedby]="(errorMessage || helpText) ? inputId + '-description' : null"
+    [attr.aria-invalid]="errorMessage ? 'true' : 'false'">
+  </textarea>
+  
+  <span *ngIf="helpText && !errorMessage" 
+        [id]="inputId + '-description'" 
+        class="form-textarea__help">
+    {{ helpText }}
+  </span>
+  
+  <span *ngIf="errorMessage" 
+        [id]="inputId + '-description'" 
+        class="form-textarea__error"
+        role="alert">
+    {{ errorMessage }}
+  </span>
+</section>

@@ -1,0 +1,78 @@
+<header class="header">
+  <section class="header__container">
+    <!-- Logo y marca -->
+    <a href="/" class="header__logo" aria-label="Ir a página principal">
+      <img 
+        src="/logo.png" 
+        alt="HomeFootball" 
+        class="header__logo-img"
+        width="56" 
+        height="56"
+      >
+    </a>
+
+    <!-- Botón hamburguesa (mobile) -->
+    <button 
+      class="header__hamburger"
+      [class.header__hamburger--active]="mobileMenuOpen"
+      (click)="toggleMobileMenu()"
+      aria-label="Menú de navegación"
+      [attr.aria-expanded]="mobileMenuOpen">
+      <span class="header__hamburger-line"></span>
+      <span class="header__hamburger-line"></span>
+      <span class="header__hamburger-line"></span>
+    </button>
+
+    <!-- Navegación principal -->
+    <nav 
+      class="header__nav" 
+      [class.header__nav--open]="mobileMenuOpen"
+      aria-label="Navegación principal">
+      <ul class="header__nav-list">
+        <li>
+          <a href="/favoritos" class="header__nav-link header__nav-link--active" (click)="closeMobileMenu()">
+            Favoritos
+          </a>
+        </li>
+        <li>
+          <a href="/noticias" class="header__nav-link" (click)="closeMobileMenu()">
+            Noticias
+          </a>
+        </li>
+        <li>
+          <a href="/fichajes" class="header__nav-link" (click)="closeMobileMenu()">
+            Fichajes
+          </a>
+        </li>
+        <li>
+          <a href="/ajustes" class="header__nav-link" (click)="closeMobileMenu()">
+            Ajustes
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Utilidades -->
+    <section class="header__utilities">
+      @if (isLoggedIn) {
+        <!-- Dropdown de usuario -->
+        <app-user-dropdown (logout)="onLogout()"></app-user-dropdown>
+      } @else {
+        <!-- Botón de iniciar sesión -->
+        <button 
+          class="header__login-btn" 
+          (click)="openLoginModal()"
+          aria-label="Iniciar sesión"
+          type="button"
+        >
+          Iniciar sesión
+        </button>
+      }
+    </section>
+  </section>
+</header>
+
+<!-- Modal de inicio de sesión -->
+<app-modal [isOpen]="showLoginModal" (closeModal)="closeLoginModal()">
+  <app-login-form (loginSuccess)="onLoginSuccess($event)"></app-login-form>
+</app-modal>

@@ -1,0 +1,25 @@
+// Main component styles
+
+.main__content {
+  opacity: 1;
+}
+
+.main__search {
+  opacity: 1;
+}
+
+.main__sidebar {
+  opacity: 1;
+
+  &-item {
+    opacity: 1;
+  }
+}
+
+// Estados de carga
+.main.is-loading {
+  .main__container {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}

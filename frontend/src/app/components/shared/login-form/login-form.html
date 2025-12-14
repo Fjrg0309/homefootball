@@ -1,0 +1,44 @@
+<form class="login-form" (ngSubmit)="onSubmit()" #loginFormElement="ngForm">
+  <fieldset class="login-form__fieldset">
+    <legend class="login-form__legend">Iniciar sesión</legend>
+    
+    <section class="login-form__field-group">
+      <app-form-input
+        label="Usuario"
+        type="text"
+        name="username"
+        placeholder="Introduce tu usuario"
+        [required]="true"
+        [(ngModel)]="formData.username"
+        [errorMessage]="submitted && !formData.username ? 'El usuario es obligatorio' : ''"
+      ></app-form-input>
+    </section>
+
+    <section class="login-form__field-group">
+      <app-form-input
+        label="Contraseña"
+        type="password"
+        name="password"
+        placeholder="Introduce tu contraseña"
+        [required]="true"
+        [(ngModel)]="formData.password"
+        [errorMessage]="submitted && !formData.password ? 'La contraseña es obligatoria' : ''"
+      ></app-form-input>
+    </section>
+
+    <section class="login-form__actions">
+      <button 
+        type="submit" 
+        class="login-form__btn"
+      >
+        Iniciar sesión
+      </button>
+    </section>
+
+    <footer class="login-form__footer">
+      <p class="login-form__register-text">
+        ¿No tienes una cuenta? <a href="/registro" class="login-form__register-link">Regístrate</a>
+      </p>
+    </footer>
+  </fieldset>
+</form>

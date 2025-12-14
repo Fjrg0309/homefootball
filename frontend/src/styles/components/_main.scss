@@ -1,0 +1,388 @@
+// Main content
+
+@use '../00-settings/variables' as *;
+@use '../01-tools/mixins' as *;
+
+.main {
+  width: 100%;
+  min-height: calc(100vh - var(--header-height, 4rem) - 3.75rem);
+  
+  // Padding consistente (base-8)
+  padding: var(--spacing-4) 0;
+  
+  background-color: var(--color-primary);
+  
+  // Transición para cambios de fondo
+  transition: background-color var(--transition-base) var(--transition-ease);
+
+  @media (max-width: 48rem) {
+    min-height: calc(100vh - var(--header-height-mobile, 3.5rem) - 3.75rem);
+    padding: var(--spacing-3) 0;
+  }
+
+  &__container {
+    // Ancho máximo contenido
+    max-width: var(--breakpoint-xl);
+    margin: 0 auto;
+    
+    // Padding lateral consistente (base-8)
+    padding: 0 var(--spacing-4);
+    width: 100%;
+    
+    // Transición para efectos de estado (loading, etc.)
+    transition: opacity var(--transition-base) var(--transition-ease);
+
+    @media (max-width: 48rem) {
+      padding: 0 var(--spacing-2);
+    }
+  }
+
+  // Búsqueda
+  &__search {
+    position: relative;
+    max-width: 37.5rem;
+    margin: 0 auto var(--spacing-4);
+
+    &-input {
+      width: 100%;
+      padding: var(--spacing-2) var(--spacing-6) var(--spacing-2) var(--spacing-3);
+      border: 0.125rem solid var(--color-neutral-300);
+      border-radius: 3.125rem;
+      font-size: var(--font-size-md);
+      background-color: var(--color-secundary);
+      transition: all var(--transition-base) var(--transition-ease);
+
+      &::placeholder {
+        color: var(--color-text-secondary);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 3px rgba(0, 217, 95, 0.1);
+      }
+    }
+
+    &-btn {
+      position: absolute;
+      right: var(--spacing-2);
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      padding: var(--spacing-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all var(--transition-base) var(--transition-ease);
+
+      &:hover {
+        color: var(--color-accent);
+        background-color: rgba(0, 217, 95, 0.1);
+      }
+
+      &:focus {
+        outline: 0.125rem solid var(--color-accent);
+        outline-offset: 0.125rem;
+      }
+    }
+  }
+
+  // Layout dos columnas
+  &__layout {
+    // Grid para distribución de contenido + sidebar
+    display: grid;
+    grid-template-columns: 1fr var(--sidebar-width, 18.75rem);
+    gap: var(--spacing-4);
+    
+    // Transición suave para cambios de layout
+    transition: gap var(--transition-base) var(--transition-ease);
+
+    @media (max-width: 64rem) {
+      grid-template-columns: 1fr 15.625rem;
+      gap: var(--spacing-3);
+    }
+
+    @media (max-width: 48rem) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__content {
+    min-height: 25rem;
+    
+    // Transición para efectos de carga
+    transition: opacity var(--transition-base) var(--transition-ease);
+  }
+
+  // Sidebar noticias
+  &__sidebar {
+    // Layout
+    width: 100%;
+    background-color: var(--color-secundary);
+    border-radius: var(--radius-lg);
+    
+    // Padding consistente (base-8)
+    padding: var(--spacing-3);
+    
+    height: fit-content;
+    box-shadow: var(--shadow-sm);
+    
+    // Sticky para mantener visible al hacer scroll
+    position: sticky;
+    top: calc(var(--header-height, 4rem) + var(--spacing-4));
+    
+    // Z-index para controlar apilamiento
+    z-index: var(--z-sidebar, 10);
+    
+    // Transiciones para efectos hover
+    transition: box-shadow var(--transition-base) var(--transition-ease);
+
+    @media (max-width: 48rem) {
+      position: static;
+    }
+
+    &-header {
+      padding-bottom: var(--spacing-2);
+      border-bottom: 0.125rem solid var(--color-accent);
+      margin-bottom: var(--spacing-3);
+    }
+
+    &-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-secundary);
+      background-color: var(--color-accent);
+      padding: var(--spacing-2) var(--spacing-3);
+      border-radius: var(--radius-md);
+      margin: 0;
+      text-align: center;
+    }
+
+    &-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-2);
+    }
+
+    &-item {
+      margin: 0;
+    }
+
+    &-link {
+      display: block;
+      padding: var(--spacing-3);
+      background-color: var(--color-neutral-100);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: var(--font-weight-medium);
+      transition: all var(--transition-base) var(--transition-ease);
+      border: 0.125rem solid transparent;
+
+      &:hover {
+        background-color: var(--color-secundary);
+        border-color: var(--color-accent);
+        transform: translateX(0.25rem);
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 0.1875rem rgba(0, 217, 95, 0.1);
+      }
+    }
+  }
+}
+
+// Partidos
+.matches {
+  margin-bottom: var(--spacing-6);
+
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-secundary);
+    background-color: var(--color-accent);
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-md);
+    margin: 0 0 var(--spacing-3);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--spacing-2);
+  }
+}
+
+.match-card {
+  background-color: var(--color-secundary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base) var(--transition-ease);
+  border: 0.125rem solid transparent;
+
+  &:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-accent);
+  }
+
+  &__teams {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-2);
+  }
+
+  &__team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-1);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__score {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    padding: 0 var(--spacing-1);
+    white-space: nowrap;
+  }
+}
+
+// Competiciones
+.competitions {
+  margin-bottom: var(--spacing-4);
+
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-secundary);
+    background-color: var(--color-accent);
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-md);
+    margin: 0 0 var(--spacing-3);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-2);
+
+    @media (max-width: 64rem) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 48rem) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.competition-card {
+  background-color: var(--color-secundary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base) var(--transition-ease);
+  border: 0.125rem solid transparent;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-md);
+  }
+
+  // Colores específicos por liga
+  &:nth-child(1):hover { // LaLiga
+    border-color: var(--color-laliga);
+    background-color: rgba(255, 23, 68, 0.05);
+  }
+
+  &:nth-child(2):hover { // Ligue 1
+    border-color: var(--color-ligue1);
+    background-color: rgba(30, 58, 138, 0.05);
+  }
+
+  &:nth-child(3):hover { // Premier League
+    border-color: var(--color-premierleague);
+    background-color: rgba(63, 31, 128, 0.05);
+  }
+
+  &:nth-child(4):hover { // Primeira Liga
+    border-color: var(--color-primeiraliga);
+    background-color: rgba(5, 150, 105, 0.05);
+  }
+
+  &:nth-child(5):hover { // Serie A
+    border-color: var(--color-seriea);
+    background-color: rgba(0, 102, 204, 0.05);
+  }
+
+  &:nth-child(6):hover { // Eredivisie
+    border-color: var(--color-eredivisie);
+    background-color: rgba(249, 115, 22, 0.05);
+  }
+
+  &:nth-child(7):hover { // Bundesliga
+    border-color: var(--color-bundesliga);
+    background-color: rgba(211, 47, 47, 0.05);
+  }
+
+  &:nth-child(8):hover { // Süper Lig
+    border-color: var(--color-superlig);
+    background-color: rgba(220, 38, 38, 0.05);
+  }
+
+  &:nth-child(9):hover { // MLS
+    border-color: var(--color-mls);
+    background-color: rgba(0, 76, 151, 0.05);
+  }
+
+  &:nth-child(10):hover { // Liga MX
+    border-color: var(--color-ligamx);
+    background-color: rgba(6, 95, 70, 0.05);
+  }
+
+  &:nth-child(11):hover { // Championship
+    border-color: var(--color-championship);
+    background-color: rgba(30, 64, 175, 0.05);
+  }
+
+  &:nth-child(12):hover { // Ligue 2
+    border-color: var(--color-ligue2);
+    background-color: rgba(75, 85, 99, 0.05);
+  }
+
+  &__name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    text-align: center;
+  }
+}

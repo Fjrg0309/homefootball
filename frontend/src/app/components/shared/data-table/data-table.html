@@ -1,0 +1,49 @@
+<section class="data-table" [class.data-table--cards]="responsive === 'cards'" [class.data-table--scroll]="responsive === 'scroll'">
+  <!-- Vista de tabla (desktop y scroll mobile) -->
+  <section class="data-table__wrapper">
+    <table 
+      class="data-table__table"
+      [class.data-table__table--striped]="striped"
+      [class.data-table__table--hoverable]="hoverable">
+      <thead class="data-table__head">
+        <tr class="data-table__row">
+          <th 
+            *ngFor="let column of columns" 
+            class="data-table__header"
+            [class.data-table__header--sortable]="column.sortable"
+            (click)="onSort(column)">
+            {{ column.label }}
+            <span *ngIf="column.sortable" class="data-table__sort-icon">
+              {{ getSortIcon(column) }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="data-table__body">
+        <tr *ngFor="let row of data" class="data-table__row">
+          <td 
+            *ngFor="let column of columns" 
+            class="data-table__cell"
+            [attr.data-label]="column.label">
+            <ng-container [ngSwitch]="column.type">
+              <span *ngSwitchCase="'badge'" class="data-table__badge">{{ row[column.key] }}</span>
+              <span *ngSwitchDefault>{{ row[column.key] }}</span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Vista de cards (mobile) -->
+  <section class="data-table__cards">
+    <article *ngFor="let row of data" class="data-table__card">
+      <section class="data-table__card-content">
+        <section *ngFor="let column of columns" class="data-table__card-field">
+          <strong class="data-table__card-label">{{ column.label }}:</strong>
+          <span class="data-table__card-value">{{ row[column.key] }}</span>
+        </section>
+      </section>
+    </article>
+  </section>
+</section>

@@ -1,0 +1,83 @@
+// Sidebar animations
+
+.sidebar {
+  animation: slideInRight 0.3s ease-out;
+
+  &__container {
+    // Transición suave del contenido
+    > * {
+      animation: fadeIn 0.4s ease-out 0.1s backwards;
+    }
+  }
+}
+
+// Links: efectos adicionales
+.sidebar__link {
+  position: relative;
+
+  // Indicador lateral en hover
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.1875rem;
+    height: 0;
+    background-color: var(--color-accent);
+    border-radius: 0 0.125rem 0.125rem 0;
+    transition: height 0.2s ease;
+  }
+
+  &:hover::before,
+  &--active::before {
+    height: 70%;
+  }
+}
+
+// Animaciones
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive: sidebar móvil
+@media (max-width: 48rem) {
+  .sidebar {
+    // Si se usa como menú desplegable en móvil
+    &.is-mobile-open {
+      position: fixed;
+      top: 3.5rem;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      overflow-y: auto;
+      animation: slideInLeft 0.3s ease-out;
+    }
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

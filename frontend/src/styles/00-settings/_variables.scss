@@ -1,0 +1,124 @@
+@charset "utf-8";
+
+
+:root {
+  /* COLORES PRINCIPALES */
+  --color-primary: #F5F5F5;           // Gris claro (fondo principal)
+  --color-secundary: #FFFFFF;         // Blanco puro (tarjetas, cards)
+  --color-header: #363871;            // Azul marino oscuro (header y footer, profesional)
+  --color-text: #212121;              // Negro casi puro (texto principal)
+  --color-text-secondary: #757575;    // Gris medio (metadatos, fechas)
+  --color-header-text: #FFFFFF;       // Texto sobre header azul marino
+  
+  /* COLORES DE ACCIÓN */
+  --color-accent: #00D95F;            // Verde brillante (títulos, acciones positivas)
+  --color-accent-hover: #00B350;      // Verde hover
+  --color-sendcomment: #00D95F;       // Verde (enviar comentario, confirmar)
+  --color-deletecomment: #D32F2F;     // Rojo Material (eliminar, peligro)
+  
+  /* COLORES POR COMPETICIÓN */
+  --color-laliga: #FF1744;            // Rojo LaLiga
+  --color-premierleague: #3F1F80;     // Púrpura Premier League
+  --color-seriea: #0066CC;            // Azul Serie A
+  --color-bundesliga: #D32F2F;        // Rojo Bundesliga
+  --color-ligue1: #1e3a8a;            // Azul Ligue 1
+  --color-ligue2: #4b5563;            // Gris Ligue 2
+  --color-primeiraliga: #059669;      // Verde Primeira Liga
+  --color-eredivisie: #f97316;        // Naranja Eredivisie
+  --color-superlig: #dc2626;          // Rojo Süper Lig Turca
+  --color-mls: #004c97;               // Azul MLS
+  --color-ligamx: #065f46;            // Verde Liga MX
+  --color-championship: #1e40af;      // Azul Championship
+  --color-champions: #0066CC;         // Azul Champions League
+  --color-europaleague: #FF6600;      // Naranja Europa League
+  --color-conferenceleague: #00C853;  // Verde Conference League
+  
+  /* COLORES SEMÁNTICOS */
+  --color-success: #00D95F;
+  --color-error: #D32F2F;
+  --color-warning: #FF6F00;
+  --color-info: #1976D2;
+  --color-winner: #00D95F;
+  
+  /* ESCALA DE GRISES */
+  --color-neutral-50: #FAFAFA;
+  --color-neutral-100: #F5F5F5;
+  --color-neutral-200: #EEEEEE;
+  --color-neutral-300: #E0E0E0;
+  --color-neutral-400: #BDBDBD;
+  --color-neutral-500: #9E9E9E;
+  --color-neutral-600: #757575;
+  --color-neutral-700: #616161;
+  --color-neutral-800: #424242;
+  --color-neutral-900: #212121;
+
+  /* TIPOGRAFÍA - Inter (optimizada para UI y legibilidad en pantallas) */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Tamaños de fuente (sistema base 8px) */
+  --font-size-xs: 0.5rem;        // 8px
+  --font-size-sm: 0.75rem;       // 12px
+  --font-size-md: 1rem;          // 16px (base)
+  --font-size-lg: 1.5rem;        // 24px
+  --font-size-xl: 2rem;          // 32px
+  --font-size-2xl: 2.5rem;       // 40px
+  --font-size-3xl: 3rem;         // 48px
+  --font-size-4xl: 4rem;         // 64px
+  --font-size-5xl: 5rem;         // 80px
+  
+  /* Pesos de fuente */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  
+  /* Alturas de línea */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ESPACIADO (sistema base 8px - más generoso) */
+  --spacing-1: 0.5rem;      // 8px
+  --spacing-2: 1rem;        // 16px
+  --spacing-3: 1.5rem;      // 24px
+  --spacing-4: 2rem;        // 32px
+  --spacing-5: 2.5rem;      // 40px
+  --spacing-6: 3rem;        // 48px
+  --spacing-8: 4rem;        // 64px
+  --spacing-10: 5rem;       // 80px
+  --spacing-12: 6rem;       // 96px
+  --spacing-16: 8rem;       // 128px
+  --spacing-20: 10rem;      // 160px
+  --spacing-24: 12rem;      // 192px
+
+  /* BREAKPOINTS */
+  --breakpoint-sm: 40rem;   // 640px
+  --breakpoint-md: 48rem;   // 768px
+  --breakpoint-lg: 64rem;   // 1024px
+  --breakpoint-xl: 80rem;   // 1280px
+
+  /* BORDES Y RADIOS (más suaves y modernos) */
+  --border-thin: 0.0625rem;
+  --border-medium: 0.125rem;
+  --border-thick: 0.25rem;
+  --radius-sm: 0.5rem;      // 8px
+  --radius-md: 0.75rem;     // 12px
+  --radius-lg: 1rem;        // 16px
+  --radius-xl: 1.5rem;      // 24px
+  --radius-2xl: 2rem;       // 32px
+  --radius-full: 62.4375rem;    // Círculo perfecto (9999px)
+
+  /* TRANSICIONES */
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-slow: 500ms;
+  --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* SOMBRAS (Material Design) */
+  --shadow-sm: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.12), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.12), 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.15), 0 0.1875rem 0.375rem rgba(0, 0, 0, 0.10);
+  --shadow-xl: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.18), 0 0.3125rem 0.625rem rgba(0, 0, 0, 0.12);
+}

@@ -1,0 +1,42 @@
+<section class="form-radio-group" 
+     [class.form-radio-group--error]="errorMessage"
+     [class.form-radio-group--disabled]="disabled">
+  
+  <fieldset class="form-radio-group__fieldset">
+    <legend class="form-radio-group__legend">{{ label }}</legend>
+    
+    <section class="form-radio-group__options" [class.form-radio-group__options--inline]="inline">
+      <label 
+        *ngFor="let option of options; let i = index"
+        [for]="getRadioId(i)"
+        class="form-radio-group__option"
+        [class.form-radio-group__option--disabled]="option.disabled || disabled">
+        
+        <input
+          [id]="getRadioId(i)"
+          type="radio"
+          [name]="name"
+          [value]="option.value"
+          [checked]="value === option.value"
+          [disabled]="option.disabled || disabled"
+          (change)="onSelectionChange(option.value)"
+          (blur)="onBlur()"
+          class="form-radio-group__input">
+        
+        <span class="form-radio-group__radio">
+          <span class="form-radio-group__dot"></span>
+        </span>
+        
+        <span class="form-radio-group__text">{{ option.label }}</span>
+      </label>
+    </section>
+  </fieldset>
+  
+  <span *ngIf="helpText && !errorMessage" class="form-radio-group__help">
+    {{ helpText }}
+  </span>
+  
+  <span *ngIf="errorMessage" class="form-radio-group__error" role="alert">
+    {{ errorMessage }}
+  </span>
+</section>

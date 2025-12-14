@@ -1,0 +1,307 @@
+@charset "utf-8";
+
+// ELEMENTOS HTML
+
+@layer elements {
+  // Encabezados
+  h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+  }
+
+  h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+  }
+
+  h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+  }
+
+  h4 {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  h5, h6 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  p {
+    margin-bottom: var(--spacing-3);
+    line-height: var(--line-height-normal);
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color var(--transition-fast) var(--transition-ease);
+    
+    &:hover {
+      color: var(--color-accent-hover);
+      text-decoration: underline;
+    }
+  }
+
+  ul, ol {
+    margin-bottom: var(--spacing-3);
+  }
+
+  li {
+    margin-bottom: var(--spacing-1);
+    padding: var(--spacing-2) 0;
+  }
+
+  img {
+    border-radius: var(--radius-md);
+  }
+
+  // Botones
+  button {
+    padding: var(--spacing-2) var(--spacing-5);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    border: var(--border-thin) solid var(--color-neutral-300);
+    background: var(--color-secundary);
+    cursor: pointer;
+    transition: all var(--transition-fast) var(--transition-ease);
+    
+    &:hover {
+      background: var(--color-header);
+      transform: translateY(-0.0625rem);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    // Botón primario (verde como "Registrarme")
+    &.btn--primary {
+      background: var(--color-sendcomment);
+      border-color: var(--color-sendcomment);
+    }
+    
+    // Botón secundario
+    &.btn--secondary {
+      background: var(--color-header);
+    }
+    
+    // Botón peligro (rojo como "Cerrar sesión")
+    &.btn--danger {
+      background: var(--color-laliga);
+      border-color: var(--color-deletecomment);
+      color: var(--color-deletecomment);
+    }
+    
+    // Botón outline
+    &.btn--outline {
+      background: transparent;
+      border: var(--border-medium) solid var(--color-neutral-400);
+    }
+  }
+}
+
+// Formularios - Estilo modal login/registro
+@layer elements {
+  @scope (.form) {
+    :scope {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+    
+    .form__group {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+      
+      label {
+        min-width: 8.75rem;
+        text-align: right;
+        font-size: var(--font-size-sm);
+      }
+      
+      input {
+        flex: 1;
+        max-width: 12.5rem;
+      }
+    }
+    
+    input,
+    textarea,
+    select {
+      padding: var(--spacing-2) var(--spacing-3);
+      border: var(--border-thin) solid var(--color-neutral-400);
+      border-radius: var(--radius-md);
+      background-color: white;
+      font-size: var(--font-size-sm);
+      transition: border-color var(--transition-fast) var(--transition-ease);
+      
+      &:focus {
+        outline: none;
+        border-color: var(--color-secundary);
+      }
+    }
+
+    .form__actions {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-4);
+      margin-top: var(--spacing-4);
+    }
+  }
+}
+
+// Tablas de clasificación
+@layer elements {
+  @scope (.table-container) {
+    :scope {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-4);
+      overflow-x: auto;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: var(--spacing-2) var(--spacing-3);
+      text-align: center;
+      font-size: var(--font-size-sm);
+    }
+    
+    th {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-neutral-500);
+      border-bottom: var(--border-thin) solid var(--color-neutral-200);
+    }
+    
+    td {
+      border-bottom: var(--border-thin) solid var(--color-neutral-100);
+    }
+    
+    // Columna de posición con colores
+    td:first-child {
+      font-weight: var(--font-weight-bold);
+    }
+    
+    // Columna de equipo alineada a izquierda
+    td:nth-child(2) {
+      text-align: left;
+    }
+  }
+}
+
+// Cards de contenido (noticias, resultados, etc.)
+@layer elements {
+  @scope (.content-card) {
+    :scope {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-6);
+      box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.06);
+    }
+    
+    .content-card__title {
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-4);
+      text-align: center;
+    }
+    
+    .content-card__list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-3);
+    }
+    
+    .content-card__item {
+      padding: var(--spacing-3);
+      border-bottom: var(--border-thin) solid var(--color-neutral-100);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// Lista de resultados de búsqueda
+@layer elements {
+  @scope (.search-results) {
+    :scope {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-4);
+    }
+    
+    .search-results__item {
+      padding: var(--spacing-3) var(--spacing-4);
+      border-bottom: var(--border-thin) solid var(--color-neutral-100);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      
+      &:hover {
+        background: var(--color-neutral-50);
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// Grid de equipos (círculos)
+@layer elements {
+  @scope (.teams-grid) {
+    :scope {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(3.125rem, 1fr));
+      gap: var(--spacing-4);
+      justify-items: center;
+    }
+    
+    .teams-grid__item {
+      width: 3.125rem;
+      height: 3.125rem;
+      border-radius: var(--radius-full);
+      background: var(--color-neutral-400);
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: var(--radius-full);
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+// Elementos globales
+@layer elements {
+  hr {
+    border: none;
+    height: var(--border-thin);
+    background-color: var(--color-neutral-200);
+    margin: var(--spacing-4) 0;
+  }
+}

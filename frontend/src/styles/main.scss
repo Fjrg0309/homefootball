@@ -1,0 +1,66 @@
+// ============================================
+// MAIN.SCSS - Entry Point
+// Arquitectura ITCSS (Inverted Triangle CSS)
+// ============================================
+
+@charset "utf-8";
+
+// Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+// Definición de capas (de menor a mayor especificidad)
+@layer reset, base, objects, components, utilities;
+
+// ============================================
+// 1. SETTINGS - Variables y configuración
+// Sin output CSS, solo definiciones
+// ============================================
+@use '00-settings/variables' as *;
+
+// ============================================
+// 2. TOOLS - Mixins y funciones
+// Sin output CSS, solo herramientas
+// ============================================
+@use '01-tools/mixins' as *;
+
+// ============================================
+// 3. GENERIC - Reset y normalización
+// Primer layer con CSS real
+// ============================================
+@layer reset {
+  @use '02-generic/reset';
+}
+
+// ============================================
+// 4. ELEMENTS - Estilos base de elementos HTML
+// Selectores de elementos sin clases
+// ============================================
+@layer base {
+  @use '03-elements/elements';
+}
+
+// ============================================
+// 5. LAYOUT - Patrones de diseño reutilizables
+// Layouts, grids, containers (sin diseño visual)
+// ============================================
+@layer objects {
+  @use '04-layout/layouts';
+}
+
+// ============================================
+// 6. COMPONENTS - Componentes específicos
+// Header, Footer, Buttons (con diseño visual)
+// ============================================
+@layer components {
+  @use 'components/header';
+  @use 'components/footer';
+  @use 'components/buttons';
+}
+
+// ============================================
+// 7. UTILITIES - Clases de utilidad
+// Última capa, máxima especificidad
+// ============================================
+@layer utilities {
+  @use 'utilities/helpers';
+}

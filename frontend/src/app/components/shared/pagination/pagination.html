@@ -1,0 +1,79 @@
+<nav class="pagination" aria-label="Paginación">
+  <ul class="pagination__list">
+    <!-- Botón Primera página -->
+    <li *ngIf="showFirstLast" class="pagination__item">
+      <button 
+        class="pagination__button pagination__button--nav"
+        [disabled]="currentPage === 1"
+        (click)="firstPage()"
+        aria-label="Primera página">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M11 2L5 8L11 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M3 2V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </li>
+
+    <!-- Botón Anterior -->
+    <li *ngIf="showPrevNext" class="pagination__item">
+      <button 
+        class="pagination__button pagination__button--nav"
+        [disabled]="currentPage === 1"
+        (click)="previousPage()"
+        aria-label="Página anterior">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 2L4 8L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </li>
+
+    <!-- Elipsis izquierda -->
+    <li *ngIf="showLeftEllipsis" class="pagination__item">
+      <span class="pagination__ellipsis">...</span>
+    </li>
+
+    <!-- Números de página -->
+    <li *ngFor="let page of visiblePages" class="pagination__item">
+      <button 
+        class="pagination__button pagination__button--page"
+        [class.pagination__button--active]="page === currentPage"
+        (click)="goToPage(page)"
+        [attr.aria-current]="page === currentPage ? 'page' : null"
+        [attr.aria-label]="'Página ' + page">
+        {{ page }}
+      </button>
+    </li>
+
+    <!-- Elipsis derecha -->
+    <li *ngIf="showRightEllipsis" class="pagination__item">
+      <span class="pagination__ellipsis">...</span>
+    </li>
+
+    <!-- Botón Siguiente -->
+    <li *ngIf="showPrevNext" class="pagination__item">
+      <button 
+        class="pagination__button pagination__button--nav"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+        aria-label="Página siguiente">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 2L12 8L6 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </li>
+
+    <!-- Botón Última página -->
+    <li *ngIf="showFirstLast" class="pagination__item">
+      <button 
+        class="pagination__button pagination__button--nav"
+        [disabled]="currentPage === totalPages"
+        (click)="lastPage()"
+        aria-label="Última página">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M5 2L11 8L5 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M13 2V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </li>
+  </ul>
+</nav>

@@ -1,0 +1,140 @@
+@charset "utf-8";
+
+// CSS Custom Properties para temas
+
+:root {
+  // Colores de fondo
+  --bg-primary: #F5F5F5;              // Fondo principal de la app (gris claro)
+  --bg-secondary: #FFFFFF;            // Fondo secundario (blanco - cards, modales)
+  --bg-header: #363871;               // Fondo del header y footer (azul marino)
+  --bg-overlay: rgba(0, 0, 0, 0.5);   // Overlay de modales (negro 50%)
+  
+  // Fondos de estado
+  --bg-hover: rgba(255, 255, 255, 0.1);      // Hover sobre elementos
+  --bg-active: rgba(255, 255, 255, 0.15);    // Estado activo
+  --bg-disabled: #E0E0E0;                     // Estado deshabilitado
+  --bg-selected: rgba(0, 217, 95, 0.1);      // Elemento seleccionado (verde claro)
+  
+  // Fondos de acento
+  --bg-accent: #00D95F;               // Fondo verde acento (botones, títulos)
+  --bg-accent-hover: #00B350;         // Hover del acento
+  --bg-success: #00D95F;              // Fondo de éxito
+  --bg-error: #D32F2F;                // Fondo de error
+  --bg-warning: #FF6F00;              // Fondo de advertencia
+  --bg-info: #1976D2;                 // Fondo de información
+  
+  // Colores de texto
+  --text-primary: #212121;            // Texto principal (negro casi puro)
+  --text-secondary: #757575;          // Texto secundario (gris medio)
+  --text-tertiary: #9E9E9E;           // Texto terciario (gris claro)
+  --text-disabled: #BDBDBD;           // Texto deshabilitado
+  
+  // Textos sobre fondos oscuros
+  --text-on-dark: #FFFFFF;            // Texto sobre header/footer
+  --text-on-accent: #212121;          // Texto sobre verde acento (negro)
+  
+  // Textos semánticos
+  --text-success: #00D95F;            // Texto de éxito (verde)
+  --text-error: #D32F2F;              // Texto de error (rojo)
+  --text-warning: #FF6F00;            // Texto de advertencia (naranja)
+  --text-info: #1976D2;               // Texto de información (azul)
+  
+  // Enlaces
+  --text-link: #00D95F;               // Color de enlaces (verde acento)
+  --text-link-hover: #00B350;         // Hover de enlaces
+  --text-link-visited: #059669;       // Enlaces visitados
+  
+  // Colores de borde
+  --border-primary: #E0E0E0;          // Borde principal (gris claro)
+  --border-secondary: #EEEEEE;        // Borde secundario (gris muy claro)
+  --border-tertiary: #F5F5F5;         // Borde terciario (casi blanco)
+  
+  // Bordes de estado
+  --border-hover: #BDBDBD;            // Borde en hover
+  --border-focus: #00D95F;            // Borde en focus (verde acento)
+  --border-active: #00B350;           // Borde en estado activo
+  --border-disabled: #E0E0E0;         // Borde deshabilitado
+  --border-error: #D32F2F;            // Borde de error
+  
+  // Bordes semánticos
+  --border-success: #00D95F;          // Borde de éxito
+  --border-warning: #FF6F00;          // Borde de advertencia
+  --border-info: #1976D2;             // Borde de información
+  
+  // Bordes de acento
+  --border-accent: #00D95F;           // Borde acento (verde)
+  --border-accent-hover: #00B350;     // Borde acento hover
+  
+  // Colores de sombra
+  --shadow-color: rgba(0, 0, 0, 0.12);        // Color base de sombras
+  --shadow-color-hover: rgba(0, 0, 0, 0.18);  // Sombra en hover
+  --shadow-color-accent: rgba(0, 217, 95, 0.25); // Sombra verde acento
+  
+  // Colores de iconos
+  --icon-primary: #212121;            // Color de iconos principal
+  --icon-secondary: #757575;          // Color de iconos secundario
+  --icon-on-dark: #FFFFFF;            // Iconos sobre fondo oscuro
+  --icon-accent: #00D95F;             // Iconos con acento
+  --icon-disabled: #BDBDBD;           // Iconos deshabilitados
+}
+
+// Tema oscuro
+[data-theme="dark"] {
+  // Fondos invertidos
+  --bg-primary: #121212;              // Fondo principal oscuro
+  --bg-secondary: #1E1E1E;            // Fondo secundario oscuro
+  --bg-header: #1A1A2E;               // Header oscuro (azul muy oscuro)
+  --bg-overlay: rgba(0, 0, 0, 0.7);   // Overlay más oscuro
+  
+  // Fondos de estado (ajustados para dark mode)
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --bg-active: rgba(255, 255, 255, 0.1);
+  --bg-disabled: #2C2C2C;
+  --bg-selected: rgba(0, 217, 95, 0.15);
+  
+  // Textos invertidos
+  --text-primary: #FFFFFF;            // Texto principal blanco
+  --text-secondary: #B0B0B0;          // Texto secundario gris claro
+  --text-tertiary: #808080;           // Texto terciario gris medio
+  --text-disabled: #4A4A4A;           // Texto deshabilitado
+  
+  --text-on-dark: #FFFFFF;            // Mantiene blanco
+  --text-on-accent: #000000;          // Texto sobre verde oscuro
+  
+  // Bordes más sutiles en dark mode
+  --border-primary: #2C2C2C;
+  --border-secondary: #1E1E1E;
+  --border-tertiary: #121212;
+  --border-hover: #3C3C3C;
+  --border-disabled: #2C2C2C;
+  
+  // Sombras más pronunciadas
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --shadow-color-hover: rgba(0, 0, 0, 0.6);
+  
+  // Iconos claros
+  --icon-primary: #FFFFFF;
+  --icon-secondary: #B0B0B0;
+  --icon-on-dark: #FFFFFF;
+  --icon-disabled: #4A4A4A;
+}
+
+// Tema alto contraste (accesibilidad)
+[data-theme="high-contrast"] {
+  // Máximo contraste
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #FFFFFF;
+  --bg-header: #000000;
+  
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --text-on-dark: #FFFFFF;
+  
+  --border-primary: #000000;
+  --border-secondary: #000000;
+  --border-focus: #0000FF;            // Azul brillante para focus
+  --border-error: #FF0000;            // Rojo puro
+  
+  --icon-primary: #000000;
+  --icon-on-dark: #FFFFFF;
+}

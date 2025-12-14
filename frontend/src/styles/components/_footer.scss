@@ -1,0 +1,162 @@
+// Footer con redes sociales
+
+@use '../00-settings/variables' as *;
+@use '../01-tools/mixins' as *;
+
+.footer {
+  width: 100%;
+  background-color: var(--color-header);
+  
+  // Padding consistente (base-8)
+  padding: var(--spacing-2) 0;
+  
+  // Transición suave para cambios de estado
+  transition: background-color var(--transition-base) var(--transition-ease);
+
+  &__container {
+    // Ancho máximo contenido
+    max-width: var(--breakpoint-xl);
+    margin: 0 auto;
+    
+    // Padding lateral consistente (base-8)
+    padding: 0 var(--spacing-4);
+
+    @media (max-width: 48rem) {
+      padding: 0 var(--spacing-2);
+    }
+  }
+
+  &__content {
+    // Flex para distribución horizontal
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-3);
+    position: relative;
+
+    @media (max-width: 40rem) {
+      flex-direction: column;
+      gap: var(--spacing-2);
+    }
+  }
+
+  &__text {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-header-text);
+    margin: 0;
+    line-height: 1;
+    
+    // Centrado absoluto con position
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    // Transición para animaciones
+    transition: transform var(--transition-base) var(--transition-ease);
+
+    @media (max-width: 40rem) {
+      font-size: var(--font-size-md);
+      position: static;
+      transform: none;
+    }
+  }
+
+  &__social {
+    // Flex para distribución de iconos
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    
+    // Alineación a la derecha
+    margin-left: auto;
+
+    @media (max-width: 40rem) {
+      margin-left: 0;
+    }
+  }
+
+  &__social-link {
+    // Flex para centrar icono
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    // Tamaño fijo (base-8)
+    width: var(--spacing-5);
+    height: var(--spacing-5);
+    
+    border-radius: var(--radius-full);
+    color: var(--color-header-text);
+    text-decoration: none;
+    flex-shrink: 0;
+    
+    // Transiciones para todos los efectos hover
+    transition: all var(--transition-base) var(--transition-ease);
+
+    svg {
+      width: var(--spacing-3);
+      height: var(--spacing-3);
+      display: block;
+      
+      // Transición para rotación en hover
+      transition: transform var(--transition-base) var(--transition-ease);
+    }
+
+    // Twitter/X - Negro
+    &--twitter {
+      background-color: #000000;
+
+      &:hover {
+        background-color: #1a1a1a;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    // Instagram - Gradiente
+    &--instagram {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+
+      &:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(220, 39, 67, 0.4);
+      }
+    }
+
+    // TikTok - Negro con borde cian/magenta
+    &--tiktok {
+      background-color: #000000;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #00f2ea, #ff0050);
+        z-index: -1;
+        opacity: 0.8;
+      }
+
+      &:hover {
+        background-color: #0a0a0a;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 0, 80, 0.4);
+
+        &::before {
+          opacity: 1;
+        }
+      }
+    }
+
+    &:focus {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(-1px) scale(1);
+    }
+  }
+}

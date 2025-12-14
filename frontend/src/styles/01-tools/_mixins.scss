@@ -1,0 +1,55 @@
+@charset "utf-8";
+
+// =============================================
+// MIXINS PARA HOMEFOOTBALL
+// =============================================
+
+// MIXIN 1: FLEX-CENTER
+// Centrado flexible reutilizable en toda la app
+// Uso: @include flex-center(column, var(--spacing-4));
+@mixin flex-center($direction: row, $gap: var(--spacing-2)) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
+  gap: $gap;
+}
+
+// MIXIN 2: CARD
+// Contenedores con bordes redondeados y sombra opcional
+// Uso: @include card(var(--spacing-4), var(--color-primary), false);
+@mixin card($padding: var(--spacing-6), $bg: white, $shadow: true) {
+  background: $bg;
+  border-radius: var(--radius-lg);
+  padding: $padding;
+  
+  @if $shadow {
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+// MIXIN 3: PILL-BUTTON
+// Botones con forma pill (muy redondeados) usados en competiciones, acciones, etc.
+// Uso: @include pill-button(var(--color-sendcomment), var(--color-text));
+@mixin pill-button($bg: var(--color-secundary), $color: var(--color-text)) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  background: $bg;
+  color: $color;
+  border: var(--border-thin) solid var(--color-neutral-300);
+  border-radius: var(--radius-full);
+  padding: var(--spacing-2) var(--spacing-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--transition-ease);
+
+  &:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: translateY(-0.0625rem);
+    box-shadow: var(--shadow-sm);
+  }
+}

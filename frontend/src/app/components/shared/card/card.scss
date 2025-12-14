@@ -1,0 +1,74 @@
+@use '../../../../styles/00-settings/variables' as *;
+
+// Card base
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+}
+
+// Card vertical (por defecto)
+.card:not(.card--horizontal) {
+  display: flex;
+  flex-direction: column;
+}
+
+.card__image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card__content {
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.card__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.card__description {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.card__actions {
+  margin-top: var(--spacing-2);
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+// Card horizontal
+.card--horizontal {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  
+  .card__image {
+    height: 100%;
+    min-height: 200px;
+  }
+  
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    
+    .card__image {
+      height: 200px;
+    }
+  }
+}

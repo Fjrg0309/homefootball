@@ -1,0 +1,16 @@
+<article class="card" [class.card--horizontal]="horizontal">
+  <img 
+    *ngIf="imageSrc" 
+    [src]="imageSrc" 
+    [alt]="imageAlt || ''"
+    class="card__image">
+  
+  <section class="card__content">
+    <h3 *ngIf="title" class="card__title">{{ title }}</h3>
+    <p *ngIf="description" class="card__description">{{ description }}</p>
+    
+    <footer class="card__actions">
+      <ng-content></ng-content>
+    </footer>
+  </section>
+</article>

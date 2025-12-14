@@ -1,0 +1,13 @@
+### HTTP examples (IntelliJ HTTP Client)
+@base = http://localhost:8080
+
+### Entrega 1 — eco
+GET {{base}}/books
+###
+GET {{base}}/books/42
+###
+POST {{base}}/books
+###
+PUT {{base}}/books/42
+###
+DELETE {{base}}/books/42
