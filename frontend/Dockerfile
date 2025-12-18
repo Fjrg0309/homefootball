@@ -5,17 +5,22 @@ FROM node:20-alpine AS build
 # Establecer directorio de trabajo
 WORKDIR /app
 
+# Configurar npm para aumentar timeouts
+RUN npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000 && \
+    npm config set fetch-timeout 300000
+
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias
-RUN npm ci --legacy-peer-deps
+# Instalar dependencias con reintentos
+RUN npm install --legacy-peer-deps || npm install --legacy-peer-deps
 
 # Copiar código fuente
 COPY . .
 
 # Build de la aplicación en modo producción
-RUN npm run build --  --configuration production
+RUN npm run build -- --configuration production
 
 # Etapa 2: Servidor de producción con Nginx
 FROM nginx:alpine

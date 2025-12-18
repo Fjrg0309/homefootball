@@ -9,9 +9,6 @@
 // Tools
 @use '01-tools/mixins' as *;
 
-// Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
-
 // CSS Layers
 @layer reset, base, layout, components, utilities;
 

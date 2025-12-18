@@ -57,13 +57,13 @@
       
       <!-- Indicador de fortaleza de contraseña -->
       @if (passwordControl.value) {
-        <div class="register-form__password-hints">
+        <section class="register-form__password-hints" aria-label="Requisitos de contraseña">
           <span [class.valid]="passwordControl.value.length >= 6">✓ 6+ caracteres</span>
           <span [class.valid]="passwordControl.value.match('[A-Z]')">✓ Mayúscula</span>
           <span [class.valid]="passwordControl.value.match('[a-z]')">✓ Minúscula</span>
           <span [class.valid]="passwordControl.value.match('[0-9]')">✓ Número</span>
           <span [class.valid]="passwordControl.value.match('[!@#$%^&*]')">✓ Especial</span>
-        </div>
+        </section>
       }
     </section>
 
