@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: homefootball-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - homefootball-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: homefootball-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - homefootball-network
+
+networks:
+  homefootball-network:
+    driver: bridge

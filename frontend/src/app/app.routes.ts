@@ -1,7 +1,154 @@
 import { Routes } from '@angular/router';
-import { StyleGuide } from './pages/style-guide/style-guide';
+import { About } from './pages/about/about';
+import { Login } from './pages/login/login';
+import { Profile } from './pages/profile/profile';
+import { Home } from './pages/home/home';
+import { NotFound } from './components/shared/not-found/not-found';
+import { authGuard, adminGuard } from './guards/auth.guard';
+import { pendingChangesGuard } from './guards/pending-changes.guard';
+import { ProductList } from './pages/product-list/product-list';
+import { ProductDetail } from './pages/product-detail/product-detail';
+import { ProductForm } from './pages/product-form/product-form';
+import { productResolver } from './resolvers/product.resolver';
 
 export const routes: Routes = [
-  { path: 'style-guide', component: StyleGuide },
-  { path: '', redirectTo: '/style-guide', pathMatch: 'full' }
+  // Página principal
+  { path: '', component: Home, data: { breadcrumb: 'Inicio' } },
+  
+  // Rutas públicas
+  { path: 'login', component: Login, data: { breadcrumb: 'Login' } },
+  { path: 'about', component: About, data: { breadcrumb: 'Acerca' } },
+  
+  // Rutas protegidas con authGuard
+  {
+    path: 'profile', 
+    component: Profile,
+    canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
+    data: { breadcrumb: 'Perfil' }
+  },
+  
+  // Lazy Loading con adminGuard
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
+    data: { breadcrumb: 'Admin' }
+  },
+  
+  // Lazy Loading sin guard (público)
+  {
+    path: 'shop',
+    loadChildren: () => import('./features/shop/shop.routes').then(m => m.SHOP_ROUTES),
+    data: { breadcrumb: 'Tienda' }
+  },
+  
+  // Rutas de productos con resolver y CRUD (Tarea 5 + Fase 5)
+  { 
+    path: 'productos', 
+    component: ProductList,
+    data: { breadcrumb: 'Productos' }
+  },
+  {
+    path: 'productos/nuevo',
+    component: ProductForm,
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Nuevo Producto' }
+  },
+  { 
+    path: 'productos/:id', 
+    component: ProductDetail,
+    resolve: { product: productResolver },
+    data: { breadcrumb: 'Detalle' }
+  },
+  {
+    path: 'productos/:id/editar',
+    component: ProductForm,
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Editar' }
+  },
+  
+  // Demos de fases anteriores - LAZY LOADING (Fase 4)
+  { 
+    path: 'style-guide', 
+    loadComponent: () => import('./pages/style-guide/style-guide').then(m => m.StyleGuide),
+    data: { breadcrumb: 'Guía de Estilos' } 
+  },
+  { 
+    path: 'dom-manipulation', 
+    loadComponent: () => import('./pages/dom-manipulation/dom-manipulation').then(m => m.DomManipulation),
+    data: { breadcrumb: 'DOM' } 
+  },
+  { 
+    path: 'event-system', 
+    loadComponent: () => import('./pages/event-system/event-system').then(m => m.EventSystem),
+    data: { breadcrumb: 'Eventos' } 
+  },
+  { 
+    path: 'interactive-components', 
+    loadComponent: () => import('./pages/interactive-components/interactive-components').then(m => m.InteractiveComponents),
+    data: { breadcrumb: 'Componentes Interactivos' } 
+  },
+  { 
+    path: 'theme-switcher', 
+    loadComponent: () => import('./pages/theme-switcher/theme-switcher').then(m => m.ThemeSwitcher),
+    data: { breadcrumb: 'Temas' } 
+  },
+  { 
+    path: 'communication', 
+    loadComponent: () => import('./pages/communication-demo/communication-demo').then(m => m.CommunicationDemo),
+    data: { breadcrumb: 'Comunicación' } 
+  },
+  { 
+    path: 'toast-demo', 
+    loadComponent: () => import('./pages/toast-demo/toast-demo').then(m => m.ToastDemo),
+    data: { breadcrumb: 'Toast' } 
+  },
+  { 
+    path: 'loading-demo', 
+    loadComponent: () => import('./pages/loading-demo/loading-demo').then(m => m.LoadingDemo),
+    data: { breadcrumb: 'Loading' } 
+  },
+  { 
+    path: 'user-form', 
+    loadComponent: () => import('./pages/user-form/user-form').then(m => m.UserForm),
+    data: { breadcrumb: 'Formulario Usuario' } 
+  },
+  { 
+    path: 'invoice-form', 
+    loadComponent: () => import('./pages/invoice-form/invoice-form').then(m => m.InvoiceForm),
+    data: { breadcrumb: 'Formulario Factura' } 
+  },
+  { 
+    path: 'navigation-demo', 
+    loadComponent: () => import('./pages/navigation-demo/navigation-demo').then(m => m.NavigationDemo),
+    data: { breadcrumb: 'Navegación' } 
+  },
+  { 
+    path: 'upload-demo', 
+    loadComponent: () => import('./pages/upload-demo/upload-demo').then(m => m.UploadDemo),
+    data: { breadcrumb: 'Upload' } 
+  },
+  
+  // Demos de estados de carga (Fase 5, Tarea 5) - LAZY LOADING
+  { 
+    path: 'productos-with-states', 
+    loadComponent: () => import('./pages/product-list-with-states/product-list-with-states').then(m => m.ProductListWithStates),
+    data: { breadcrumb: 'Productos con Estados' } 
+  },
+  {
+    path: 'productos-with-states/nuevo',
+    loadComponent: () => import('./pages/product-form-with-feedback/product-form-with-feedback').then(m => m.ProductFormWithFeedback),
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Nuevo (con Feedback)' }
+  },
+  {
+    path: 'productos-with-states/:id/editar',
+    loadComponent: () => import('./pages/product-form-with-feedback/product-form-with-feedback').then(m => m.ProductFormWithFeedback),
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Editar (con Feedback)' }
+  },
+  
+  // Wildcard 404 - SIEMPRE AL FINAL
+  { path: '**', component: NotFound }
 ];

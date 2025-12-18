@@ -50,8 +50,8 @@ public class MiembroService {
                 .collect(Collectors.toList());
     }
 
-    public List<MiembroDTO> findByRangoFechaNacimiento(int añoInicio, int añoFin) {
-        return miembroRepository.findByRangoFechaNacimiento(añoInicio, añoFin).stream()
+    public List<MiembroDTO> findByRangoFechaNacimiento(int anioInicio, int anioFin) {
+        return miembroRepository.findByRangoFechaNacimiento(anioInicio, anioFin).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }

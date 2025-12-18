@@ -49,8 +49,8 @@ public class EntrenadorController {
     }
 
     @GetMapping("/experiencia")
-    public ResponseEntity<List<EntrenadorDTO>> getEntrenadoresByExperiencia(@RequestParam int minAños) {
-        List<EntrenadorDTO> entrenadores = entrenadorService.findByMinExperiencia(minAños);
+    public ResponseEntity<List<EntrenadorDTO>> getEntrenadoresByExperiencia(@RequestParam int minAnios) {
+        List<EntrenadorDTO> entrenadores = entrenadorService.findByMinExperiencia(minAnios);
         return ResponseEntity.ok(entrenadores);
     }
 

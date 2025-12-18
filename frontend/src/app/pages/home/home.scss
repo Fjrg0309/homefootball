@@ -1,0 +1,6 @@
+// Home page styles
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--color-primary); // Usa el fondo principal de la app
+}

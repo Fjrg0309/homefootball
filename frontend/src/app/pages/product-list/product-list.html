@@ -1,0 +1,73 @@
+<div class="product-list-container">
+  <div class="list-header">
+    <h1>📦 Catálogo de Productos</h1>
+    <p>Navegación con Resolvers y Breadcrumbs</p>
+  </div>
+
+  <!-- Error Alert -->
+  @if (errorMessage()) {
+    <div class="alert alert-error">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-content">
+        <strong>Error:</strong> {{ errorMessage() }}
+      </div>
+      <button class="alert-close" (click)="clearError()">✕</button>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+  }
+
+  <!-- Products Grid -->
+  @if (!loading() && products().length > 0) {
+    <div class="products-grid">
+      @for (product of products(); track product.id) {
+        <div class="product-card" [routerLink]="['/productos', product.id]">
+          <div class="product-image">
+            {{ product.image }}
+          </div>
+          <div class="product-info">
+            <span class="category-badge">{{ product.category }}</span>
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-description">{{ product.description }}</p>
+            <div class="product-footer">
+              <span class="price">{{ product.price | currency:'EUR' }}</span>
+              <span class="stock" [class.low-stock]="product.stock < 10">
+                📦 Stock: {{ product.stock }}
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && products().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">📭</span>
+      <h3>No hay productos disponibles</h3>
+      <p>Vuelve más tarde para ver nuestro catálogo</p>
+    </div>
+  }
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <h2>🔍 Resolver en Acción</h2>
+    <p>
+      Al hacer clic en un producto, el <code>productResolver</code> precargará los datos
+      antes de navegar al detalle. Si el producto no existe, redirigirá aquí con un mensaje de error.
+    </p>
+    <ul>
+      <li>✅ Datos precargados antes de mostrar la página</li>
+      <li>✅ Loading state durante la carga del resolver</li>
+      <li>✅ Redirección automática en caso de error</li>
+      <li>✅ Mensaje de error propagado vía navigation state</li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,284 @@
+<div class="theme-switcher-container">
+  <h1>Tarea 4: Theme Switcher Funcional</h1>
+
+  <!-- Sección 1: Información del Sistema -->
+  <section class="seccion">
+    <h2>📊 Información del Sistema</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">💻</div>
+        <h3>Preferencia del Sistema</h3>
+        <div class="theme-badge" [class.dark]="systemPreference === 'dark'">
+          {{ systemPreference === 'dark' ? '🌙 Oscuro' : '☀️ Claro' }}
+        </div>
+        <p class="info-text">
+          Detectado usando <code>window.matchMedia('(prefers-color-scheme: dark)')</code>
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">💾</div>
+        <h3>Tema Guardado</h3>
+        @if (hasStoredTheme) {
+          <div class="theme-badge" [class.dark]="storedTheme === 'dark'">
+            {{ storedTheme === 'dark' ? '🌙 Oscuro' : '☀️ Claro' }}
+          </div>
+          <p class="info-text">Guardado en localStorage</p>
+          <button (click)="clearStoredTheme()" class="btn btn-warning btn-sm">
+            🗑️ Limpiar preferencia
+          </button>
+        } @else {
+          <div class="theme-badge neutral">
+            Sin preferencia guardada
+          </div>
+          <p class="info-text">Usando preferencia del sistema</p>
+        }
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">🎨</div>
+        <h3>Tema Actual</h3>
+        <div class="theme-badge" [class.dark]="themeService.isDark()">
+          {{ themeService.isDark() ? '🌙 Oscuro' : '☀️ Claro' }}
+        </div>
+        <p class="info-text">
+          Aplicado al <code>&lt;html&gt;</code> con clase <code>theme-{{ getCurrentTheme() }}</code>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección 2: Controles del Tema -->
+  <section class="seccion">
+    <h2>🎛️ Controles del Tema</h2>
+    
+    <div class="controls-demo">
+      <div class="toggle-section">
+        <h3>Toggle Automático</h3>
+        <button (click)="toggleTheme()" class="theme-toggle-btn">
+          <span class="toggle-icon">
+            {{ themeService.isDark() ? '☀️' : '🌙' }}
+          </span>
+          <span class="toggle-text">
+            Cambiar a {{ themeService.isDark() ? 'Claro' : 'Oscuro' }}
+          </span>
+        </button>
+        <p class="hint">Click para alternar entre tema claro y oscuro</p>
+      </div>
+
+      <div class="manual-section">
+        <h3>Selección Manual</h3>
+        <div class="theme-buttons">
+          <button 
+            (click)="setTheme('light')" 
+            class="theme-btn"
+            [class.active]="themeService.isLight()">
+            <span class="btn-icon">☀️</span>
+            <span class="btn-label">Tema Claro</span>
+          </button>
+          <button 
+            (click)="setTheme('dark')" 
+            class="theme-btn"
+            [class.active]="themeService.isDark()">
+            <span class="btn-icon">🌙</span>
+            <span class="btn-label">Tema Oscuro</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección 3: Demo Visual -->
+  <section class="seccion">
+    <h2>🎨 Demostración Visual</h2>
+    <p class="descripcion">
+      Los siguientes elementos cambian automáticamente con el tema seleccionado:
+    </p>
+
+    <div class="visual-demo">
+      <div class="demo-card">
+        <h3>Tarjeta de Ejemplo</h3>
+        <p>Este es un ejemplo de cómo se ven los elementos con el tema actual.</p>
+        <div class="demo-buttons">
+          <button class="btn btn-primary">Primario</button>
+          <button class="btn btn-secondary">Secundario</button>
+          <button class="btn btn-success">Éxito</button>
+        </div>
+      </div>
+
+      <div class="demo-form">
+        <h3>Formulario de Ejemplo</h3>
+        <input type="text" placeholder="Nombre" class="demo-input">
+        <input type="email" placeholder="Email" class="demo-input">
+        <textarea placeholder="Mensaje" class="demo-textarea"></textarea>
+        <button class="btn btn-primary">Enviar</button>
+      </div>
+
+      <div class="demo-list">
+        <h3>Lista de Ejemplo</h3>
+        <ul>
+          <li>Elemento de lista 1</li>
+          <li>Elemento de lista 2</li>
+          <li>Elemento de lista 3</li>
+          <li>Elemento de lista 4</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección 4: Implementación -->
+  <section class="seccion">
+    <h2>💻 Implementación</h2>
+
+    <div class="implementation-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Detectar prefers-color-scheme</h4>
+          <p>Se usa <code>window.matchMedia()</code> para detectar la preferencia del sistema:</p>
+          <pre><code>detectSystemPreference(): boolean &#123;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+&#125;</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Toggle entre tema claro/oscuro</h4>
+          <p>Se mantiene un estado y se aplican clases al <code>&lt;html&gt;</code>:</p>
+          <pre><code>toggleTheme(): void &#123;
+  const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+  this.setTheme(newTheme);
+&#125;
+
+applyThemeToDOM(theme: Theme): void &#123;
+  document.documentElement.classList.remove('theme-light', 'theme-dark');
+  document.documentElement.classList.add(`theme-$&#123;theme&#125;`);
+&#125;</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Persistir en localStorage</h4>
+          <p>Se guarda la preferencia del usuario:</p>
+          <pre><code>storeTheme(theme: Theme): void &#123;
+  localStorage.setItem('theme', theme);
+&#125;
+
+getStoredTheme(): Theme | null &#123;
+  const stored = localStorage.getItem('theme');
+  return stored === 'light' || stored === 'dark' ? stored : null;
+&#125;</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Aplicar tema al cargar</h4>
+          <p>Al inicializar la aplicación:</p>
+          <pre><code>initializeTheme(): void &#123;
+  // 1. Leer localStorage
+  const savedTheme = this.getStoredTheme();
+  
+  if (savedTheme) &#123;
+    // 2. Si hay tema guardado, usarlo
+    this.setTheme(savedTheme);
+  &#125; else &#123;
+    // 3. Si no, usar preferencia del sistema
+    const prefersDark = this.detectSystemPreference();
+    this.setTheme(prefersDark ? 'dark' : 'light');
+  &#125;
+&#125;</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección 5: Variables CSS -->
+  <section class="seccion">
+    <h2>🎨 Variables CSS de Tema</h2>
+    <p class="descripcion">
+      Los temas se definen usando variables CSS que cambian según la clase aplicada:
+    </p>
+
+    <div class="css-variables">
+      <h4>Tema Claro (.theme-light)</h4>
+      <pre><code>.theme-light &#123;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --border-color: #e0e0e0;
+  --shadow: rgba(0, 0, 0, 0.1);
+&#125;</code></pre>
+
+      <h4>Tema Oscuro (.theme-dark)</h4>
+      <pre><code>.theme-dark &#123;
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border-color: #404040;
+  --shadow: rgba(0, 0, 0, 0.3);
+&#125;</code></pre>
+
+      <h4>Uso en componentes</h4>
+      <pre><code>.mi-componente &#123;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow);
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Resumen -->
+  <section class="seccion resumen">
+    <h2>📚 Resumen del Theme Switcher</h2>
+    <div class="resumen-grid">
+      <div class="resumen-card">
+        <h4>🔍 Detección</h4>
+        <ul>
+          <li><code>window.matchMedia()</code></li>
+          <li>Preferencia del sistema</li>
+          <li>Escucha de cambios</li>
+          <li>SSR-safe (typeof window)</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>🔄 Toggle</h4>
+        <ul>
+          <li>Estado en servicio</li>
+          <li>Clases en <code>&lt;html&gt;</code></li>
+          <li>Variables CSS</li>
+          <li>Transiciones suaves</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>💾 Persistencia</h4>
+        <ul>
+          <li>localStorage API</li>
+          <li>Prioridad: guardado > sistema</li>
+          <li>Sincronización automática</li>
+          <li>Función de limpieza</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>🚀 Inicialización</h4>
+        <ul>
+          <li>Constructor del servicio</li>
+          <li>Lectura de localStorage</li>
+          <li>Fallback al sistema</li>
+          <li>Aplicación al DOM</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

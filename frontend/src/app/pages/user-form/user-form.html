@@ -1,0 +1,258 @@
+<div class="form-container">
+  <header class="form-header">
+    <a routerLink="/" class="back-button">← Volver</a>
+    <h1>📝 Formulario de Usuario</h1>
+    <p class="subtitle">Formularios Reactivos con Validaciones Personalizadas</p>
+  </header>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+    
+    <!-- Nombre -->
+    <div class="form-field">
+      <label for="name">Nombre *</label>
+      <input 
+        id="name"
+        formControlName="name" 
+        placeholder="Juan Pérez"
+        [class.invalid]="isFieldInvalid('name')">
+      
+      @if (isFieldInvalid('name')) {
+        <div class="error-message">
+          {{ getErrorMessage('name') }}
+        </div>
+      }
+    </div>
+
+    <!-- Username -->
+    <div class="form-field">
+      <label for="username">Nombre de Usuario *</label>
+      <input 
+        id="username"
+        formControlName="username" 
+        placeholder="juanperez123"
+        [class.invalid]="isFieldInvalid('username')">
+      
+      @if (username?.pending) {
+        <div class="loading-message">
+          ⏳ Comprobando disponibilidad...
+        </div>
+      }
+      
+      @if (isFieldInvalid('username')) {
+        <div class="error-message">
+          {{ getErrorMessage('username') }}
+        </div>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="form-field">
+      <label for="email">Email *</label>
+      <input 
+        id="email"
+        type="email"
+        formControlName="email" 
+        placeholder="juan@ejemplo.com"
+        [class.invalid]="isFieldInvalid('email')">
+      
+      @if (email?.pending) {
+        <div class="loading-message">
+          ⏳ Verificando email...
+        </div>
+      }
+      
+      @if (isFieldInvalid('email')) {
+        <div class="error-message">
+          {{ getErrorMessage('email') }}
+        </div>
+      }
+    </div>
+
+    <!-- Edad -->
+    <div class="form-field">
+      <label for="age">Edad *</label>
+      <input 
+        id="age"
+        type="number"
+        formControlName="age" 
+        placeholder="25"
+        [class.invalid]="isFieldInvalid('age')">
+      
+      @if (isFieldInvalid('age')) {
+        <div class="error-message">
+          {{ getErrorMessage('age') }}
+        </div>
+      }
+    </div>
+
+    <!-- NIF -->
+    <div class="form-field">
+      <label for="nif">NIF *</label>
+      <input 
+        id="nif"
+        formControlName="nif" 
+        placeholder="12345678Z"
+        maxlength="9"
+        [class.invalid]="isFieldInvalid('nif')">
+      
+      @if (isFieldInvalid('nif')) {
+        <div class="error-message">
+          {{ getErrorMessage('nif') }}
+        </div>
+      }
+    </div>
+
+    <!-- Teléfono -->
+    <div class="form-field">
+      <label for="telefono">Teléfono Móvil *</label>
+      <input 
+        id="telefono"
+        formControlName="telefono" 
+        placeholder="612345678"
+        maxlength="9"
+        [class.invalid]="isFieldInvalid('telefono')">
+      
+      @if (isFieldInvalid('telefono')) {
+        <div class="error-message">
+          {{ getErrorMessage('telefono') }}
+        </div>
+      }
+    </div>
+
+    <!-- Código Postal -->
+    <div class="form-field">
+      <label for="codigoPostal">Código Postal *</label>
+      <input 
+        id="codigoPostal"
+        formControlName="codigoPostal" 
+        placeholder="28001"
+        maxlength="5"
+        [class.invalid]="isFieldInvalid('codigoPostal')">
+      
+      @if (isFieldInvalid('codigoPostal')) {
+        <div class="error-message">
+          {{ getErrorMessage('codigoPostal') }}
+        </div>
+      }
+    </div>
+
+    <!-- Contraseña -->
+    <div class="form-field">
+      <label for="password">Contraseña *</label>
+      <input 
+        id="password"
+        type="password"
+        formControlName="password" 
+        placeholder="••••••••••••"
+        [class.invalid]="isFieldInvalid('password')">
+      
+      @if (userForm.get('password')?.touched && getPasswordErrors().length > 0) {
+        <div class="error-list">
+          <p class="error-title">La contraseña debe cumplir:</p>
+          <ul>
+            @for (error of getPasswordErrors(); track error) {
+              <li class="error-item">{{ error }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+
+    <!-- Confirmar Contraseña -->
+    <div class="form-field">
+      <label for="confirmPassword">Confirmar Contraseña *</label>
+      <input 
+        id="confirmPassword"
+        type="password"
+        formControlName="confirmPassword" 
+        placeholder="••••••••••••"
+        [class.invalid]="isFieldInvalid('confirmPassword')">
+      
+      @if (isFieldInvalid('confirmPassword')) {
+        <div class="error-message">
+          {{ getErrorMessage('confirmPassword') }}
+        </div>
+      }
+    </div>
+
+    <!-- Botones -->
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="btn-primary"
+        [disabled]="userForm.invalid || userForm.pending">
+        <span class="btn-icon">
+          @if (userForm.pending) {
+            ⏳
+          } @else {
+            ✓
+          }
+        </span>
+        {{ userForm.pending ? 'Validando...' : 'Registrar Usuario' }}
+      </button>
+      <button 
+        type="button" 
+        class="btn-secondary"
+        (click)="onReset()">
+        <span class="btn-icon">↻</span>
+        Limpiar
+      </button>
+    </div>
+
+    <!-- Estado del formulario -->
+    <div class="form-status">
+      <div class="status-item">
+        <strong>Estado:</strong>
+        @if (userForm.valid) {
+          <span class="status-valid">✓ Válido</span>
+        } @else {
+          <span class="status-invalid">✕ Inválido</span>
+        }
+      </div>
+      <div class="status-item">
+        <strong>Pristine:</strong> {{ userForm.pristine ? 'Sí' : 'No' }}
+      </div>
+      <div class="status-item">
+        <strong>Touched:</strong> {{ userForm.touched ? 'Sí' : 'No' }}
+      </div>
+    </div>
+
+  </form>
+
+  <!-- Sección de teoría -->
+  <section class="theory-section">
+    <h2>📚 Conceptos de Formularios Reactivos</h2>
+    
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3>FormBuilder</h3>
+        <p>Servicio para crear FormGroup y FormControl programáticamente con sintaxis simplificada</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>FormGroup</h3>
+        <p>Agrupa múltiples controles relacionados con validación sincronizada</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>FormControl</h3>
+        <p>Representa un campo individual con valor, estado (valid/invalid) y errores</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>Validadores Síncronos</h3>
+        <p>required, minLength, email, pattern, min, max - evaluación instantánea</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>Cross-Field Validation</h3>
+        <p>Validadores a nivel FormGroup que comparan múltiples campos</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>ValidationErrors</h3>
+        <p>Objeto con claves de error personalizadas para mensajes específicos</p>
+      </div>
+    </div>
+  </section>
+</div>

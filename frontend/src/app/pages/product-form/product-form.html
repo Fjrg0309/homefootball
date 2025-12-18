@@ -1,0 +1,129 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>{{ isEditMode() ? 'Editar Producto' : 'Nuevo Producto' }}</h1>
+    <p class="subtitle">{{ isEditMode() ? 'Modifica la información del producto' : 'Completa el formulario para crear un nuevo producto' }}</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
+    
+    <!-- Nombre -->
+    <div class="form-group">
+      <label for="name">Nombre del producto *</label>
+      <input 
+        id="name"
+        type="text" 
+        formControlName="name"
+        placeholder="Ej: Laptop Pro 15&quot;"
+        [class.error]="hasError('name', 'required') || hasError('name', 'minlength')"
+      />
+      @if (getErrorMessage('name')) {
+        <span class="error-message">{{ getErrorMessage('name') }}</span>
+      }
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group">
+      <label for="description">Descripción *</label>
+      <textarea 
+        id="description"
+        formControlName="description"
+        rows="4"
+        placeholder="Describe las características del producto..."
+        [class.error]="hasError('description', 'required') || hasError('description', 'minlength')"
+      ></textarea>
+      @if (getErrorMessage('description')) {
+        <span class="error-message">{{ getErrorMessage('description') }}</span>
+      }
+    </div>
+
+    <!-- Precio y Stock (grid 2 columnas) -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price">Precio ($) *</label>
+        <input 
+          id="price"
+          type="number" 
+          formControlName="price"
+          step="0.01"
+          min="0"
+          placeholder="0.00"
+          [class.error]="hasError('price', 'required') || hasError('price', 'min')"
+        />
+        @if (getErrorMessage('price')) {
+          <span class="error-message">{{ getErrorMessage('price') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="stock">Stock *</label>
+        <input 
+          id="stock"
+          type="number" 
+          formControlName="stock"
+          min="0"
+          placeholder="0"
+          [class.error]="hasError('stock', 'required') || hasError('stock', 'min')"
+        />
+        @if (getErrorMessage('stock')) {
+          <span class="error-message">{{ getErrorMessage('stock') }}</span>
+        }
+      </div>
+    </div>
+
+    <!-- Categoría -->
+    <div class="form-group">
+      <label for="category">Categoría *</label>
+      <select 
+        id="category"
+        formControlName="category"
+        [class.error]="hasError('category', 'required')"
+      >
+        <option value="">Selecciona una categoría</option>
+        @for (cat of categories; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+      @if (getErrorMessage('category')) {
+        <span class="error-message">{{ getErrorMessage('category') }}</span>
+      }
+    </div>
+
+    <!-- Imagen (emoji o URL) -->
+    <div class="form-group">
+      <label for="image">Imagen (emoji o URL) *</label>
+      <input 
+        id="image"
+        type="text" 
+        formControlName="image"
+        placeholder="💻 o https://example.com/image.jpg"
+        [class.error]="hasError('image', 'required')"
+      />
+      @if (getErrorMessage('image')) {
+        <span class="error-message">{{ getErrorMessage('image') }}</span>
+      }
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn-cancel"
+        (click)="onCancel()"
+        [disabled]="loading()"
+      >
+        Cancelar
+      </button>
+      <button 
+        type="submit" 
+        class="btn-submit"
+        [disabled]="form.invalid || loading()"
+      >
+        @if (loading()) {
+          <span class="spinner"></span>
+        }
+        {{ isEditMode() ? 'Actualizar' : 'Crear' }} Producto
+      </button>
+    </div>
+
+  </form>
+</div>

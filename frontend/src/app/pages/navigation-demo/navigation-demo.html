@@ -1,0 +1,228 @@
+<div class="navigation-demo">
+  <header class="demo-header">
+    <h1>🧭 Navegación Programática con Router</h1>
+    <p>Ejemplos interactivos de Router.navigate() y NavigationExtras</p>
+  </header>
+
+  <!-- 1. Navegación Básica -->
+  <section class="demo-section">
+    <h2>1. Navegación Básica</h2>
+    <p>Navegación simple usando router.navigate() con rutas absolutas.</p>
+    
+    <div class="demo-actions">
+      <button (click)="goHome()" class="btn-primary">
+        Ir a Home
+      </button>
+      <button (click)="goToAbout()" class="btn-secondary">
+        Ir a About
+      </button>
+    </div>
+
+    <div class="code-example">
+      <pre><code>this.router.navigate(['/home']);</code></pre>
+    </div>
+  </section>
+
+  <!-- 2. Query Params -->
+  <section class="demo-section">
+    <h2>2. Query Parameters</h2>
+    <p>Navegación con parámetros de consulta (queryParams) para filtrado.</p>
+    
+    <div class="demo-controls">
+      <div class="control-group">
+        <label>Categoría:</label>
+        <select [(ngModel)]="selectedCategory">
+          <option value="libros">Libros</option>
+          <option value="electronicos">Electrónicos</option>
+          <option value="ropa">Ropa</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label>Página:</label>
+        <input 
+          type="number" 
+          [(ngModel)]="selectedPage" 
+          min="1"
+          max="10"
+        >
+      </div>
+    </div>
+
+    <div class="demo-actions">
+      <button 
+        (click)="filterProducts(selectedCategory(), selectedPage())" 
+        class="btn-primary"
+      >
+        Filtrar Productos
+      </button>
+    </div>
+
+    <div class="code-example">
+      <pre><code>this.router.navigate(['/productos'], &#123;
+  queryParams: &#123; 
+    categoria: 'libros', 
+    page: 1 
+  &#125;
+&#125;);
+// URL: /productos?categoria=libros&page=1</code></pre>
+    </div>
+  </section>
+
+  <!-- 3. Fragment (Anclas) -->
+  <section class="demo-section">
+    <h2>3. Fragments (Anclas)</h2>
+    <p>Navegación con fragment para scroll a secciones específicas.</p>
+    
+    <div class="demo-actions">
+      <button (click)="goToProductsWithFragment()" class="btn-primary">
+        Ir a Comentarios
+      </button>
+    </div>
+
+    <div class="code-example">
+      <pre><code>this.router.navigate(['/productos/123'], &#123;
+  fragment: 'comentarios'
+&#125;);
+// URL: /productos/123#comentarios</code></pre>
+    </div>
+  </section>
+
+  <!-- 4. State (Datos en Memoria) -->
+  <section class="demo-section">
+    <h2>4. State (Datos en Memoria)</h2>
+    <p>Pasar datos sin exponerlos en la URL usando state.</p>
+    
+    <div class="demo-actions">
+      <button (click)="goToCheckoutWithState()" class="btn-primary">
+        Ir a Checkout con Orden
+      </button>
+    </div>
+
+    <div class="code-example">
+      <pre><code>const order = &#123; id: 123, total: 99.99 &#125;;
+
+this.router.navigate(['/checkout'], &#123;
+  state: &#123; order: order &#125;
+&#125;);
+
+// En el componente destino:
+const state = this.router.getCurrentNavigation()?.extras.state;
+const order = state?.['order'];</code></pre>
+    </div>
+  </section>
+
+  <!-- 5. NavigationExtras Avanzadas -->
+  <section class="demo-section">
+    <h2>5. NavigationExtras Avanzadas</h2>
+    <p>Opciones adicionales para controlar el comportamiento de navegación.</p>
+    
+    <div class="demo-actions">
+      <button (click)="redirectToLogin()" class="btn-warning">
+        Redirect (replaceUrl)
+      </button>
+      <button (click)="addQueryParam()" class="btn-secondary">
+        Merge Query Params
+      </button>
+    </div>
+
+    <div class="code-example">
+      <pre><code>// replaceUrl: reemplaza historial (no se puede volver atrás)
+this.router.navigate(['/login'], &#123; replaceUrl: true &#125;);
+
+// queryParamsHandling: mantener query params existentes
+this.router.navigate(['/productos'], &#123;
+  queryParams: &#123; destacados: true &#125;,
+  queryParamsHandling: 'merge' // 'preserve' | 'merge'
+&#125;);</code></pre>
+    </div>
+  </section>
+
+  <!-- 6. Utilidades del Router -->
+  <section class="demo-section">
+    <h2>6. Utilidades del Router</h2>
+    <p>Métodos útiles para obtener información de la navegación.</p>
+    
+    <div class="demo-actions">
+      <button (click)="checkCurrentRoute()" class="btn-info">
+        Ver Ruta Actual
+      </button>
+      <button (click)="goToExternalSite()" class="btn-link">
+        Sitio Externo ↗
+      </button>
+    </div>
+
+    <div class="code-example">
+      <pre><code>// Obtener URL actual
+const currentUrl = this.router.url;
+
+// Verificar si una ruta está activa
+this.router.isActive('/home', true);
+
+// Navegar a URL externa
+window.open('https://angular.dev', '_blank');</code></pre>
+    </div>
+  </section>
+
+  <!-- Tabla de NavigationExtras -->
+  <section class="demo-section">
+    <h2>📋 NavigationExtras: Referencia Completa</h2>
+    
+    <div class="extras-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Propiedad</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>queryParams</code></td>
+            <td>Params</td>
+            <td>Parámetros de consulta en la URL</td>
+            <td><code>&#123; categoria: 'libros' &#125;</code></td>
+          </tr>
+          <tr>
+            <td><code>fragment</code></td>
+            <td>string</td>
+            <td>Ancla/hash en la URL (#section)</td>
+            <td><code>'comentarios'</code></td>
+          </tr>
+          <tr>
+            <td><code>state</code></td>
+            <td>object</td>
+            <td>Datos en memoria (no en URL)</td>
+            <td><code>&#123; order: &#123;...&#125; &#125;</code></td>
+          </tr>
+          <tr>
+            <td><code>replaceUrl</code></td>
+            <td>boolean</td>
+            <td>Reemplaza entrada en historial</td>
+            <td><code>true</code></td>
+          </tr>
+          <tr>
+            <td><code>skipLocationChange</code></td>
+            <td>boolean</td>
+            <td>No actualiza la URL del navegador</td>
+            <td><code>true</code></td>
+          </tr>
+          <tr>
+            <td><code>queryParamsHandling</code></td>
+            <td>string</td>
+            <td>Manejo de query params existentes</td>
+            <td><code>'merge' | 'preserve'</code></td>
+          </tr>
+          <tr>
+            <td><code>relativeTo</code></td>
+            <td>ActivatedRoute</td>
+            <td>Navegación relativa a ruta actual</td>
+            <td><code>this.activatedRoute</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

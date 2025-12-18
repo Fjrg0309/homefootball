@@ -1,0 +1,108 @@
+@if (product(); as prod) {
+  <div class="product-detail-container">
+    <!-- Product Header -->
+    <div class="product-header">
+      <button class="back-button" (click)="goBack()">
+        <span class="back-icon">←</span> Volver al catálogo
+      </button>
+      <div class="product-category-badge">&#123;&#123; prod.category &#125;&#125;</div>
+    </div>
+
+    <!-- Product Main Content -->
+    <div class="product-content">
+      <!-- Product Image -->
+      <div class="product-image-section">
+        <div class="product-image">
+          <span class="emoji-image">&#123;&#123; prod.image &#125;&#125;</span>
+        </div>
+        <div class="image-badge">
+          <span class="badge-icon">✨</span>
+          <span>Datos precargados con Resolver</span>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info-section">
+        <h1 class="product-name">&#123;&#123; prod.name &#125;&#125;</h1>
+        
+        <div class="product-meta">
+          <div class="meta-item">
+            <span class="meta-label">Precio:</span>
+            <span class="meta-value price">€&#123;&#123; prod.price.toFixed(2) &#125;&#125;</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Stock:</span>
+            <span class="meta-value" [class.low-stock]="prod.stock < 10">
+              &#123;&#123; prod.stock &#125;&#125; unidades
+            </span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Categoría:</span>
+            <span class="meta-value">&#123;&#123; prod.category &#125;&#125;</span>
+          </div>
+        </div>
+
+        <div class="product-description">
+          <h2>Descripción</h2>
+          <p>&#123;&#123; prod.description &#125;&#125;</p>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="quantity-section">
+          <label class="quantity-label">Cantidad:</label>
+          <div class="quantity-controls">
+            <button 
+              class="quantity-btn" 
+              (click)="decreaseQuantity()"
+              [disabled]="quantity() === 1">
+              −
+            </button>
+            <span class="quantity-value">&#123;&#123; quantity() &#125;&#125;</span>
+            <button 
+              class="quantity-btn" 
+              (click)="increaseQuantity()"
+              [disabled]="quantity() >= prod.stock">
+              +
+            </button>
+          </div>
+          <span class="quantity-info">Máximo: &#123;&#123; prod.stock &#125;&#125;</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn-primary" (click)="addToCart()">
+            <span class="btn-icon">🛒</span>
+            Añadir al carrito (€&#123;&#123; (prod.price * quantity()).toFixed(2) &#125;&#125;)
+          </button>
+          <button class="btn-secondary" (click)="goBack()">
+            <span class="btn-icon">📋</span>
+            Ver más productos
+          </button>
+        </div>
+
+        <!-- Resolver Info -->
+        <div class="resolver-info">
+          <div class="info-header">
+            <span class="info-icon">ℹ️</span>
+            <strong>Sobre los Resolvers</strong>
+          </div>
+          <p>
+            Esta página utiliza un <strong>Resolver</strong> para precargar los datos del producto 
+            antes de activar la ruta. Esto significa que:
+          </p>
+          <ul>
+            <li>Los datos están disponibles <strong>inmediatamente</strong> al cargar la página</li>
+            <li>No hay estados de carga vacíos o "skeletons"</li>
+            <li>Si el producto no existe, se redirige automáticamente al catálogo</li>
+            <li>Mejora la experiencia de usuario y el rendimiento percibido</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando producto...</p>
+  </div>
+}

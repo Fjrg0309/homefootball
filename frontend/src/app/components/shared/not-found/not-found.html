@@ -1,0 +1,27 @@
+<div class="not-found-container">
+  <div class="not-found-content">
+    <div class="error-code">404</div>
+    <h1>Página No Encontrada</h1>
+    <p class="error-message">
+      Lo sentimos, la página que estás buscando no existe o ha sido movida.
+    </p>
+    
+    <div class="suggestions">
+      <h2>¿Qué puedes hacer?</h2>
+      <ul>
+        <li>Verifica que la URL sea correcta</li>
+        <li>Regresa a la página de inicio</li>
+        <li>Usa el menú de navegación para encontrar lo que buscas</li>
+      </ul>
+    </div>
+
+    <div class="actions">
+      <a routerLink="/" class="btn-primary">
+        🏠 Volver al Inicio
+      </a>
+      <button (click)="goBack()" class="btn-secondary">
+        ← Página Anterior
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,274 @@
+.profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+.profile-card {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 3rem;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.95rem;
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    &.admin {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+    }
+  }
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+  }
+
+  input,
+  textarea {
+    padding: 0.875rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s;
+
+    &:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    &.error {
+      border-color: #f44336;
+    }
+
+    &::placeholder {
+      color: #999;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  small {
+    color: #666;
+    font-size: 0.85rem;
+    text-align: right;
+  }
+
+  .error-message {
+    color: #f44336;
+    font-size: 0.85rem;
+  }
+
+  &.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      user-select: none;
+
+      input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      span {
+        color: #666;
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+.guard-info {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+
+  h3 {
+    color: #856404;
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+  }
+
+  p {
+    color: #856404;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+
+  .status {
+    font-weight: 600;
+    margin-top: 1rem;
+
+    strong {
+      &.dirty {
+        color: #ff9800;
+      }
+
+      &.pristine {
+        color: #4caf50;
+      }
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-save {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+  }
+
+  .btn-cancel {
+    background: #f5f5f5;
+    color: #666;
+
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
+}
+
+.logout-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+
+  .btn-logout {
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .profile-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .user-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}

@@ -11,7 +11,7 @@ import lombok.*;
 public class Entrenador extends Miembro {
 
     @Column(nullable = false)
-    private int añosExperiencia;
+    private int aniosExperiencia;
 
     @Column(nullable = false)
     private int titulosGanados;

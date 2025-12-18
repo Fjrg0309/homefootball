@@ -68,8 +68,8 @@
 
 // Variantes
 .alert--success {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: rgba(0, 217, 95, 0.15);
+  color: var(--color-success);
   border-left-color: var(--color-success);
   
   .alert__icon {
@@ -78,8 +78,8 @@
 }
 
 .alert--error {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: rgba(211, 47, 47, 0.15);
+  color: var(--color-error);
   border-left-color: var(--color-error);
   
   .alert__icon {
@@ -88,8 +88,8 @@
 }
 
 .alert--warning {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: rgba(255, 111, 0, 0.15);
+  color: var(--color-warning);
   border-left-color: var(--color-warning);
   
   .alert__icon {
@@ -98,11 +98,12 @@
 }
 
 .alert--info {
-  background-color: #d1ecf1;
-  color: #0c5460;
+  background-color: rgba(25, 118, 210, 0.15);
+  color: var(--color-info);
   border-left-color: var(--color-info);
   
   .alert__icon {
     color: var(--color-info);
   }
 }
+

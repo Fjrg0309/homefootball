@@ -1,0 +1,106 @@
+<div class="product-list-container">
+  <div class="header">
+    <h1>Productos (con Estados de Carga)</h1>
+    <button 
+      type="button" 
+      class="btn-reload" 
+      (click)="loadProducts()"
+      [disabled]="state().loading"
+    >
+      {{ state().loading ? 'Cargando...' : 'Recargar' }}
+    </button>
+  </div>
+
+  <!-- LOADING STATE: Spinner mientras se cargan datos -->
+  @if (state().loading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+  }
+
+  <!-- ERROR STATE: Mensaje de error con botón de reintento -->
+  @if (state().error && !state().loading) {
+    <div class="error-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <h3>¡Vaya! Algo salió mal</h3>
+      <p>{{ state().error }}</p>
+      <div class="error-actions">
+        <button type="button" class="btn-retry" (click)="loadProducts()">
+          Reintentar
+        </button>
+        <button type="button" class="btn-dismiss" (click)="clearError()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- EMPTY STATE: No hay productos (después de cargar) -->
+  @if (!state().loading && !state().error && state().data?.length === 0) {
+    <div class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <h3>No hay productos disponibles</h3>
+      <p>Aún no se han agregado productos al catálogo.</p>
+      <a routerLink="/productos/nuevo" class="btn-add-first">
+        Agregar primer producto
+      </a>
+    </div>
+  }
+
+  <!-- SUCCESS STATE: Lista de productos -->
+  @if (!state().loading && !state().error && state().data && (state().data?.length ?? 0) > 0) {
+    <div class="products-grid">
+      @for (product of state().data; track product.id) {
+        <div class="product-card">
+          <div class="product-image">
+            <img [src]="product.image" [alt]="product.name" />
+          </div>
+          
+          <div class="product-info">
+            <h3>{{ product.name }}</h3>
+            <p class="description">{{ product.description }}</p>
+            <p class="category">{{ product.category }}</p>
+            
+            <div class="product-footer">
+              <span class="price">${{ product.price }}</span>
+              <span class="stock" [class.out-of-stock]="product.stock === 0">
+                {{ product.stock > 0 ? 'Stock: ' + product.stock : 'Agotado' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="product-actions">
+            <a [routerLink]="['/productos', product.id]" class="btn-view">
+              Ver Detalle
+            </a>
+            <button 
+              type="button"
+              class="btn-delete"
+              (click)="deleteProduct(product.id)"
+              [disabled]="isDeleting(product.id)"
+            >
+              {{ isDeleting(product.id) ? 'Eliminando...' : 'Eliminar' }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Indicador de error persistente (no bloquea la vista) -->
+  @if (state().error && state().data && (state().data?.length ?? 0) > 0) {
+    <div class="inline-error">
+      ⚠️ {{ state().error }}
+      <button type="button" (click)="clearError()">×</button>
+    </div>
+  }
+</div>

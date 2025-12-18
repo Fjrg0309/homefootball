@@ -1,0 +1,71 @@
+<div class="communication-container">
+  <header class="demo-header">
+    <a routerLink="/" class="back-button">← Volver</a>
+    <h1>🔄 Servicio de Comunicación entre Componentes</h1>
+    <p class="subtitle">Patrón Observable/Subject con RxJS BehaviorSubject</p>
+  </header>
+
+  <section class="explanation">
+    <h2>¿Cómo funciona?</h2>
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <strong>1. Emisor</strong> → <code>service.sendNotification(msg)</code>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <strong>2. BehaviorSubject</strong> → <code>next(msg)</code>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <strong>3. Observable</strong> → <code>notifications$</code>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <strong>4. Receptor</strong> → <code>subscribe(msg => ...)</code>
+      </div>
+    </div>
+  </section>
+
+  <div class="siblings-container">
+    <app-sender />
+    <app-receiver />
+  </div>
+
+  <section class="theory">
+    <h2>📚 Teoría</h2>
+    
+    <div class="theory-grid">
+      <div class="theory-card">
+        <h3>Subject</h3>
+        <p><strong>Uso:</strong> Eventos únicos (clicks, logs)</p>
+        <p><strong>Ventaja:</strong> No retiene valor</p>
+        <p><strong>Ejemplo:</strong> Notificaciones one-time</p>
+      </div>
+
+      <div class="theory-card highlight">
+        <h3>BehaviorSubject</h3>
+        <p><strong>Uso:</strong> Estado compartido (filtros, user)</p>
+        <p><strong>Ventaja:</strong> Valor inicial + histórico</p>
+        <p><strong>Ejemplo:</strong> Tema actual, usuario logueado</p>
+      </div>
+
+      <div class="theory-card">
+        <h3>ReplaySubject</h3>
+        <p><strong>Uso:</strong> Historial limitado de emisiones</p>
+        <p><strong>Ventaja:</strong> Reproducir últimos N eventos</p>
+        <p><strong>Ejemplo:</strong> Logs, notificaciones recientes</p>
+      </div>
+    </div>
+
+    <div class="best-practices">
+      <h3>✅ Mejores Prácticas</h3>
+      <ul>
+        <li>Usar <code>providedIn: 'root'</code> para servicios singleton</li>
+        <li>Siempre limpiar suscripciones en <code>ngOnDestroy()</code></li>
+        <li>Usar BehaviorSubject para estado que necesita valor inicial</li>
+        <li>Exponer solo Observable público, mantener Subject privado</li>
+        <li>Considerar AsyncPipe en templates para auto-unsubscribe</li>
+      </ul>
+    </div>
+  </section>
+</div>

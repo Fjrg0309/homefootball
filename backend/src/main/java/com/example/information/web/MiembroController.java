@@ -48,9 +48,9 @@ public class MiembroController {
 
     @GetMapping("/rango-fecha")
     public ResponseEntity<List<MiembroDTO>> getMiembrosByRangoFecha(
-            @RequestParam int añoInicio,
-            @RequestParam int añoFin) {
-        List<MiembroDTO> miembros = miembroService.findByRangoFechaNacimiento(añoInicio, añoFin);
+            @RequestParam int anioInicio,
+            @RequestParam int anioFin) {
+        List<MiembroDTO> miembros = miembroService.findByRangoFechaNacimiento(anioInicio, anioFin);
         return ResponseEntity.ok(miembros);
     }
 

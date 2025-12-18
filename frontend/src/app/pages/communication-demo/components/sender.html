@@ -1,0 +1,14 @@
+<div class="sender-card">
+  <h3>🔵 Componente Emisor</h3>
+  <p>Envía mensajes al hermano receptor</p>
+  
+  <div class="controls">
+    <button (click)="onAction()">Enviar Mensaje Automático</button>
+    <input #customInput type="text" placeholder="Mensaje personalizado" (keyup.enter)="sendCustomMessage(customInput.value); customInput.value = ''">
+    <button (click)="sendCustomMessage(customInput.value); customInput.value = ''">Enviar Personalizado</button>
+  </div>
+  
+  <div class="info">
+    <p>Mensajes enviados: {{ messageCount }}</p>
+  </div>
+</div>

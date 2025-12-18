@@ -1,0 +1,16 @@
+// App root styles
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--color-primary); // Fondo principal de la app
+}
+
+// Asegurar que el router-outlet no genere contenedores vacíos visibles
+router-outlet {
+  display: none; // El router-outlet es un marcador, no debería ocupar espacio
+}
+
+// Ocultar cualquier elemento vacío del router durante la hidratación
+router-outlet + * {
+  display: block;
+}

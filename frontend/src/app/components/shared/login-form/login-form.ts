@@ -12,6 +12,7 @@ import { FormInput } from '../form-input/form-input';
 })
 export class LoginForm {
   @Output() loginSuccess = new EventEmitter<{username: string, password: string}>();
+  @Output() goToRegister = new EventEmitter<void>();
 
   formData = {
     username: '',
@@ -37,5 +38,9 @@ export class LoginForm {
       };
       this.submitted = false;
     }
+  }
+
+  onGoToRegister(): void {
+    this.goToRegister.emit();
   }
 }

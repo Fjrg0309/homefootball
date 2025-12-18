@@ -1,9 +1,19 @@
 <article class="card" [class.card--horizontal]="horizontal">
-  <img 
-    *ngIf="imageSrc" 
-    [src]="imageSrc" 
-    [alt]="imageAlt || ''"
-    class="card__image">
+  <!-- Picture con soporte WebP, srcset y lazy loading -->
+  <picture *ngIf="imageSrc" class="card__picture">
+    <source 
+      *ngIf="imageWebp" 
+      [srcset]="imageWebp" 
+      type="image/webp">
+    <img 
+      [src]="imageSrc"
+      [srcset]="imageSrcset"
+      [sizes]="imageSizes"
+      [alt]="imageAlt || ''"
+      [loading]="lazyLoad ? 'lazy' : 'eager'"
+      decoding="async"
+      class="card__image">
+  </picture>
   
   <section class="card__content">
     <h3 *ngIf="title" class="card__title">{{ title }}</h3>

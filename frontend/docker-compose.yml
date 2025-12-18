@@ -1,0 +1,45 @@
+services:
+  # Servicio de desarrollo (hot reload)
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: homefootball-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./src:/app/src
+      - ./angular.json:/app/angular.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./package.json:/app/package.json
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run start
+    networks:
+      - homefootball-network
+
+  # Servicio de producción (Nginx)
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: homefootball-prod
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    networks:
+      - homefootball-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  node_modules:
+
+networks:
+  homefootball-network:
+    driver: bridge

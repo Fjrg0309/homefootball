@@ -1,0 +1,254 @@
+<div class="form-container">
+  <header class="form-header">
+    <a routerLink="/" class="back-button">← Volver</a>
+    <h1>🧾 Formulario de Factura</h1>
+    <p class="subtitle">FormArray - Gestión Dinámica de Colecciones</p>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="invoice-form">
+    
+    <!-- Cliente -->
+    <section class="form-section">
+      <h2>👤 Cliente</h2>
+      <div class="form-field">
+        <label for="customer">Nombre del Cliente *</label>
+        <input 
+          id="customer"
+          formControlName="customer" 
+          placeholder="Empresa S.A."
+          [class.invalid]="form.get('customer')?.invalid && form.get('customer')?.touched">
+        
+        @if (form.get('customer')?.invalid && form.get('customer')?.touched) {
+          <div class="error-message">
+            Cliente es requerido
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Teléfonos -->
+    <section class="form-section">
+      <h2>📞 Teléfonos</h2>
+      <div formArrayName="phones" class="array-container">
+        @for (phoneGroup of phones.controls; track $index; let i = $index) {
+          <div [formGroupName]="i" class="array-item">
+            <div class="array-content">
+              <input 
+                formControlName="phone" 
+                placeholder="612345678"
+                maxlength="9"
+                [class.invalid]="isPhoneInvalid(i)">
+              
+              <button 
+                type="button" 
+                class="btn-remove"
+                (click)="removePhone(i)"
+                [disabled]="phones.length === 1">
+                <span class="btn-icon">🗑</span>
+                Eliminar
+              </button>
+            </div>
+            
+            @if (isPhoneInvalid(i)) {
+              <div class="error-message">
+                Teléfono inválido (formato: 6XXXXXXXX o 7XXXXXXXX)
+              </div>
+            }
+          </div>
+        }
+        
+        <button type="button" class="btn-add" (click)="addPhone()">
+          <span class="btn-icon">➕</span>
+          Añadir Teléfono
+        </button>
+      </div>
+    </section>
+
+    <!-- Direcciones -->
+    <section class="form-section">
+      <h2>📍 Direcciones</h2>
+      <div formArrayName="addresses" class="array-container">
+        @for (addressGroup of addresses.controls; track $index; let i = $index) {
+          <div [formGroupName]="i" class="array-item address-item">
+            <div class="address-grid">
+              <div class="form-field">
+                <label>Calle *</label>
+                <input 
+                  formControlName="street" 
+                  placeholder="Calle Mayor 123">
+              </div>
+              
+              <div class="form-field">
+                <label>Ciudad *</label>
+                <input 
+                  formControlName="city" 
+                  placeholder="Madrid">
+              </div>
+              
+              <div class="form-field">
+                <label>Código Postal *</label>
+                <input 
+                  formControlName="zip" 
+                  placeholder="28001"
+                  maxlength="5">
+              </div>
+            </div>
+            
+            <button 
+              type="button" 
+              class="btn-remove"
+              (click)="removeAddress(i)"
+              [disabled]="addresses.length === 1">
+              <span class="btn-icon">🗑</span>
+              Eliminar Dirección
+            </button>
+            
+            @if (isAddressInvalid(i)) {
+              <div class="error-message">
+                Todos los campos son obligatorios. CP debe tener 5 dígitos.
+              </div>
+            }
+          </div>
+        }
+        
+        <button type="button" class="btn-add" (click)="addAddress()">
+          <span class="btn-icon">➕</span>
+          Añadir Dirección
+        </button>
+      </div>
+    </section>
+
+    <!-- Items de Factura -->
+    <section class="form-section">
+      <h2>🛒 Items de Factura</h2>
+      <div formArrayName="items" class="array-container">
+        @for (itemGroup of items.controls; track $index; let i = $index) {
+          <div [formGroupName]="i" class="array-item item-row">
+            <div class="item-grid">
+              <div class="form-field">
+                <label>Descripción *</label>
+                <input 
+                  formControlName="description" 
+                  placeholder="Producto o servicio">
+              </div>
+              
+              <div class="form-field">
+                <label>Cantidad *</label>
+                <input 
+                  formControlName="quantity" 
+                  type="number" 
+                  min="1"
+                  placeholder="1">
+              </div>
+              
+              <div class="form-field">
+                <label>Precio (€) *</label>
+                <input 
+                  formControlName="price" 
+                  type="number" 
+                  min="0" 
+                  step="0.01"
+                  placeholder="0.00">
+              </div>
+              
+              <div class="item-total">
+                <label>Subtotal</label>
+                <div class="total-value">{{ getItemTotal(i) | currency:'EUR':'symbol' }}</div>
+              </div>
+            </div>
+            
+            <button 
+              type="button" 
+              class="btn-remove"
+              (click)="removeItem(i)"
+              [disabled]="items.length === 1">
+              <span class="btn-icon">🗑</span>
+              Eliminar Item
+            </button>
+            
+            @if (isItemInvalid(i)) {
+              <div class="error-message">
+                Descripción requerida. Cantidad mínima: 1. Precio debe ser ≥ 0.
+              </div>
+            }
+          </div>
+        }
+        
+        <button type="button" class="btn-add" (click)="addItem()">
+          <span class="btn-icon">➕</span>
+          Añadir Item
+        </button>
+      </div>
+    </section>
+
+    <!-- Total -->
+    <section class="total-section">
+      <div class="total-display">
+        <span class="total-label">TOTAL:</span>
+        <span class="total-amount">{{ getTotal() | currency:'EUR':'symbol' }}</span>
+      </div>
+    </section>
+
+    <!-- Botones -->
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="btn-primary"
+        [disabled]="form.invalid || form.pending">
+        <span class="btn-icon">
+          @if (form.pending) {
+            ⏳
+          } @else {
+            💾
+          }
+        </span>
+        {{ form.pending ? 'Validando...' : 'Guardar Factura' }}
+      </button>
+      <button 
+        type="button" 
+        class="btn-secondary"
+        (click)="onReset()">
+        <span class="btn-icon">↻</span>
+        Limpiar
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Teoría -->
+  <section class="theory-section">
+    <h2>📚 FormArray en Angular</h2>
+    
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3>FormArray</h3>
+        <p>Colección dinámica de FormGroup o FormControl. Permite añadir/eliminar elementos en tiempo de ejecución.</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>push() / removeAt()</h3>
+        <p>Métodos para agregar nuevos elementos al array o eliminar por índice.</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>at(index)</h3>
+        <p>Accede a un FormGroup específico dentro del array por su posición.</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>Validación Individual</h3>
+        <p>Cada elemento del array tiene sus propios validadores independientes.</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>&#64;for con track</h3>
+        <p>Itera sobre controls con track $index para rendimiento óptimo.</p>
+      </div>
+      
+      <div class="concept-card">
+        <h3>formArrayName</h3>
+        <p>Directiva para bindear el template con el FormArray del componente.</p>
+      </div>
+    </div>
+  </section>
+</div>

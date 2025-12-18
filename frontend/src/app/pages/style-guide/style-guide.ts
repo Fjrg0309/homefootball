@@ -72,6 +72,5 @@ export class StyleGuide {
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    console.log('Página actual:', page);
   }
 }

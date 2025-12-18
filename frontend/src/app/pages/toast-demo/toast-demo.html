@@ -1,0 +1,99 @@
+<div class="toast-demo-container">
+  <header class="demo-header">
+    <a routerLink="/" class="back-button">← Volver</a>
+    <h1>🔔 Sistema de Notificaciones Toast</h1>
+    <p class="subtitle">BehaviorSubject + Auto-dismiss + Tipos diferenciados</p>
+  </header>
+
+  <section class="demo-section">
+    <h2>Tipos de Notificaciones</h2>
+    <p>Cada tipo tiene una duración diferente por defecto</p>
+    <div class="button-grid">
+      <button class="btn-success" (click)="showSuccess()">
+        <span class="btn-icon">✓</span>
+        Success Toast (4s)
+      </button>
+      <button class="btn-error" (click)="showError()">
+        <span class="btn-icon">✕</span>
+        Error Toast (8s)
+      </button>
+      <button class="btn-info" (click)="showInfo()">
+        <span class="btn-icon">ℹ</span>
+        Info Toast (3s)
+      </button>
+      <button class="btn-warning" (click)="showWarning()">
+        <span class="btn-icon">⚠</span>
+        Warning Toast (6s)
+      </button>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Configuraciones Avanzadas</h2>
+    <div class="button-grid">
+      <button class="btn-custom" (click)="showCustomDuration()">
+        <span class="btn-icon">⏱</span>
+        Duración Corta (2s)
+      </button>
+      <button class="btn-custom" (click)="showPersistent()">
+        <span class="btn-icon">📌</span>
+        Sin Auto-dismiss
+      </button>
+      <button class="btn-custom" (click)="showLongMessage()">
+        <span class="btn-icon">📝</span>
+        Mensaje Largo
+      </button>
+    </div>
+  </section>
+
+  <section class="theory-section">
+    <h2>📚 Características</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>🔄 Servicio Centralizado</h3>
+        <p>BehaviorSubject para gestión reactiva del estado de notificaciones</p>
+      </div>
+      <div class="feature-card">
+        <h3>⏱ Auto-dismiss Configurable</h3>
+        <p>Duración diferente por tipo: Success 4s, Error 8s, Info 3s, Warning 6s</p>
+      </div>
+      <div class="feature-card">
+        <h3>🎨 Animaciones</h3>
+        <p>Fade in/out suaves con Angular animations</p>
+      </div>
+      <div class="feature-card">
+        <h3>🖱 Cierre Manual</h3>
+        <p>Click en el toast o botón close para cerrar inmediatamente</p>
+      </div>
+      <div class="feature-card">
+        <h3>🧹 Cleanup Automático</h3>
+        <p>Limpieza de timeouts con clearTimeout() en OnDestroy</p>
+      </div>
+      <div class="feature-card">
+        <h3>📱 Responsive</h3>
+        <p>Adaptación automática a dispositivos móviles</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="code-section">
+    <h2>💻 Uso en Código</h2>
+    <div class="code-examples">
+      <div class="code-example">
+        <h3>Inyección del Servicio</h3>
+        <pre><code>private toastService = inject(ToastService);</code></pre>
+      </div>
+      <div class="code-example">
+        <h3>Mostrar Notificaciones</h3>
+        <pre><code>// Con duración por defecto
+this.toastService.success('¡Éxito!');
+
+// Con duración personalizada
+this.toastService.error('Error', 5000);
+
+// Sin auto-dismiss
+this.toastService.warning('Persistente', 0);</code></pre>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,163 @@
+<div class="upload-container">
+  <h1>📤 Demo de Subida de Archivos</h1>
+  <p class="subtitle">FormData, Progress Events y Headers Personalizados</p>
+
+  <!-- Selector de archivo -->
+  <div class="upload-section">
+    <h2>1. Seleccionar Archivo</h2>
+    
+    <div class="file-input-wrapper">
+      <input 
+        type="file" 
+        id="fileInput"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        [disabled]="uploading()"
+      />
+      <label for="fileInput" class="file-label">
+        <span class="icon">📁</span>
+        <span>{{ selectedFile() ? selectedFile()!.name : 'Seleccionar imagen...' }}</span>
+      </label>
+    </div>
+
+    @if (selectedFile()) {
+      <div class="file-info">
+        <p><strong>Nombre:</strong> {{ selectedFile()!.name }}</p>
+        <p><strong>Tamaño:</strong> {{ formatFileSize(selectedFile()!.size) }}</p>
+        <p><strong>Tipo:</strong> {{ selectedFile()!.type }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- Preview de imagen -->
+  @if (imagePreview()) {
+    <div class="preview-section">
+      <h2>2. Preview</h2>
+      <div class="image-preview">
+        <img [src]="imagePreview()!" alt="Preview" />
+      </div>
+    </div>
+  }
+
+  <!-- Botones de acción -->
+  @if (selectedFile() && !uploadedUrl()) {
+    <div class="actions-section">
+      <h2>3. Subir Archivo</h2>
+      
+      <div class="button-group">
+        <button 
+          class="btn-upload"
+          (click)="uploadFile()"
+          [disabled]="uploading()"
+        >
+          @if (uploading()) {
+            <span class="spinner"></span>
+          }
+          📤 Con Progreso
+        </button>
+
+        <button 
+          class="btn-upload-simple"
+          (click)="uploadProductImage()"
+          [disabled]="uploading()"
+        >
+          🖼️ Como Imagen de Producto
+        </button>
+
+        <button 
+          class="btn-clear"
+          (click)="clear()"
+          [disabled]="uploading()"
+        >
+          🗑️ Limpiar
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Barra de progreso -->
+  @if (uploading() && uploadProgress() > 0) {
+    <div class="progress-section">
+      <h2>Subiendo...</h2>
+      <div class="progress-bar">
+        <div 
+          class="progress-fill"
+          [style.width.%]="uploadProgress()"
+        ></div>
+      </div>
+      <p class="progress-text">{{ uploadProgress() }}%</p>
+    </div>
+  }
+
+  <!-- URL subida -->
+  @if (uploadedUrl()) {
+    <div class="success-section">
+      <h2>✅ Archivo Subido</h2>
+      <div class="url-box">
+        <p><strong>URL:</strong></p>
+        <code>{{ uploadedUrl() }}</code>
+      </div>
+      <button class="btn-new" (click)="clear()">
+        🔄 Subir Otro Archivo
+      </button>
+    </div>
+  }
+
+  <!-- Demo de descarga con headers personalizados -->
+  <div class="download-section">
+    <h2>📥 Descargar Reportes (Headers Personalizados)</h2>
+    <p class="info">
+      Usa HttpHeaders para enviar metadata:<br>
+      <code>X-Report-Format</code>, <code>X-Client-Version</code>, <code>X-Export-Timestamp</code>
+    </p>
+    
+    <div class="button-group">
+      <button class="btn-download" (click)="downloadPDF()">
+        📄 Descargar PDF
+      </button>
+      <button class="btn-download" (click)="uploadService.downloadReport('csv').subscribe()">
+        📊 Descargar CSV
+      </button>
+      <button class="btn-download" (click)="uploadService.downloadReport('excel').subscribe()">
+        📈 Descargar Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Información técnica -->
+  <div class="info-section">
+    <h2>ℹ️ Información Técnica</h2>
+    
+    <div class="info-card">
+      <h3>FormData</h3>
+      <p>
+        Se usa <code>FormData</code> para enviar archivos con <code>multipart/form-data</code>.
+        No establecer <code>Content-Type</code> manualmente (el navegador añade el boundary).
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3>Progress Events</h3>
+      <p>
+        Usar <code>reportProgress: true</code> y <code>observe: 'events'</code> para recibir
+        eventos de tipo <code>HttpEventType.UploadProgress</code> con <code>loaded</code> y <code>total</code>.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3>Blob Response</h3>
+      <p>
+        Para descargar archivos binarios (PDF, imágenes), usar <code>responseType: 'blob'</code>
+        y crear URL temporal con <code>URL.createObjectURL()</code>.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3>Headers Personalizados</h3>
+      <p>
+        Usar <code>HttpHeaders</code> para añadir metadata:
+        <code>X-Report-Format</code>, <code>X-Client-Version</code>, etc.
+      </p>
+    </div>
+  </div>
+</div>

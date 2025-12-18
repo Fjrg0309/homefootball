@@ -19,8 +19,8 @@ public interface EntrenadorRepository extends JpaRepository<Entrenador, Long> {
     @Query("SELECT e FROM Entrenador e WHERE LOWER(e.nombre) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Entrenador> searchByNombre(@Param("keyword") String keyword);
 
-    @Query("SELECT e FROM Entrenador e WHERE e.añosExperiencia >= :minAños")
-    List<Entrenador> findByMinExperiencia(@Param("minAños") int minAños);
+    @Query("SELECT e FROM Entrenador e WHERE e.aniosExperiencia >= :minAnios")
+    List<Entrenador> findByMinExperiencia(@Param("minAnios") int minAnios);
 
     @Query("SELECT e FROM Entrenador e ORDER BY e.titulosGanados DESC")
     List<Entrenador> findTopByTitulos();

@@ -1,0 +1,180 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>{{ isEditMode() ? 'Editar Producto' : 'Nuevo Producto' }}</h1>
+    <p class="subtitle">
+      {{ isEditMode() 
+         ? 'Modifica los campos que desees actualizar' 
+         : 'Completa todos los campos para crear un nuevo producto' }}
+    </p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
+    
+    <!-- Campo: Nombre -->
+    <div class="form-group">
+      <label for="name">Nombre del Producto *</label>
+      <input 
+        id="name"
+        type="text" 
+        formControlName="name"
+        placeholder="Ej: Laptop HP Pavilion"
+        [class.error]="hasError('name')"
+      />
+      @if (hasError('name')) {
+        <span class="error-message">{{ getErrorMessage('name') }}</span>
+      }
+    </div>
+
+    <!-- Campo: Descripción -->
+    <div class="form-group">
+      <label for="description">Descripción *</label>
+      <textarea 
+        id="description"
+        formControlName="description"
+        placeholder="Describe las características del producto"
+        rows="4"
+        [class.error]="hasError('description')"
+      ></textarea>
+      @if (hasError('description')) {
+        <span class="error-message">{{ getErrorMessage('description') }}</span>
+      }
+    </div>
+
+    <!-- Campos en fila: Precio y Stock -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price">Precio ($) *</label>
+        <input 
+          id="price"
+          type="number" 
+          formControlName="price"
+          placeholder="0.00"
+          step="0.01"
+          [class.error]="hasError('price')"
+        />
+        @if (hasError('price')) {
+          <span class="error-message">{{ getErrorMessage('price') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="stock">Stock *</label>
+        <input 
+          id="stock"
+          type="number" 
+          formControlName="stock"
+          placeholder="0"
+          [class.error]="hasError('stock')"
+        />
+        @if (hasError('stock')) {
+          <span class="error-message">{{ getErrorMessage('stock') }}</span>
+        }
+      </div>
+    </div>
+
+    <!-- Campo: Categoría -->
+    <div class="form-group">
+      <label for="category">Categoría *</label>
+      <select 
+        id="category"
+        formControlName="category"
+        [class.error]="hasError('category')"
+      >
+        <option value="">Selecciona una categoría</option>
+        <option value="electronics">Electrónica</option>
+        <option value="clothing">Ropa</option>
+        <option value="sports">Deportes</option>
+        <option value="books">Libros</option>
+        <option value="home">Hogar</option>
+      </select>
+      @if (hasError('category')) {
+        <span class="error-message">{{ getErrorMessage('category') }}</span>
+      }
+    </div>
+
+    <!-- Campo: Imagen URL -->
+    <div class="form-group">
+      <label for="image">URL de Imagen *</label>
+      <input 
+        id="image"
+        type="url" 
+        formControlName="image"
+        placeholder="https://ejemplo.com/imagen.jpg"
+        [class.error]="hasError('image')"
+      />
+      @if (hasError('image')) {
+        <span class="error-message">{{ getErrorMessage('image') }}</span>
+      }
+      
+      <!-- Preview de imagen -->
+      @if (form.get('image')?.valid && form.get('image')?.value) {
+        <div class="image-preview">
+          <img [src]="form.get('image')?.value" alt="Preview" />
+        </div>
+      }
+    </div>
+
+    <!-- ERROR MESSAGE (inline debajo del formulario) -->
+    @if (saveError()) {
+      <div class="form-error-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ saveError() }}</span>
+      </div>
+    }
+
+    <!-- SUCCESS MESSAGE (inline debajo del formulario) -->
+    @if (saveSuccess()) {
+      <div class="form-success-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span>
+          {{ isEditMode() ? '¡Producto actualizado! Redirigiendo...' : '¡Producto creado! Redirigiendo...' }}
+        </span>
+      </div>
+    }
+
+    <!-- Botones de acción -->
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn-cancel"
+        (click)="cancel()"
+        [disabled]="isSaving()"
+      >
+        Cancelar
+      </button>
+      
+      <button 
+        type="submit" 
+        class="btn-submit"
+        [disabled]="form.invalid || isSaving()"
+        [class.saving]="isSaving()"
+      >
+        @if (isSaving()) {
+          <span class="spinner-small"></span>
+          <span>Guardando...</span>
+        } @else {
+          <span>{{ isEditMode() ? 'Actualizar' : 'Crear Producto' }}</span>
+        }
+      </button>
+    </div>
+
+    <!-- Información de estados (para demo) -->
+    <div class="form-info">
+      <p><strong>Estados actuales:</strong></p>
+      <ul>
+        <li>🔵 isSaving: {{ isSaving() }}</li>
+        <li>✅ saveSuccess: {{ saveSuccess() }}</li>
+        <li>❌ saveError: {{ saveError() || 'null' }}</li>
+        <li>📝 Form valid: {{ form.valid }}</li>
+        <li>🖊️ Form dirty: {{ form.dirty }}</li>
+      </ul>
+    </div>
+  </form>
+</div>

@@ -18,6 +18,12 @@
 @use '00-settings/variables' as *;
 
 // ============================================
+// THEME SYSTEM - Variables CSS para temas
+// Debe importarse antes de cualquier componente
+// ============================================
+@use 'themes';
+
+// ============================================
 // 2. TOOLS - Mixins y funciones
 // Sin output CSS, solo herramientas
 // ============================================

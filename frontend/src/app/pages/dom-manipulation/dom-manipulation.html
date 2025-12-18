@@ -1,0 +1,123 @@
+<div class="dom-manipulation-container">
+  <h1>Tarea 1: Manipulación del DOM en Angular</h1>
+  
+  <!-- Consola de mensajes -->
+  <div class="consola">
+    <strong>📋 Consola:</strong> {{ mensajeConsola }}
+  </div>
+
+  <!-- Sección 1: ViewChild y ElementRef -->
+  <section class="seccion">
+    <h2>1. Acceder a elementos del DOM usando ViewChild y ElementRef</h2>
+    <p class="descripcion">
+      El elemento debajo es accesible mediante <code>@ViewChild</code> y <code>ElementRef</code>.
+      Después de la inicialización del componente, puedes acceder a él en <code>ngAfterViewInit()</code>.
+    </p>
+    <div class="ejemplo-box">
+      <div #miDiv class="elemento-target">Contenido inicial</div>
+    </div>
+    <p class="nota">💡 Abre la consola del navegador (F12) para ver el log del elemento accesido.</p>
+  </section>
+
+  <!-- Sección 2: Modificar propiedades y estilos -->
+  <section class="seccion">
+    <h2>2. Modificar propiedades y estilos dinámicamente</h2>
+    <p class="descripcion">
+      Usa <code>Renderer2</code> para modificar estilos y propiedades de forma segura y compatible.
+    </p>
+    <div class="botones-grupo">
+      <button (click)="cambiarEstilo()" class="btn btn-primary">
+        🎨 Cambiar Estilos
+      </button>
+      <button (click)="cambiarPropiedad()" class="btn btn-info">
+        ✏️ Cambiar Texto
+      </button>
+      <button (click)="agregarClase()" class="btn btn-success">
+        ➕ Agregar Clase
+      </button>
+      <button (click)="quitarClase()" class="btn btn-warning">
+        ➖ Quitar Clase
+      </button>
+      <button (click)="resetearEstilos()" class="btn btn-secondary">
+        🔄 Resetear
+      </button>
+    </div>
+    <div class="info-metodos">
+      <h4>Métodos Renderer2 utilizados:</h4>
+      <ul>
+        <li><code>setStyle(elemento, 'propiedad', 'valor')</code> - Cambia estilos CSS</li>
+        <li><code>setProperty(elemento, 'propiedad', 'valor')</code> - Cambia propiedades del elemento</li>
+        <li><code>addClass(elemento, 'clase')</code> - Agrega una clase CSS</li>
+        <li><code>removeClass(elemento, 'clase')</code> - Remueve una clase CSS</li>
+        <li><code>removeStyle(elemento, 'propiedad')</code> - Remueve un estilo CSS</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Sección 3: Crear y eliminar elementos -->
+  <section class="seccion">
+    <h2>3. Crear y eliminar elementos del DOM programáticamente</h2>
+    <p class="descripcion">
+      Crea y elimina elementos dinámicamente usando <code>Renderer2</code> para mantener compatibilidad y seguridad.
+    </p>
+    
+    <div class="botones-grupo">
+      <button (click)="crearElemento()" class="btn btn-success">
+        ➕ Crear Elemento Simple
+      </button>
+      <button (click)="crearElementoComplejo()" class="btn btn-primary">
+        ✨ Crear Card Compleja
+      </button>
+      <button (click)="eliminarPrimerElemento()" class="btn btn-danger">
+        🗑️ Eliminar Primero
+      </button>
+      <button (click)="eliminarUltimoElemento()" class="btn btn-warning">
+        🗑️ Eliminar Último
+      </button>
+      <button (click)="eliminarTodos()" class="btn btn-dark">
+        🗑️ Eliminar Todos
+      </button>
+    </div>
+
+    <div class="contador">
+      <strong>Elementos creados:</strong> {{ contarElementos() }}
+    </div>
+
+    <!-- Contenedor dinámico -->
+    <div #contenedor class="contenedor-dinamico">
+      <!-- Los elementos se crearán aquí dinámicamente -->
+    </div>
+
+    <div class="info-metodos">
+      <h4>Métodos Renderer2 para DOM dinámico:</h4>
+      <ul>
+        <li><code>createElement('tag')</code> - Crea un nuevo elemento HTML</li>
+        <li><code>appendChild(parent, child)</code> - Inserta un elemento como hijo</li>
+        <li><code>removeChild(parent, child)</code> - Elimina un elemento hijo</li>
+        <li><code>setProperty(elemento, 'propiedad', valor)</code> - Establece propiedades</li>
+        <li><code>setStyle(elemento, 'propiedad', 'valor')</code> - Establece estilos CSS</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Información adicional -->
+  <section class="seccion info-adicional">
+    <h2>📚 Información Importante</h2>
+    <div class="puntos-clave">
+      <h4>Puntos Clave:</h4>
+      <ul>
+        <li><strong>@ViewChild</strong> accede al elemento referenciado en la plantilla mediante variables de template (#nombreVariable).</li>
+        <li><strong>ElementRef</strong> contiene la referencia al elemento nativo del DOM.</li>
+        <li><strong>ngAfterViewInit</strong> es el lifecycle hook adecuado para acceder al DOM después de la inicialización.</li>
+        <li><strong>Renderer2</strong> es la forma recomendada de manipular el DOM en Angular (segura y compatible con SSR).</li>
+        <li>Evita el uso directo de <code>nativeElement</code> para manipulaciones, usa Renderer2 en su lugar.</li>
+      </ul>
+    </div>
+    
+    <div class="advertencia">
+      <strong>⚠️ Advertencia:</strong> Manipular directamente <code>nativeElement</code> puede causar problemas con 
+      Server-Side Rendering (SSR) y vulnerabilidades de seguridad. Siempre usa <code>Renderer2</code> para operaciones 
+      del DOM en Angular.
+    </div>
+  </section>
+</div>

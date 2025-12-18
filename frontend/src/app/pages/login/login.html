@@ -1,0 +1,100 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>🔐 Iniciar Sesión</h1>
+      <p>Demo de Route Guards con AuthService</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+      
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          placeholder="usuario@ejemplo.com"
+          [class.error]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+        />
+        @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
+          <span class="error-message">
+            @if (loginForm.controls.email.errors?.['required']) {
+              El email es requerido
+            }
+            @if (loginForm.controls.email.errors?.['email']) {
+              Email inválido
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="password-wrapper">
+          <input 
+            [type]="showPassword ? 'text' : 'password'"
+            id="password" 
+            formControlName="password"
+            placeholder="Mínimo 6 caracteres"
+            [class.error]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="togglePassword()"
+          >
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
+          <span class="error-message">
+            @if (loginForm.controls.password.errors?.['required']) {
+              La contraseña es requerida
+            }
+            @if (loginForm.controls.password.errors?.['minlength']) {
+              Mínimo 6 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="btn-login"
+        [disabled]="loginForm.invalid"
+      >
+        Iniciar Sesión
+      </button>
+    </form>
+
+    <!-- Quick Login Demos -->
+    <div class="quick-login">
+      <p class="quick-login-title">Acceso rápido (demo):</p>
+      <div class="quick-buttons">
+        <button 
+          type="button" 
+          class="btn-quick user"
+          (click)="quickLogin('user')"
+        >
+          👤 Usuario Normal
+        </button>
+        <button 
+          type="button" 
+          class="btn-quick admin"
+          (click)="quickLogin('admin')"
+        >
+          👨‍💼 Administrador
+        </button>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="login-info">
+      <p>💡 <strong>Demo:</strong> Cualquier email/contraseña funciona</p>
+      <p>🔑 Emails con "admin" obtienen rol de administrador</p>
+    </div>
+  </div>
+</div>

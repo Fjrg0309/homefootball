@@ -37,7 +37,14 @@
 
     <footer class="login-form__footer">
       <p class="login-form__register-text">
-        ¿No tienes una cuenta? <a href="/registro" class="login-form__register-link">Regístrate</a>
+        ¿No tienes una cuenta? 
+        <button 
+          type="button" 
+          class="login-form__register-link"
+          (click)="onGoToRegister()"
+        >
+          Regístrate
+        </button>
       </p>
     </footer>
   </fieldset>

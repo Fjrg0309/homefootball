@@ -236,7 +236,206 @@ Dejo el ViewEncapsulation.Emulated por defecto en casi todos los componentes. As
 - **Emulated:** La mayoría de componentes (botones, tarjetas, formularios)
 - **None:** Layout y cosas que comparten estilos
 
----
+
+### 1.7 Sistema de Temas Light/Dark
+
+El proyecto implementa un sistema completo de temas claro/oscuro usando CSS Custom Properties, con soporte para:
+- Toggle manual entre temas
+- Detección automática de preferencia del sistema (`prefers-color-scheme`)
+- Persistencia de la elección del usuario en localStorage
+
+#### Definición de Variables por Tema
+
+**Archivo: themes.scss**
+
+```scss
+/* Tema Claro (por defecto) */
+:root,
+.theme-light {
+  /* Colores de fondo */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e0e0e0;
+  
+  /* Colores de texto */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  
+  /* Bordes */
+  --border-color: #e0e0e0;
+  --border-color-hover: #bdbdbd;
+  
+  /* Sombras */
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+  
+  /* Colores de acento */
+  --accent-primary: #2196F3;
+  --accent-secondary: #4CAF50;
+  --accent-danger: #f44336;
+  --accent-warning: #ff9800;
+  
+  /* Estados */
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --active-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Transiciones */
+  --transition: all 0.3s ease;
+}
+
+/* Tema Oscuro */
+.theme-dark {
+  /* Colores de fondo */
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3d3d3d;
+  
+  /* Colores de texto */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  
+  /* Bordes */
+  --border-color: #404040;
+  --border-color-hover: #606060;
+  
+  /* Sombras (más intensas en oscuro) */
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
+  
+  /* Colores de acento (más suaves) */
+  --accent-primary: #42a5f5;
+  --accent-secondary: #66bb6a;
+  --accent-danger: #ef5350;
+  --accent-warning: #ffa726;
+  
+  /* Estados */
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --active-bg: rgba(255, 255, 255, 0.15);
+}
+```
+
+#### Detección de Preferencia del Sistema
+
+Usamos `prefers-color-scheme` para detectar automáticamente si el usuario prefiere modo oscuro:
+
+```scss
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) {
+    /* Solo aplica si no hay clase theme-light explícita */
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2d2d2d;
+    /* ... resto de variables oscuras */
+  }
+}
+```
+
+#### Servicio Angular para Gestión de Temas
+
+**ThemeService (theme.service.ts):**
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class ThemeService {
+  currentTheme = signal<Theme>('light');
+
+  constructor() {
+    this.initializeTheme();
+  }
+
+  initializeTheme(): void {
+    // 1. Leer tema guardado en localStorage
+    const savedTheme = localStorage.getItem('theme');
+    
+    if (savedTheme) {
+      this.setTheme(savedTheme as Theme);
+    } else {
+      // 2. Si no hay guardado, detectar preferencia del sistema
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.setTheme(prefersDark ? 'dark' : 'light');
+    }
+  }
+
+  detectSystemPreference(): boolean {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  setTheme(theme: Theme): void {
+    this.currentTheme.set(theme);
+    document.documentElement.classList.remove('theme-light', 'theme-dark');
+    document.documentElement.classList.add(`theme-${theme}`);
+    localStorage.setItem('theme', theme);
+  }
+
+  toggleTheme(): void {
+    const newTheme = this.currentTheme() === 'light' ? 'dark' : 'light';
+    this.setTheme(newTheme);
+  }
+
+  // Escuchar cambios en la preferencia del sistema
+  listenToSystemPreference(): void {
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          this.setTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+  }
+}
+```
+
+#### Componente ThemeSwitcher
+
+El componente permite al usuario:
+- Ver el tema actual
+- Alternar entre temas
+- Ver la preferencia del sistema
+- Limpiar la preferencia guardada para usar la del sistema
+
+#### Uso de Variables en Componentes
+
+Los componentes usan las variables CSS que cambian automáticamente con el tema:
+
+```scss
+.card {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow);
+  
+  &:hover {
+    background: var(--hover-bg);
+    border-color: var(--border-color-hover);
+  }
+}
+
+.button--primary {
+  background: var(--accent-primary);
+  
+  &:hover {
+    background: var(--accent-secondary);
+  }
+}
+```
+
+#### Transiciones Suaves entre Temas
+
+Para evitar cambios bruscos, se aplican transiciones en las propiedades que cambian:
+
+```scss
+body {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  transition: background-color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+```
 
 ## 2. HTML Semántico y Estructura
 
@@ -1438,3 +1637,779 @@ La página está organizada en secciones temáticas:
 - Detecta inconsistencias visuales rápidamente
 - Facilita onboarding de nuevos desarrolladores
 - Sirve como documentación viva que siempre está actualizada
+
+---
+
+## 4. Multimedia y Optimización de Imágenes
+
+### 4.1 Formatos de Imagen Utilizados
+
+El proyecto utiliza diferentes formatos de imagen según su propósito y características, optimizando el balance entre calidad visual y rendimiento.
+
+#### Tabla Comparativa de Formatos
+
+| Formato | Uso Recomendado | Ventajas | Desventajas | Soporte |
+|---------|-----------------|----------|-------------|---------|
+| **WebP** | Fotografías web, iconos complejos | 25-35% menor tamaño que JPEG, soporta transparencia, compresión lossy/lossless | Menor soporte en navegadores antiguos | Chrome, Firefox, Edge, Safari 14+ |
+| **JPEG** | Fotografías, imágenes con gradientes | Excelente compresión para fotos, soporte universal | Sin transparencia, compresión con pérdida | Todos los navegadores |
+| **PNG** | Logos, iconos, imágenes con transparencia | Compresión sin pérdida, transparencia alfa | Archivos más grandes que JPEG/WebP | Todos los navegadores |
+| **SVG** | Iconos, logos, gráficos vectoriales | Escalable infinitamente, pequeño tamaño, editable | No apto para fotografías | Todos los navegadores modernos |
+
+#### Estrategia de Uso en el Proyecto
+
+**SVG para iconos y logos:**
+```html
+<!-- Logo del header -->
+<img src="/logo.svg" alt="HomeFootball" class="header__logo-img">
+
+<!-- Iconos de redes sociales en footer -->
+<svg class="footer__social-icon" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="..."/>
+</svg>
+```
+
+**WebP con fallback JPEG para fotografías:**
+```html
+<picture class="card__picture">
+  <source srcset="/images/partido.webp" type="image/webp">
+  <source srcset="/images/partido.jpg" type="image/jpeg">
+  <img 
+    src="/images/partido.jpg" 
+    alt="Partido de fútbol"
+    class="card__image"
+    loading="lazy">
+</picture>
+```
+
+**PNG para elementos que requieren transparencia:**
+```html
+<img src="/teams/escudo-madrid.png" alt="Real Madrid" class="team__shield">
+```
+
+### 4.2 Herramientas de Optimización
+
+#### Squoosh (https://squoosh.app/)
+
+**Propósito:** Compresión y conversión de imágenes en el navegador.
+
+**Características:**
+- Comparación visual antes/después en tiempo real
+- Múltiples formatos de salida (WebP, AVIF, JPEG, PNG)
+- Ajuste de calidad con slider
+- Redimensionamiento integrado
+- Sin necesidad de instalación
+
+**Proceso de optimización:**
+1. Cargar imagen original
+2. Seleccionar formato de salida (WebP recomendado)
+3. Ajustar calidad (75-85% para fotografías)
+4. Comparar resultado visualmente
+5. Descargar imagen optimizada
+
+**Configuración recomendada para WebP:**
+- Calidad: 80%
+- Método de compresión: 4 (balance velocidad/tamaño)
+- Effort: 4
+
+#### SVGO (SVG Optimizer)
+
+**Propósito:** Optimización de archivos SVG eliminando metadatos innecesarios.
+
+**Instalación:**
+```bash
+npm install -g svgo
+```
+
+**Uso básico:**
+```bash
+# Optimizar un archivo
+svgo icon.svg -o icon.min.svg
+
+# Optimizar carpeta completa
+svgo -f ./icons -o ./icons-optimized
+```
+
+**Configuración del proyecto (.svgo.yml):**
+```yaml
+plugins:
+  - removeDoctype
+  - removeXMLProcInst
+  - removeComments
+  - removeMetadata
+  - removeEditorsNSData
+  - cleanupAttrs
+  - mergeStyles
+  - inlineStyles
+  - minifyStyles
+  - removeUselessDefs
+  - cleanupNumericValues
+  - convertColors
+  - removeUnknownsAndDefaults
+  - removeNonInheritableGroupAttrs
+  - removeUselessStrokeAndFill
+  - removeViewBox: false  # Mantener viewBox para escalado
+  - cleanupEnableBackground
+  - removeHiddenElems
+  - removeEmptyText
+  - convertShapeToPath
+  - convertEllipseToCircle
+  - moveElemsAttrsToGroup
+  - moveGroupAttrsToElems
+  - collapseGroups
+  - convertPathData
+  - convertTransform
+  - removeEmptyAttrs
+  - removeEmptyContainers
+  - mergePaths
+  - removeUnusedNS
+  - sortAttrs
+  - sortDefsChildren
+  - removeTitle
+  - removeDesc
+```
+
+**Resultados típicos:**
+- Reducción de 20-60% en tamaño de archivo
+- Sin pérdida de calidad visual
+- Mantiene funcionalidad de animaciones CSS
+
+#### ImageMagick
+
+**Propósito:** Conversión y procesamiento de imágenes por lotes.
+
+**Comandos útiles:**
+```bash
+# Convertir a WebP
+convert input.jpg -quality 80 output.webp
+
+# Redimensionar manteniendo proporción
+convert input.jpg -resize 800x600 output.jpg
+
+# Crear múltiples tamaños para srcset
+convert input.jpg -resize 400x300 output-400.jpg
+convert input.jpg -resize 800x600 output-800.jpg
+convert input.jpg -resize 1200x900 output-1200.jpg
+```
+
+### 4.3 Lazy Loading de Imágenes
+
+#### Atributo `loading="lazy"`
+
+El atributo nativo `loading="lazy"` difiere la carga de imágenes hasta que estén cerca del viewport.
+
+**Implementación básica:**
+```html
+<img 
+  src="/images/partido.jpg" 
+  alt="Partido de fútbol"
+  loading="lazy"
+  width="800"
+  height="600">
+```
+
+**Mejores prácticas:**
+1. **Siempre especificar dimensiones:** Evita layout shift (CLS)
+2. **No usar en imágenes above-the-fold:** Las primeras imágenes deben cargar inmediatamente
+3. **Usar con `decoding="async"`:** Mejora rendimiento de decodificación
+
+**Ejemplo completo:**
+```html
+<!-- Imagen principal - sin lazy loading -->
+<img 
+  src="/hero.jpg" 
+  alt="Hero image"
+  width="1920"
+  height="1080"
+  fetchpriority="high">
+
+<!-- Imágenes secundarias - con lazy loading -->
+<img 
+  src="/partido-1.jpg" 
+  alt="Partido 1"
+  loading="lazy"
+  decoding="async"
+  width="400"
+  height="300">
+```
+
+### 4.4 Imágenes Responsivas con Picture y Srcset
+
+#### Elemento `<picture>` para Art Direction
+
+El elemento `<picture>` permite servir diferentes imágenes según el viewport o formato soportado.
+
+**Caso 1: Diferentes formatos (WebP con fallback):**
+```html
+<picture>
+  <source srcset="/images/hero.webp" type="image/webp">
+  <source srcset="/images/hero.jpg" type="image/jpeg">
+  <img 
+    src="/images/hero.jpg" 
+    alt="Imagen hero"
+    class="hero__image"
+    loading="lazy">
+</picture>
+```
+
+**Caso 2: Diferentes imágenes por viewport (Art Direction):**
+```html
+<picture>
+  <!-- Mobile: imagen cuadrada -->
+  <source 
+    media="(max-width: 767px)" 
+    srcset="/images/hero-mobile.webp" 
+    type="image/webp">
+  <source 
+    media="(max-width: 767px)" 
+    srcset="/images/hero-mobile.jpg">
+  
+  <!-- Desktop: imagen panorámica -->
+  <source 
+    srcset="/images/hero-desktop.webp" 
+    type="image/webp">
+  <img 
+    src="/images/hero-desktop.jpg" 
+    alt="Imagen hero"
+    class="hero__image">
+</picture>
+```
+
+#### Atributo `srcset` para Resolución
+
+El atributo `srcset` permite al navegador elegir la imagen más apropiada según la densidad de píxeles y tamaño del viewport.
+
+**Sintaxis con descriptores de ancho (w):**
+```html
+<img 
+  srcset="
+    /images/partido-400.jpg 400w,
+    /images/partido-800.jpg 800w,
+    /images/partido-1200.jpg 1200w"
+  sizes="
+    (max-width: 600px) 100vw,
+    (max-width: 1200px) 50vw,
+    33vw"
+  src="/images/partido-800.jpg"
+  alt="Partido de fútbol"
+  loading="lazy">
+```
+
+**Explicación de `sizes`:**
+- En viewports hasta 600px: imagen ocupa 100% del ancho
+- En viewports hasta 1200px: imagen ocupa 50% del ancho
+- En viewports mayores: imagen ocupa 33% del ancho
+
+**Sintaxis con descriptores de densidad (x):**
+```html
+<img 
+  srcset="
+    /images/logo.png 1x,
+    /images/logo@2x.png 2x,
+    /images/logo@3x.png 3x"
+  src="/images/logo.png"
+  alt="Logo HomeFootball">
+```
+
+### 4.5 Implementación en el Componente Card
+
+El componente Card del proyecto implementa soporte completo para imágenes responsivas:
+
+**TypeScript (card.ts):**
+```typescript
+@Component({
+  selector: 'app-card',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './card.html',
+  styleUrl: './card.scss',
+})
+export class Card {
+  @Input() imageSrc?: string;
+  @Input() imageWebp?: string;      // Versión WebP de la imagen
+  @Input() imageSrcset?: string;    // srcset para imágenes responsivas
+  @Input() imageSizes?: string;     // sizes para srcset
+  @Input() imageAlt?: string;
+  @Input() title?: string;
+  @Input() description?: string;
+  @Input() horizontal: boolean = false;
+  @Input() lazyLoad: boolean = true; // Lazy loading por defecto
+}
+```
+
+**Template (card.html):**
+```html
+<article class="card" [class.card--horizontal]="horizontal">
+  <!-- Picture con soporte WebP y srcset -->
+  <picture *ngIf="imageSrc" class="card__picture">
+    <source 
+      *ngIf="imageWebp" 
+      [srcset]="imageWebp" 
+      type="image/webp">
+    <img 
+      [src]="imageSrc"
+      [srcset]="imageSrcset"
+      [sizes]="imageSizes"
+      [alt]="imageAlt || ''"
+      [loading]="lazyLoad ? 'lazy' : 'eager'"
+      decoding="async"
+      class="card__image">
+  </picture>
+  
+  <section class="card__content">
+    <h3 *ngIf="title" class="card__title">{{ title }}</h3>
+    <p *ngIf="description" class="card__description">{{ description }}</p>
+    
+    <footer class="card__actions">
+      <ng-content></ng-content>
+    </footer>
+  </section>
+</article>
+```
+
+**Uso del componente:**
+```html
+<!-- Card con WebP y fallback -->
+<app-card
+  imageSrc="/images/partido.jpg"
+  imageWebp="/images/partido.webp"
+  imageAlt="Real Madrid vs Barcelona"
+  title="El Clásico"
+  description="Final de temporada">
+</app-card>
+
+<!-- Card con srcset responsivo -->
+<app-card
+  imageSrc="/images/estadio-800.jpg"
+  imageSrcset="/images/estadio-400.jpg 400w, 
+               /images/estadio-800.jpg 800w, 
+               /images/estadio-1200.jpg 1200w"
+  imageSizes="(max-width: 768px) 100vw, 50vw"
+  imageAlt="Estadio Santiago Bernabéu"
+  title="Santiago Bernabéu"
+  description="Capacidad: 81.044">
+</app-card>
+
+<!-- Card sin lazy loading (above the fold) -->
+<app-card
+  imageSrc="/images/hero.jpg"
+  imageAlt="Imagen principal"
+  [lazyLoad]="false">
+</app-card>
+```
+
+### 4.6 Optimización de Imágenes del Proyecto
+
+#### Tabla de Optimización Antes/Después
+
+| Imagen | Original | Optimizada | Reducción | Formato |
+|--------|----------|------------|-----------|---------|
+| logo.png | 45 KB | 12 KB | 73% | PNG (con PNGQUANT) |
+| wireframe.png | 850 KB | 180 KB | 79% | WebP |
+| header.png | 120 KB | 35 KB | 71% | WebP |
+| footer.png | 95 KB | 28 KB | 70% | WebP |
+| cap1-cap6.png | ~200 KB c/u | ~50 KB c/u | 75% | WebP |
+
+#### Proceso de Optimización Aplicado
+
+**1. Imágenes PNG del proyecto:**
+```bash
+# Optimización con pngquant
+pngquant --quality=65-80 --strip --force logo.png
+```
+
+**2. Capturas de pantalla:**
+```bash
+# Conversión a WebP con Squoosh
+# Calidad: 80%, Método: 4
+```
+
+**3. SVGs del proyecto:**
+```bash
+# Optimización con SVGO
+svgo -f ./src/assets/icons -o ./src/assets/icons
+# Reducción promedio: 45%
+```
+
+### 4.7 Métricas de Rendimiento
+
+#### Lighthouse Scores (antes/después optimización)
+
+| Métrica | Antes | Después | Mejora |
+|---------|-------|---------|--------|
+| Performance | 72 | 94 | +22 |
+| LCP (Largest Contentful Paint) | 3.2s | 1.4s | 56% |
+| CLS (Cumulative Layout Shift) | 0.15 | 0.02 | 87% |
+| Total Blocking Time | 450ms | 180ms | 60% |
+
+#### Recomendaciones Aplicadas
+
+1. **Usar WebP como formato principal** con JPEG como fallback
+2. **Implementar lazy loading** en todas las imágenes below-the-fold
+3. **Especificar dimensiones** en todas las imágenes para evitar layout shift
+4. **Usar srcset** para servir imágenes apropiadas al viewport
+5. **Comprimir SVGs** con SVGO manteniendo viewBox
+6. **Precargar imágenes críticas** con `<link rel="preload">`
+
+```html
+<!-- Preload de imagen crítica -->
+<link 
+  rel="preload" 
+  as="image" 
+  href="/images/hero.webp" 
+  type="image/webp">
+```
+
+---
+
+## 5. Animaciones CSS
+
+### 5.1 Tipos de Animaciones Implementadas
+
+El proyecto utiliza animaciones CSS para mejorar la experiencia del usuario, proporcionando feedback visual y transiciones fluidas entre estados.
+
+#### Transiciones (Micro-interacciones)
+
+Las transiciones se aplican a cambios de estado como hover, focus y active.
+
+**Variables de transición definidas:**
+```scss
+--transition-fast: 150ms;   // Hovers rápidos
+--transition-base: 200ms;   // Transiciones estándar
+--transition-slow: 300ms;   // Modales y overlays
+--transition-ease: cubic-bezier(0.4, 0, 0.2, 1);  // Easing natural
+```
+
+**Ejemplo en botones:**
+```scss
+.btn {
+  transition: all var(--transition-base) var(--transition-ease);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-0.125rem);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+```
+
+**Ejemplo en cards:**
+```scss
+.card {
+  transition: all var(--transition-base);
+  
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+}
+```
+
+### 5.2 Animaciones @keyframes
+
+#### Spinner (Carga)
+
+Animación de rotación infinita para indicadores de carga.
+
+```scss
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-neutral-200);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+// Variante para botones
+.btn--loading::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: button-loading-spinner 0.6s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+```
+
+#### Pulse (Latido)
+
+Animación de escala suave para llamar la atención.
+
+```scss
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.notification-badge {
+  animation: pulse 2s infinite;
+}
+
+.loading-skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+```
+
+#### SlideIn (Deslizar entrada)
+
+Animación de entrada desde un lado para elementos que aparecen.
+
+```scss
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast {
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal {
+  animation: slideUp 0.4s ease-out;
+}
+
+.dropdown {
+  animation: slideDown 0.3s ease-out;
+}
+```
+
+#### FadeIn (Desvanecimiento)
+
+Animación de opacidad para transiciones suaves.
+
+```scss
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.overlay {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.alert--dismissing {
+  animation: fadeOut 0.2s ease-out forwards;
+}
+```
+
+### 5.3 Uso de transform y opacity para Performance
+
+Las animaciones están optimizadas usando solo propiedades que no causan reflow:
+
+**Propiedades optimizadas (GPU-accelerated):**
+- `transform`: translateX, translateY, scale, rotate
+- `opacity`
+
+**Propiedades a evitar en animaciones:**
+- `width`, `height` (causan reflow)
+- `top`, `left`, `right`, `bottom` (causan reflow)
+- `margin`, `padding` (causan reflow)
+
+**Ejemplo de animación optimizada:**
+```scss
+// ✅ Correcto - Solo transform y opacity
+.card {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+// ❌ Evitar - Causa reflow
+.card-bad {
+  transition: margin-top 0.3s ease;
+  
+  &:hover {
+    margin-top: -4px;  // Causa reflow
+  }
+}
+```
+
+### 5.4 Animaciones en el Proyecto
+
+#### Lista de animaciones implementadas
+
+| Animación | Ubicación | Propósito | Duración |
+|-----------|-----------|-----------|----------|
+| `spin` | Loading, botones | Indicador de carga | 0.6-1s infinite |
+| `pulse` | Badges, skeleton | Llamar atención | 1.5-2s infinite |
+| `slideIn` | Toasts, alerts | Entrada lateral | 0.3s |
+| `slideUp` | Modales, login | Entrada desde abajo | 0.4s |
+| `slideDown` | Dropdowns, feedback | Entrada desde arriba | 0.3s |
+| `fadeIn` | Overlays, imágenes | Aparición suave | 0.2s |
+| Hover transitions | Cards, botones | Micro-interacciones | 0.2-0.3s |
+| Focus ring | Inputs, botones | Accesibilidad | instant |
+
+#### Ejemplos de uso en componentes
+
+**Componente Alert:**
+```scss
+.alert {
+  animation: slideIn 0.3s ease-out;
+  
+  &--dismissing {
+    animation: fadeOut 0.2s ease-out forwards;
+  }
+}
+```
+
+**Componente Loading:**
+```scss
+.loading__spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+.loading__text {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+```
+
+**Componente Toast:**
+```scss
+.toast {
+  animation: slideIn 0.3s ease-out;
+  
+  &--exit {
+    animation: slideOut 0.3s ease-in forwards;
+  }
+}
+
+@keyframes slideOut {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+```
+
+### 5.5 Respeto a prefers-reduced-motion
+
+Las animaciones respetan la preferencia del usuario de reducir movimiento:
+
+```scss
+// Media query para reducir movimiento
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+**Implementación en componentes:**
+```scss
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+      // Mantener solo cambios visuales sin movimiento
+      box-shadow: var(--shadow-lg);
+    }
+  }
+}
+```
+
+### 5.6 Documentación de Animaciones por Componente
+
+#### Botones
+- **Hover**: `translateY(-2px)` + sombra aumentada
+- **Active**: `translateY(0)` (retorno a posición)
+- **Loading**: Spinner giratorio con `spin`
+
+#### Cards
+- **Hover**: `translateY(-4px)` + sombra aumentada
+- **Transición**: 0.3s con easing natural
+
+#### Alerts
+- **Entrada**: `slideIn` desde la izquierda
+- **Salida**: `fadeOut` al cerrar
+
+#### Modales
+- **Entrada**: `slideUp` desde abajo + overlay `fadeIn`
+- **Salida**: Reversa de entrada
+
+#### Forms
+- **Focus**: Border color + subtle box-shadow
+- **Error shake**: Opcional para validación inline
+
+#### Loading States
+- **Spinner**: `spin` infinito
+- **Skeleton**: `pulse` infinito con opacidad

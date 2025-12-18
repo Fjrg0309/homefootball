@@ -74,6 +74,27 @@
           <app-button variant="ghost" size="sm">Leer más</app-button>
         </app-card>
       </section>
+
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Card con Lazy Loading</h3>
+        <p class="style-guide__description-small">Las imágenes usan <code>loading="lazy"</code> por defecto para optimizar el rendimiento.</p>
+        <section class="style-guide__grid">
+          <app-card
+            imageSrc="https://via.placeholder.com/400x200/363871/ffffff?text=Lazy+Loading"
+            imageAlt="Imagen con lazy loading"
+            title="Con Lazy Loading"
+            description="Esta imagen se carga solo cuando está cerca del viewport.">
+          </app-card>
+
+          <app-card
+            imageSrc="https://via.placeholder.com/400x200/00D95F/ffffff?text=Sin+Lazy"
+            imageAlt="Imagen sin lazy loading"
+            [lazyLoad]="false"
+            title="Sin Lazy Loading"
+            description="Esta imagen se carga inmediatamente (above the fold).">
+          </app-card>
+        </section>
+      </section>
     </section>
 
     <!-- SECCIÓN: FORMULARIOS -->

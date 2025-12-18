@@ -1,0 +1,375 @@
+<div class="interactive-components-container">
+  <h1>Tarea 3: Componentes Interactivos Funcionales</h1>
+
+  <!-- Sección 1: Menú Hamburguesa -->
+  <section class="seccion">
+    <h2>1. Menú Hamburguesa</h2>
+    <p class="descripcion">
+      Menú lateral que se abre/cierra con un botón. Se cierra automáticamente al hacer click fuera del menú usando <code>@HostListener</code>.
+    </p>
+
+    <div class="ejemplo-box">
+      <div class="hamburger-demo">
+        <!-- Botón hamburguesa -->
+        <button class="hamburger-button" (click)="toggleMenu()" [class.active]="isMenuOpen">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="demo-info">
+          <p><strong>Estado:</strong> {{ isMenuOpen ? '🟢 Abierto' : '🔴 Cerrado' }}</p>
+          <p class="hint">💡 Click en el botón para abrir/cerrar. El menú se cerrará automáticamente si haces click fuera.</p>
+        </div>
+
+        <!-- Menú lateral -->
+        <nav class="hamburger-menu" [class.open]="isMenuOpen">
+          <div class="menu-header">
+            <h3>📱 Menú de Navegación</h3>
+            <button class="close-button" (click)="closeMenu()">✕</button>
+          </div>
+          <ul class="menu-list">
+            @for (item of menuItems; track item.label) {
+              <li>
+                <a [href]="item.link" (click)="closeMenu()">
+                  <span class="menu-icon">{{ item.icon }}</span>
+                  <span>{{ item.label }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </nav>
+
+        <!-- Overlay (fondo oscuro) -->
+        <div class="menu-overlay" [class.visible]="isMenuOpen" (click)="closeMenu()"></div>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <h4>Código TypeScript:</h4>
+      <pre><code>isMenuOpen = false;
+
+toggleMenu() &#123;
+  this.isMenuOpen = !this.isMenuOpen;
+&#125;
+
+// Cerrar al hacer click fuera
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) &#123;
+  if (this.isMenuOpen && !menuContiene(event.target)) &#123;
+    this.isMenuOpen = false;
+  &#125;
+&#125;</code></pre>
+      <h4>Template HTML:</h4>
+      <pre><code>&lt;nav [class.open]="isMenuOpen"&gt;
+  &lt;!-- Contenido del menú --&gt;
+&lt;/nav&gt;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 2: Modales -->
+  <section class="seccion">
+    <h2>2. Modal (con cierre ESC)</h2>
+    <p class="descripcion">
+      Modal que se puede cerrar haciendo click fuera, en el botón de cerrar, o presionando la tecla <code>ESC</code> usando <code>@HostListener</code>.
+    </p>
+
+    <div class="ejemplo-box">
+      <button class="btn btn-primary" (click)="openModal()">
+        🪟 Abrir Modal
+      </button>
+
+      <div class="demo-info" style="margin-top: 1rem;">
+        <p><strong>Estado del Modal:</strong> {{ isModalOpen ? '🟢 Abierto' : '🔴 Cerrado' }}</p>
+        <p class="hint">💡 Formas de cerrar: Click en ✕, Click fuera del modal, o presionar ESC</p>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    @if (isModalOpen) {
+      <div class="modal-backdrop" (click)="onModalBackdropClick($event)">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>{{ modalTitle }}</h3>
+            <button class="modal-close" (click)="closeModal()">✕</button>
+          </div>
+          <div class="modal-body">
+            <p>{{ modalContent }}</p>
+            <div class="modal-features">
+              <div class="feature">✅ Click en el fondo oscuro para cerrar</div>
+              <div class="feature">✅ Click en el botón ✕ para cerrar</div>
+              <div class="feature">✅ Presiona ESC para cerrar</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+            <button class="btn btn-primary" (click)="closeModal()">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="code-info">
+      <h4>Código TypeScript:</h4>
+      <pre><code>isModalOpen = false;
+
+openModal() &#123;
+  this.isModalOpen = true;
+&#125;
+
+closeModal() &#123;
+  this.isModalOpen = false;
+&#125;
+
+// Cerrar con ESC
+@HostListener('document:keydown.escape')
+onEscapeKey() &#123;
+  if (this.isModalOpen) &#123;
+    this.closeModal();
+  &#125;
+&#125;</code></pre>
+      <h4>Template HTML:</h4>
+      <pre><code>&#64;if (isModalOpen) &#123;
+  &lt;div class="modal-backdrop" (click)="onBackdropClick($event)"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;!-- Contenido --&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 3: Tabs -->
+  <section class="seccion">
+    <h2>3. Tabs (Pestañas)</h2>
+    <p class="descripcion">
+      Sistema de pestañas que muestra diferentes paneles de contenido. La pestaña activa se controla con una variable <code>activeTab</code>.
+    </p>
+
+    <div class="ejemplo-box">
+      <div class="tabs-container">
+        <!-- Botones de pestañas -->
+        <div class="tabs-header">
+          @for (tab of tabs; track tab.id) {
+            <button 
+              class="tab-button"
+              [class.active]="activeTab === tab.id"
+              (click)="selectTab(tab.id)">
+              <span class="tab-icon">{{ tab.icon }}</span>
+              <span class="tab-label">{{ tab.label }}</span>
+            </button>
+          }
+        </div>
+
+        <!-- Contenido de las pestañas -->
+        <div class="tabs-content">
+          @for (tab of tabs; track tab.id) {
+            @if (activeTab === tab.id) {
+              <div class="tab-panel" [@fadeIn]>
+                <h3>{{ tab.icon }} {{ tab.label }}</h3>
+                <p>{{ tab.content }}</p>
+                <div class="tab-meta">
+                  <small>Pestaña activa: <strong>{{ tab.id }}</strong></small>
+                </div>
+              </div>
+            }
+          }
+        </div>
+
+        <div class="tabs-info">
+          <strong>Pestaña actual:</strong> {{ activeTab }}
+        </div>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <h4>Código TypeScript:</h4>
+      <pre><code>activeTab = 'detalles';
+
+selectTab(tabId: string) &#123;
+  this.activeTab = tabId;
+&#125;</code></pre>
+      <h4>Template HTML:</h4>
+      <pre><code>&lt;button 
+  [class.active]="activeTab === 'detalles'"
+  (click)="selectTab('detalles')"&gt;
+  Detalles
+&lt;/button&gt;
+
+&#64;if (activeTab === 'detalles') &#123;
+  &lt;div&gt;Contenido de Detalles&lt;/div&gt;
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 4: Tooltips -->
+  <section class="seccion">
+    <h2>4. Tooltips</h2>
+    <p class="descripcion">
+      Tooltips que aparecen al pasar el mouse sobre elementos. Se pueden controlar con eventos <code>(mouseenter)</code> y <code>(mouseleave)</code> o con CSS puro.
+    </p>
+
+    <div class="ejemplo-box">
+      <div class="tooltips-demo">
+        <h4>Tooltips con eventos de Angular:</h4>
+        <div class="tooltip-row">
+          <!-- Tooltip Arriba -->
+          <div class="tooltip-wrapper">
+            <button 
+              class="btn btn-info"
+              (mouseenter)="showTooltip(1)"
+              (mouseleave)="hideTooltip(1)">
+              🔝 Tooltip Arriba
+            </button>
+            @if (showTooltip1) {
+              <div class="tooltip tooltip-top">
+                Este es un tooltip que aparece arriba del elemento
+              </div>
+            }
+          </div>
+
+          <!-- Tooltip Derecha -->
+          <div class="tooltip-wrapper">
+            <button 
+              class="btn btn-success"
+              (mouseenter)="showTooltip(2)"
+              (mouseleave)="hideTooltip(2)">
+              ➡️ Tooltip Derecha
+            </button>
+            @if (showTooltip2) {
+              <div class="tooltip tooltip-right">
+                Tooltip a la derecha
+              </div>
+            }
+          </div>
+
+          <!-- Tooltip Abajo -->
+          <div class="tooltip-wrapper">
+            <button 
+              class="btn btn-warning"
+              (mouseenter)="showTooltip(3)"
+              (mouseleave)="hideTooltip(3)">
+              🔽 Tooltip Abajo
+            </button>
+            @if (showTooltip3) {
+              <div class="tooltip tooltip-bottom">
+                Tooltip que aparece debajo
+              </div>
+            }
+          </div>
+
+          <!-- Tooltip Izquierda -->
+          <div class="tooltip-wrapper">
+            <button 
+              class="btn btn-danger"
+              (mouseenter)="showTooltip(4)"
+              (mouseleave)="hideTooltip(4)">
+              ⬅️ Tooltip Izquierda
+            </button>
+            @if (showTooltip4) {
+              <div class="tooltip tooltip-left">
+                Tooltip a la izquierda
+              </div>
+            }
+          </div>
+        </div>
+
+        <h4 style="margin-top: 2rem;">Tooltips con CSS puro (hover):</h4>
+        <div class="tooltip-row">
+          <div class="tooltip-css" data-tooltip="Tooltip solo con CSS - Arriba">
+            <button class="btn btn-primary">🎨 CSS Arriba</button>
+          </div>
+          <div class="tooltip-css" data-tooltip="Tooltip CSS - Derecha" data-position="right">
+            <button class="btn btn-primary">🎨 CSS Derecha</button>
+          </div>
+          <div class="tooltip-css" data-tooltip="Tooltip CSS - Abajo" data-position="bottom">
+            <button class="btn btn-primary">🎨 CSS Abajo</button>
+          </div>
+          <div class="tooltip-css" data-tooltip="Tooltip CSS - Izquierda" data-position="left">
+            <button class="btn btn-primary">🎨 CSS Izquierda</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <h4>Código TypeScript (Tooltips con Angular):</h4>
+      <pre><code>showTooltip = false;
+
+showTooltip() &#123;
+  this.showTooltip = true;
+&#125;
+
+hideTooltip() &#123;
+  this.showTooltip = false;
+&#125;</code></pre>
+      <h4>Template HTML:</h4>
+      <pre><code>&lt;div class="tooltip-wrapper"&gt;
+  &lt;button 
+    (mouseenter)="showTooltip()"
+    (mouseleave)="hideTooltip()"&gt;
+    Hover aquí
+  &lt;/button&gt;
+  &#64;if (showTooltip) &#123;
+    &lt;div class="tooltip"&gt;Texto del tooltip&lt;/div&gt;
+  &#125;
+&lt;/div&gt;</code></pre>
+      <h4>CSS para tooltips puros:</h4>
+      <pre><code>.tooltip-css:hover::after &#123;
+  content: attr(data-tooltip);
+  position: absolute;
+  /* Estilos... */
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Resumen -->
+  <section class="seccion resumen">
+    <h2>📚 Resumen de Componentes Interactivos</h2>
+    <div class="resumen-grid">
+      <div class="resumen-card">
+        <h4>🍔 Menú Hamburguesa</h4>
+        <ul>
+          <li>Variable booleana <code>isOpen</code></li>
+          <li>Toggle con <code>(click)</code></li>
+          <li>Cierre con <code>@HostListener('document:click')</code></li>
+          <li>Animaciones CSS para apertura</li>
+          <li>Overlay para oscurecer fondo</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>🪟 Modales</h4>
+        <ul>
+          <li>Control con <code>isModalOpen</code></li>
+          <li>Backdrop clickeable</li>
+          <li>Cierre con ESC: <code>@HostListener('keydown.escape')</code></li>
+          <li>Botón de cerrar (✕)</li>
+          <li>Animación de entrada</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>📑 Tabs</h4>
+        <ul>
+          <li>Variable <code>activeTab</code></li>
+          <li>Método <code>selectTab(id)</code></li>
+          <li>Clases condicionales: <code>[class.active]</code></li>
+          <li>Contenido con <code>&#64;if</code> o <code>*ngIf</code></li>
+          <li>Transiciones suaves</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>💬 Tooltips</h4>
+        <ul>
+          <li>Eventos: <code>(mouseenter)</code>, <code>(mouseleave)</code></li>
+          <li>CSS puro con <code>:hover</code></li>
+          <li>Posicionamiento: <code>position: absolute</code></li>
+          <li>Múltiples posiciones (top, right, bottom, left)</li>
+          <li>Animaciones de aparición</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

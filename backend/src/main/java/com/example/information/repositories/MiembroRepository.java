@@ -19,8 +19,8 @@ public interface MiembroRepository extends JpaRepository<Miembro, Long> {
     @Query("SELECT m FROM Miembro m WHERE LOWER(m.nombre) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Miembro> searchByNombre(@Param("keyword") String keyword);
 
-    @Query("SELECT m FROM Miembro m WHERE YEAR(CAST(m.fechaNacimiento AS date)) BETWEEN :añoInicio AND :añoFin")
-    List<Miembro> findByRangoFechaNacimiento(@Param("añoInicio") int añoInicio, @Param("añoFin") int añoFin);
+    @Query("SELECT m FROM Miembro m WHERE YEAR(CAST(m.fechaNacimiento AS date)) BETWEEN :anioInicio AND :anioFin")
+    List<Miembro> findByRangoFechaNacimiento(@Param("anioInicio") int anioInicio, @Param("anioFin") int anioFin);
 
     @Query("SELECT m FROM Miembro m WHERE TYPE(m) = :tipo")
     List<Miembro> findByTipo(@Param("tipo") Class<? extends Miembro> tipo);

@@ -255,17 +255,18 @@
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);
     color: var(--color-header);
-    background-color: var(--color-secundary);
-    border: 2px solid var(--color-secundary);
+    background-color: #FFFFFF;
+    border: 2px solid #FFFFFF;
     border-radius: 2rem;
     cursor: pointer;
     transition: all var(--transition-base) var(--transition-ease);
     white-space: nowrap;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0, 217, 95, 0.4);
     }
 
     &:focus {
@@ -280,6 +281,19 @@
     @media (max-width: 48rem) {
       padding: var(--spacing-1) var(--spacing-3);
       font-size: var(--font-size-sm);
+    }
+
+    // Estilos específicos para modo oscuro
+    [data-theme="dark"] & {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #FFFFFF;
+
+      &:hover {
+        background-color: var(--color-accent-hover);
+        border-color: var(--color-accent-hover);
+        box-shadow: 0 2px 12px rgba(16, 185, 129, 0.5);
+      }
     }
   }
 

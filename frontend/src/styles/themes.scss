@@ -1,0 +1,114 @@
+/* ============================================
+   THEME SYSTEM - Variables CSS
+   ============================================ */
+
+/* Tema Claro (por defecto) */
+:root,
+.theme-light {
+  /* Colores de fondo */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e0e0e0;
+  
+  /* Colores de texto */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  
+  /* Bordes */
+  --border-color: #e0e0e0;
+  --border-color-hover: #bdbdbd;
+  
+  /* Sombras */
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+  
+  /* Colores de acento */
+  --accent-primary: #2196F3;
+  --accent-secondary: #4CAF50;
+  --accent-danger: #f44336;
+  --accent-warning: #ff9800;
+  
+  /* Estados */
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --active-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Transiciones */
+  --transition: all 0.3s ease;
+}
+
+/* Tema Oscuro */
+.theme-dark {
+  /* Colores de fondo */
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3d3d3d;
+  
+  /* Colores de texto */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  
+  /* Bordes */
+  --border-color: #404040;
+  --border-color-hover: #606060;
+  
+  /* Sombras */
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
+  
+  /* Colores de acento (más suaves en tema oscuro) */
+  --accent-primary: #42a5f5;
+  --accent-secondary: #66bb6a;
+  --accent-danger: #ef5350;
+  --accent-warning: #ffa726;
+  
+  /* Estados */
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --active-bg: rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================
+   APLICACIÓN DE VARIABLES A ELEMENTOS BASE
+   ============================================ */
+
+/* 
+   NOTA: Los estilos base de body están definidos en _reset.scss
+   usando las variables del sistema principal (--color-primary, etc.)
+   No se sobrescriben aquí para evitar conflictos.
+*/
+
+/* ============================================
+   DETECCIÓN DE PREFERENCIA DEL SISTEMA
+   ============================================ */
+
+/* 
+  Si el usuario no ha seleccionado un tema manualmente,
+  estos estilos se aplicarán según la preferencia del sistema
+*/
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) {
+    /* Solo aplicar si no hay clase theme-light explícita */
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #3d3d3d;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-tertiary: #808080;
+    --border-color: #404040;
+    --border-color-hover: #606060;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-lg: rgba(0, 0, 0, 0.5);
+    --hover-bg: rgba(255, 255, 255, 0.1);
+    --active-bg: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* ============================================
+   TRANSICIONES SUAVES AL CAMBIAR TEMA
+   ============================================ */
+
+/* 
+   NOTA: Las transiciones están definidas en los componentes individuales.
+   No aplicamos transiciones globales con * para evitar problemas de rendimiento.
+*/

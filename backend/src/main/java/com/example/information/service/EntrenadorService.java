@@ -52,8 +52,8 @@ public class EntrenadorService {
                 .collect(Collectors.toList());
     }
 
-    public List<EntrenadorDTO> findByMinExperiencia(int minAños) {
-        return entrenadorRepository.findByMinExperiencia(minAños).stream()
+    public List<EntrenadorDTO> findByMinExperiencia(int minAnios) {
+        return entrenadorRepository.findByMinExperiencia(minAnios).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -81,7 +81,7 @@ public class EntrenadorService {
         entrenador.setNombre(entrenadorDTO.getNombre());
         entrenador.setFechaNacimiento(entrenadorDTO.getFechaNacimiento());
         entrenador.setNacionalidad(entrenadorDTO.getNacionalidad());
-        entrenador.setAñosExperiencia(entrenadorDTO.getAñosExperiencia());
+        entrenador.setAniosExperiencia(entrenadorDTO.getAniosExperiencia());
         entrenador.setTitulosGanados(entrenadorDTO.getTitulosGanados());
 
         // Asignar equipo si se proporciona
@@ -107,7 +107,7 @@ public class EntrenadorService {
         existingEntrenador.setNombre(entrenadorDTO.getNombre());
         existingEntrenador.setFechaNacimiento(entrenadorDTO.getFechaNacimiento());
         existingEntrenador.setNacionalidad(entrenadorDTO.getNacionalidad());
-        existingEntrenador.setAñosExperiencia(entrenadorDTO.getAñosExperiencia());
+        existingEntrenador.setAniosExperiencia(entrenadorDTO.getAniosExperiencia());
         existingEntrenador.setTitulosGanados(entrenadorDTO.getTitulosGanados());
 
         Entrenador updatedEntrenador = entrenadorRepository.save(existingEntrenador);
@@ -182,7 +182,7 @@ public class EntrenadorService {
                 .nombre(entrenador.getNombre())
                 .fechaNacimiento(entrenador.getFechaNacimiento())
                 .nacionalidad(entrenador.getNacionalidad())
-                .añosExperiencia(entrenador.getAñosExperiencia())
+                .aniosExperiencia(entrenador.getAniosExperiencia())
                 .titulosGanados(entrenador.getTitulosGanados())
                 .equipoId(entrenador.getEquipo() != null ? entrenador.getEquipo().getId() : null)
                 .equipoNombre(entrenador.getEquipo() != null ? entrenador.getEquipo().getNombre() : null)

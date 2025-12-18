@@ -1,0 +1,148 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <h1>👤 Editar Perfil</h1>
+      <p>Protegido con CanDeactivate Guard</p>
+    </div>
+
+    <div class="user-info">
+      <div class="avatar">{{ auth.currentUser()?.name?.charAt(0) }}</div>
+      <div>
+        <h3>{{ auth.currentUser()?.name }}</h3>
+        <span class="role-badge" [class.admin]="auth.isAdmin()">
+          {{ auth.isAdmin() ? '👨‍💼 Admin' : '👤 Usuario' }}
+        </span>
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSave()" class="profile-form">
+      
+      <!-- Name -->
+      <div class="form-group">
+        <label for="name">Nombre Completo *</label>
+        <input 
+          type="text" 
+          id="name" 
+          formControlName="name"
+          placeholder="Tu nombre"
+          [class.error]="form.controls['name'].invalid && form.controls['name'].touched"
+        />
+        @if (form.controls['name'].invalid && form.controls['name'].touched) {
+          <span class="error-message">
+            @if (form.controls['name'].errors?.['required']) {
+              El nombre es requerido
+            }
+            @if (form.controls['name'].errors?.['minlength']) {
+              Mínimo 3 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          placeholder="tu@email.com"
+          [class.error]="form.controls['email'].invalid && form.controls['email'].touched"
+        />
+        @if (form.controls['email'].invalid && form.controls['email'].touched) {
+          <span class="error-message">
+            @if (form.controls['email'].errors?.['required']) {
+              El email es requerido
+            }
+            @if (form.controls['email'].errors?.['email']) {
+              Email inválido
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label for="phone">Teléfono</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          formControlName="phone"
+          placeholder="123456789"
+          [class.error]="form.controls['phone'].invalid && form.controls['phone'].touched"
+        />
+        @if (form.controls['phone'].invalid && form.controls['phone'].touched) {
+          <span class="error-message">
+            Formato inválido (9 dígitos)
+          </span>
+        }
+      </div>
+
+      <!-- Bio -->
+      <div class="form-group">
+        <label for="bio">Biografía</label>
+        <textarea 
+          id="bio" 
+          formControlName="bio"
+          placeholder="Cuéntanos sobre ti..."
+          rows="4"
+        ></textarea>
+        <small>{{ form.controls['bio'].value?.length || 0 }} / 200</small>
+      </div>
+
+      <!-- Checkboxes -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="notifications" />
+          <span>Recibir notificaciones por email</span>
+        </label>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="newsletter" />
+          <span>Suscribirme al newsletter</span>
+        </label>
+      </div>
+
+      <!-- Guard Info -->
+      <div class="guard-info">
+        <h3>🛡️ CanDeactivate Guard Activo</h3>
+        <p>
+          Si intentas salir de esta página con cambios sin guardar, 
+          el guard mostrará una confirmación.
+        </p>
+        <p class="status">
+          Estado del formulario: 
+          <strong [class.dirty]="form.dirty" [class.pristine]="form.pristine">
+            {{ form.dirty ? '✏️ Con cambios' : '✅ Sin cambios' }}
+          </strong>
+        </p>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn-save"
+          [disabled]="form.invalid || form.pristine"
+        >
+          💾 Guardar Cambios
+        </button>
+        <button 
+          type="button" 
+          class="btn-cancel"
+          (click)="onCancel()"
+        >
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+
+    <div class="logout-section">
+      <button class="btn-logout" (click)="logout()">
+        🚪 Cerrar Sesión
+      </button>
+    </div>
+  </div>
+</div>

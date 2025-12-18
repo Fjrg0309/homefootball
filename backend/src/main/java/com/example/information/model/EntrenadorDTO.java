@@ -25,7 +25,7 @@ public class EntrenadorDTO {
     private String nacionalidad;
 
     @Min(value = 0, message = "Los años de experiencia no pueden ser negativos")
-    private int añosExperiencia;
+    private int aniosExperiencia;
 
     @Min(value = 0, message = "Los títulos ganados no pueden ser negativos")
     private int titulosGanados;

@@ -1,0 +1,326 @@
+<div class="event-system-container">
+  <h1>Tarea 2: Sistema de Eventos en Angular</h1>
+
+  <!-- Console de eventos -->
+  <div class="event-console">
+    <div class="console-header">
+      <h3>📋 Consola de Eventos (últimos {{ maxLogs }})</h3>
+      <button (click)="clearLogs()" class="btn-clear">Limpiar</button>
+    </div>
+    <div class="console-body">
+      @if (eventLogs.length === 0) {
+        <div class="no-events">No hay eventos registrados. ¡Interactúa con los elementos!</div>
+      }
+      @for (log of eventLogs; track log.timestamp) {
+        <div class="event-log" [ngClass]="getEventTypeClass(log.type)">
+          <span class="timestamp">{{ formatTime(log.timestamp) }}</span>
+          <span class="event-type">{{ log.type }}</span>
+          <span class="event-message">{{ log.message }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Sección 1: Event Binding Básico -->
+  <section class="seccion">
+    <h2>1. Event Binding en Componentes Interactivos</h2>
+    <p class="descripcion">
+      El event binding se realiza poniendo el nombre del evento entre paréntesis: <code>(click)</code>, <code>(keyup)</code>, etc.
+    </p>
+    
+    <div class="ejemplo-box">
+      <div class="buttons-row">
+        <button (click)="onClick()" class="btn btn-primary">
+          Click Simple ({{ clickCount }})
+        </button>
+        <button (dblclick)="onDoubleClick()" class="btn btn-success">
+          Doble Click ({{ doubleClickCount }})
+        </button>
+        <button (click)="resetCounters()" class="btn btn-secondary">
+          Resetear Contadores
+        </button>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <h4>Código TypeScript:</h4>
+      <pre><code>onClick() &#123;
+  this.clickCount++;
+  console.log('Botón clickeado');
+&#125;</code></pre>
+      <h4>Template HTML:</h4>
+      <pre><code>&lt;button (click)="onClick()"&gt;Click aquí&lt;/button&gt;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 2: Eventos de Teclado -->
+  <section class="seccion">
+    <h2>2. Eventos de Teclado</h2>
+    <p class="descripcion">
+      Angular soporta eventos de teclado como <code>(keyup)</code>, <code>(keydown)</code> y pseudoeventos como <code>(keyup.enter)</code>.
+    </p>
+    
+    <div class="ejemplo-box">
+      <div class="keyboard-demo">
+        <div class="input-group">
+          <label>Eventos generales (keyup, keydown):</label>
+          <input 
+            type="text" 
+            (keyup)="onKeyUp($event)" 
+            (keydown)="onKeyDown($event)"
+            placeholder="Escribe algo..."
+            class="input-field">
+          <div class="key-display">Última tecla: <strong>{{ lastKeyPressed || 'ninguna' }}</strong></div>
+        </div>
+
+        <div class="input-group">
+          <label>Pseudoevento Enter (keyup.enter):</label>
+          <input 
+            type="text" 
+            [(ngModel)]="inputValue"
+            (keyup.enter)="onEnterKey()"
+            placeholder="Escribe y presiona Enter..."
+            class="input-field">
+        </div>
+
+        <div class="input-group">
+          <label>Pseudoevento Escape (keyup.escape):</label>
+          <input 
+            type="text" 
+            [(ngModel)]="inputValue"
+            (keyup.escape)="onEscapeKey()"
+            placeholder="Escribe y presiona ESC para limpiar..."
+            class="input-field">
+          <div class="value-display">Valor actual: "{{ inputValue }}"</div>
+        </div>
+
+        <div class="input-group">
+          <label>Combinación de teclas (Ctrl + Enter):</label>
+          <input 
+            type="text" 
+            (keyup.control.enter)="onCtrlEnter()"
+            placeholder="Presiona Ctrl + Enter..."
+            class="input-field">
+        </div>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <h4>Acceso al objeto evento:</h4>
+      <pre><code>onKeyUp(event: KeyboardEvent) &#123;
+  console.log(event.key); // La tecla presionada
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 3: Eventos de Mouse -->
+  <section class="seccion">
+    <h2>3. Eventos de Mouse</h2>
+    <p class="descripcion">
+      Eventos: <code>(click)</code>, <code>(dblclick)</code>, <code>(mouseenter)</code>, <code>(mouseleave)</code>, <code>(mousemove)</code>.
+    </p>
+    
+    <div class="ejemplo-box">
+      <div class="mouse-demo">
+        <div 
+          class="mouse-area"
+          [class.active]="isMouseOver"
+          (mouseenter)="onMouseEnter()"
+          (mouseleave)="onMouseLeave()"
+          (mousemove)="onMouseMove($event)"
+          (contextmenu)="onRightClick($event)">
+          <h3>{{ isMouseOver ? '🖱️ Mouse dentro del área' : '👆 Mueve el mouse aquí' }}</h3>
+          <p>Posición: X={{ mousePosition.x }}, Y={{ mousePosition.y }}</p>
+          <p class="hint">💡 Intenta hacer click derecho (menú contextual prevenido)</p>
+        </div>
+
+        <button (click)="onMultipleEvents($event)" class="btn btn-info">
+          Click con modificadores (Shift, Ctrl, Alt)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección 4: Eventos Focus y Blur -->
+  <section class="seccion">
+    <h2>4. Eventos Focus y Blur</h2>
+    <p class="descripcion">
+      Los eventos <code>(focus)</code> y <code>(blur)</code> se disparan cuando un elemento obtiene o pierde el foco.
+    </p>
+    
+    <div class="ejemplo-box">
+      <div class="focus-demo">
+        <input 
+          type="text" 
+          (focus)="onFocus()"
+          (blur)="onBlur()"
+          (input)="onInputChange($event)"
+          placeholder="Click aquí para dar foco..."
+          class="input-field"
+          [class.focused]="inputFocused">
+        <div class="focus-status" [class.active]="inputFocused">
+          Estado: <strong>{{ inputFocused ? '🟢 Con foco' : '🔴 Sin foco' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <pre><code>&lt;input (focus)="onFocus()" (blur)="onBlur()"&gt;
+
+onFocus() &#123;
+  console.log('Input con foco');
+&#125;
+
+onBlur() &#123;
+  console.log('Input perdió foco');
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 5: Prevenir Comportamientos por Defecto -->
+  <section class="seccion">
+    <h2>5. Prevenir Comportamientos por Defecto (preventDefault)</h2>
+    <p class="descripcion">
+      Usa <code>event.preventDefault()</code> para evitar el comportamiento predeterminado de eventos.
+    </p>
+    
+    <div class="ejemplo-box">
+      <div class="prevent-demo">
+        <h4>Formulario sin recarga:</h4>
+        <form (submit)="onSubmit($event)" class="form-example">
+          <input 
+            type="text" 
+            [(ngModel)]="formData.nombre"
+            name="nombre"
+            placeholder="Nombre"
+            class="input-field">
+          <input 
+            type="email" 
+            [(ngModel)]="formData.email"
+            name="email"
+            placeholder="Email"
+            class="input-field">
+          <button type="submit" class="btn btn-primary">Enviar (sin recarga)</button>
+        </form>
+        @if (lastSubmit) {
+          <div class="submit-result">✅ Último envío: {{ lastSubmit }}</div>
+        }
+
+        <h4 style="margin-top: 2rem;">Enlace sin navegación:</h4>
+        <a href="https://example.com" (click)="onLinkClick($event)" class="link-example">
+          Click aquí (navegación prevenida) - Clicks: {{ linkClicks }}
+        </a>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <pre><code>onSubmit(event: Event) &#123;
+  event.preventDefault(); // Previene recarga
+  console.log('Formulario enviado sin recarga');
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 6: Propagación de Eventos -->
+  <section class="seccion">
+    <h2>6. Propagar o Detener Propagación de Eventos</h2>
+    <p class="descripcion">
+      Por defecto, los eventos burbujean hacia arriba. Usa <code>event.stopPropagation()</code> para detenerlo.
+    </p>
+    
+    <div class="ejemplo-box">
+      <div class="propagation-demo">
+        <div class="control-panel">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="stopPropagation" (change)="togglePropagation()">
+            Detener propagación al hacer click en el hijo
+          </label>
+        </div>
+
+        <div 
+          class="parent-box" 
+          [class.clicked]="parentClicked"
+          (click)="onParentClick()">
+          <h3>🔵 Elemento PADRE</h3>
+          <p>Click aquí para ver el evento del padre</p>
+          
+          <div 
+            class="child-box" 
+            [class.clicked]="childClicked"
+            (click)="onChildClick($event)">
+            <h4>🟢 Elemento HIJO</h4>
+            <p>Click aquí</p>
+            <p class="hint">{{ stopPropagation ? '🛑 Propagación detenida' : '✅ Propagación permitida' }}</p>
+          </div>
+        </div>
+
+        <div class="explanation">
+          <strong>Explicación:</strong>
+          <ul>
+            <li>Con propagación <strong>permitida</strong>: El click en el hijo también dispara el evento del padre</li>
+            <li>Con propagación <strong>detenida</strong>: Solo se dispara el evento del hijo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <pre><code>onChildClick(event: MouseEvent) &#123;
+  if (this.stopPropagation) &#123;
+    event.stopPropagation(); // Detiene propagación
+  &#125;
+  console.log('Click en hijo');
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Resumen -->
+  <section class="seccion resumen">
+    <h2>📚 Resumen de Eventos en Angular</h2>
+    <div class="resumen-grid">
+      <div class="resumen-card">
+        <h4>🖱️ Eventos de Mouse</h4>
+        <ul>
+          <li><code>(click)</code> - Click simple</li>
+          <li><code>(dblclick)</code> - Doble click</li>
+          <li><code>(mouseenter)</code> - Mouse entra</li>
+          <li><code>(mouseleave)</code> - Mouse sale</li>
+          <li><code>(mousemove)</code> - Movimiento</li>
+          <li><code>(contextmenu)</code> - Click derecho</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>⌨️ Eventos de Teclado</h4>
+        <ul>
+          <li><code>(keyup)</code> - Tecla soltada</li>
+          <li><code>(keydown)</code> - Tecla presionada</li>
+          <li><code>(keyup.enter)</code> - Enter específico</li>
+          <li><code>(keyup.escape)</code> - ESC específico</li>
+          <li><code>(keyup.space)</code> - Espacio</li>
+          <li>Acceso a <code>event.key</code></li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>🎯 Eventos de Focus</h4>
+        <ul>
+          <li><code>(focus)</code> - Obtiene foco</li>
+          <li><code>(blur)</code> - Pierde foco</li>
+          <li><code>(input)</code> - Valor cambia</li>
+          <li><code>(change)</code> - Cambio confirmado</li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>🛡️ Control de Eventos</h4>
+        <ul>
+          <li><code>event.preventDefault()</code> - Previene comportamiento</li>
+          <li><code>event.stopPropagation()</code> - Detiene burbujeo</li>
+          <li><code>$event</code> - Objeto evento</li>
+          <li>Modificadores: shift, ctrl, alt</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

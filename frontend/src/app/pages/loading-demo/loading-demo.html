@@ -1,0 +1,160 @@
+<div class="loading-demo-container">
+  <header class="demo-header">
+    <a routerLink="/" class="back-button">← Volver</a>
+    <h1>⏳ Gestión de Loading States</h1>
+    <p class="subtitle">BehaviorSubject + Signals Locales + Contador de Peticiones</p>
+  </header>
+
+  <section class="demo-section">
+    <h2>Loading Global (Overlay)</h2>
+    <p>Spinner de pantalla completa para operaciones globales</p>
+    <div class="button-grid">
+      <button class="btn-primary" (click)="simulateGlobalLoading()">
+        <span class="btn-icon">🌐</span>
+        Simular Loading Global
+      </button>
+      <button class="btn-primary" (click)="simulateMultipleOperations()">
+        <span class="btn-icon">🔄</span>
+        Operaciones Concurrentes
+      </button>
+      <button class="btn-danger" (click)="resetLoading()">
+        <span class="btn-icon">🔄</span>
+        Reset Estado
+      </button>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Loading Local (Botones)</h2>
+    <p>Estados de carga específicos por operación con signals</p>
+    <div class="button-grid">
+      <button 
+        class="btn-success" 
+        (click)="simulateLocalLoading()" 
+        [disabled]="isSaving()">
+        <span class="btn-icon">{{ isSaving() ? '⏳' : '💾' }}</span>
+        {{ isSaving() ? 'Guardando...' : 'Guardar' }}
+      </button>
+      
+      <button 
+        class="btn-danger" 
+        (click)="simulateError()" 
+        [disabled]="isDeleting()">
+        <span class="btn-icon">{{ isDeleting() ? '⏳' : '🗑' }}</span>
+        {{ isDeleting() ? 'Eliminando...' : 'Eliminar' }}
+      </button>
+      
+      <button 
+        class="btn-info" 
+        (click)="simulateUpload()" 
+        [disabled]="isUploading()">
+        <span class="btn-icon">{{ isUploading() ? '⏳' : '📤' }}</span>
+        {{ isUploading() ? 'Subiendo...' : 'Upload' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="theory-section">
+    <h2>📚 Características</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>🔢 Contador de Peticiones</h3>
+        <p>Tracking de operaciones concurrentes con requestCount</p>
+      </div>
+      <div class="feature-card">
+        <h3>🌐 Loading Global</h3>
+        <p>Overlay de pantalla completa con spinner animado</p>
+      </div>
+      <div class="feature-card">
+        <h3>📍 Loading Local</h3>
+        <p>Signals para estados específicos en botones</p>
+      </div>
+      <div class="feature-card">
+        <h3>🧹 Cleanup Garantizado</h3>
+        <p>finalize() de RxJS para limpiar estado siempre</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔄 Operaciones Concurrentes</h3>
+        <p>Manejo correcto de múltiples operaciones simultáneas</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔧 Reset Manual</h3>
+        <p>Método reset() para recuperación de errores</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="code-section">
+    <h2>💻 Implementación</h2>
+    <div class="code-examples">
+      <div class="code-example">
+        <h3>LoadingService</h3>
+        <pre><code>private loadingService = inject(LoadingService);
+
+// Mostrar loading
+this.loadingService.show();
+
+// Ocultar loading
+this.loadingService.hide();
+
+// Reset completo
+this.loadingService.reset();</code></pre>
+      </div>
+      
+      <div class="code-example">
+        <h3>Loading Local con Signals</h3>
+        <pre><code>isSaving = signal(false);
+
+async save() &#123;
+  this.isSaving.set(true);
+  
+  try &#123;
+    await this.service.save();
+  &#125; finally &#123;
+    this.isSaving.set(false);
+  &#125;
+&#125;</code></pre>
+      </div>
+
+      <div class="code-example">
+        <h3>Con RxJS y finalize()</h3>
+        <pre><code>this.userService.save(user).pipe(
+  finalize(() => this.loadingService.hide())
+).subscribe(&#123;
+  next: () => this.toast.success('Guardado'),
+  error: () => this.toast.error('Error')
+&#125;);</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <h2>💡 Patrones de Uso</h2>
+    <div class="pattern-grid">
+      <div class="pattern-card">
+        <h3>✅ Loading Global</h3>
+        <ul>
+          <li>Carga inicial de aplicación</li>
+          <li>Operaciones que afectan toda la UI</li>
+          <li>Múltiples llamadas HTTP simultáneas</li>
+        </ul>
+      </div>
+      <div class="pattern-card">
+        <h3>✅ Loading Local</h3>
+        <ul>
+          <li>Botones de formulario (Guardar, Eliminar)</li>
+          <li>Operaciones específicas de componente</li>
+          <li>Feedback visual inmediato</li>
+        </ul>
+      </div>
+      <div class="pattern-card">
+        <h3>✅ Combinado</h3>
+        <ul>
+          <li>Loading global + toast de confirmación</li>
+          <li>Loading local + loading global para HTTP</li>
+          <li>Signals + BehaviorSubject para flexibilidad</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

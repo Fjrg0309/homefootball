@@ -1,0 +1,28 @@
+<div class="receiver-card">
+  <h3>🟢 Componente Receptor</h3>
+  <p>Recibe mensajes del hermano emisor</p>
+  
+  @if (lastMessage) {
+    <div class="last-message">
+      <strong>Último mensaje:</strong>
+      <p>{{ lastMessage }}</p>
+    </div>
+  } @else {
+    <div class="no-messages">
+      <p>Esperando mensajes...</p>
+    </div>
+  }
+  
+  <div class="message-history">
+    <h4>Historial ({{ receivedMessages.length }} mensajes)</h4>
+    @if (receivedMessages.length > 0) {
+      <button (click)="clearMessages()">Limpiar Historial</button>
+    }
+    
+    <ul>
+      @for (msg of receivedMessages; track $index) {
+        <li>{{ msg }}</li>
+      }
+    </ul>
+  </div>
+</div>

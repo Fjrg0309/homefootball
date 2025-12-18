@@ -1,0 +1,114 @@
+<form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <fieldset class="register-form__fieldset">
+    <legend class="register-form__legend">Crear cuenta</legend>
+    
+    <!-- Nombre -->
+    <section class="register-form__field-group">
+      <label class="register-form__label" for="reg-name">
+        Nombre <span class="register-form__required">*</span>
+      </label>
+      <input 
+        class="register-form__input"
+        [class.register-form__input--error]="isFieldInvalid('name')"
+        type="text"
+        id="reg-name"
+        formControlName="name"
+        placeholder="Tu nombre completo"
+      />
+      @if (isFieldInvalid('name')) {
+        <span class="register-form__error">{{ getErrorMessage('name') }}</span>
+      }
+    </section>
+
+    <!-- Email -->
+    <section class="register-form__field-group">
+      <label class="register-form__label" for="reg-email">
+        Email <span class="register-form__required">*</span>
+      </label>
+      <input 
+        class="register-form__input"
+        [class.register-form__input--error]="isFieldInvalid('email')"
+        type="email"
+        id="reg-email"
+        formControlName="email"
+        placeholder="tu@email.com"
+      />
+      @if (isFieldInvalid('email')) {
+        <span class="register-form__error">{{ getErrorMessage('email') }}</span>
+      }
+    </section>
+
+    <!-- Contraseña -->
+    <section class="register-form__field-group">
+      <label class="register-form__label" for="reg-password">
+        Contraseña <span class="register-form__required">*</span>
+      </label>
+      <input 
+        class="register-form__input"
+        [class.register-form__input--error]="isFieldInvalid('password')"
+        type="password"
+        id="reg-password"
+        formControlName="password"
+        placeholder="Mínimo 6 caracteres"
+      />
+      @if (isFieldInvalid('password')) {
+        <span class="register-form__error">{{ getErrorMessage('password') }}</span>
+      }
+      
+      <!-- Indicador de fortaleza de contraseña -->
+      @if (passwordControl.value) {
+        <div class="register-form__password-hints">
+          <span [class.valid]="passwordControl.value.length >= 6">✓ 6+ caracteres</span>
+          <span [class.valid]="passwordControl.value.match('[A-Z]')">✓ Mayúscula</span>
+          <span [class.valid]="passwordControl.value.match('[a-z]')">✓ Minúscula</span>
+          <span [class.valid]="passwordControl.value.match('[0-9]')">✓ Número</span>
+          <span [class.valid]="passwordControl.value.match('[!@#$%^&*]')">✓ Especial</span>
+        </div>
+      }
+    </section>
+
+    <!-- Confirmar Contraseña -->
+    <section class="register-form__field-group">
+      <label class="register-form__label" for="reg-confirm-password">
+        Confirmar Contraseña <span class="register-form__required">*</span>
+      </label>
+      <input 
+        class="register-form__input"
+        [class.register-form__input--error]="isFieldInvalid('confirmPassword') || getPasswordMatchError()"
+        type="password"
+        id="reg-confirm-password"
+        formControlName="confirmPassword"
+        placeholder="Repite tu contraseña"
+      />
+      @if (isFieldInvalid('confirmPassword')) {
+        <span class="register-form__error">{{ getErrorMessage('confirmPassword') }}</span>
+      }
+      @if (getPasswordMatchError()) {
+        <span class="register-form__error">{{ getPasswordMatchError() }}</span>
+      }
+    </section>
+
+    <section class="register-form__actions">
+      <button 
+        type="submit" 
+        class="register-form__btn"
+        [disabled]="registerForm.invalid"
+      >
+        Crear cuenta
+      </button>
+    </section>
+
+    <footer class="register-form__footer">
+      <p class="register-form__login-text">
+        ¿Ya tienes una cuenta? 
+        <button 
+          type="button" 
+          class="register-form__login-link"
+          (click)="onGoToLogin()"
+        >
+          Inicia sesión
+        </button>
+      </p>
+    </footer>
+  </fieldset>
+</form>
