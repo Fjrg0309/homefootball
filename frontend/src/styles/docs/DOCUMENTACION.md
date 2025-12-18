@@ -589,10 +589,8 @@ La sección de noticias usa una estructura donde el título está **fuera** del 
 
 ```html
 <section class="main__sidebar-wrapper" aria-label="Noticias destacadas">
-  <!-- Título FUERA del recuadro blanco, a la altura de "Partidos principales" -->
   <h2 class="main__sidebar-title">Noticias</h2>
-  
-  <!-- Recuadro blanco con las noticias -->
+
   <aside class="main__sidebar">
     <ul class="main__sidebar-list">
       <li class="main__sidebar-item">
