@@ -1,13 +1,13 @@
-# 🐳 Docker Setup - HomeFootball Frontend
+# Docker Setup - HomeFootball Frontend
 
 Este proyecto incluye configuración completa de Docker para desarrollo y producción.
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 - Docker Desktop instalado
 - Docker Compose instalado
 
-## 🚀 Modo Desarrollo (con hot reload)
+## Modo Desarrollo (con hot reload)
 
 Inicia el servidor de desarrollo con recarga automática:
 
@@ -18,18 +18,18 @@ docker-compose up dev
 La aplicación estará disponible en: **http://localhost:4200**
 
 ### Características del modo desarrollo:
-- ✅ Hot reload automático
-- ✅ Volúmenes montados para cambios en tiempo real
-- ✅ Angular DevServer
-- ✅ Logs en consola
-- ✅ Port: 4200
+- Hot reload automático
+- Volúmenes montados para cambios en tiempo real
+- Angular DevServer
+- Logs en consola
+- Port: 4200
 
 ### Detener el servicio:
 ```bash
 docker-compose down
 ```
 
-## 🏭 Modo Producción (Nginx optimizado)
+## Modo Producción (Nginx optimizado)
 
 Build y ejecuta la versión optimizada de producción:
 
@@ -40,20 +40,20 @@ docker-compose up prod
 La aplicación estará disponible en: **http://localhost**
 
 ### Características del modo producción:
-- ✅ Build optimizado y minificado
-- ✅ Servidor Nginx ultra-rápido
-- ✅ Gzip compression activada
-- ✅ Cache de assets estáticos
-- ✅ Health check endpoint (`/health`)
-- ✅ Reinicio automático
-- ✅ Port: 80
+- Build optimizado y minificado
+- Servidor Nginx ultra-rápido
+- Gzip compression activada
+- Cache de assets estáticos
+- Health check endpoint (`/health`)
+- Reinicio automático
+- Port: 80
 
 ### Detener el servicio:
 ```bash
 docker-compose down
 ```
 
-## 🛠️ Comandos Útiles
+## Comandos Útiles
 
 ### Rebuild completo (desarrollo):
 ```bash
@@ -90,7 +90,7 @@ docker-compose down -v
 docker system prune -a
 ```
 
-## 📁 Estructura de Archivos Docker
+## Estructura de Archivos Docker
 
 ```
 frontend/

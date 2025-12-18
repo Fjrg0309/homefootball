@@ -1,4 +1,4 @@
-# ⚽ HomeFootball - Backend API
+# HomeFootball - Backend API
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.3-green)
@@ -8,13 +8,13 @@
 
 Sistema de gestión de ligas de fútbol desarrollado con Spring Boot. API REST completa para administrar ligas, equipos, jugadores y entrenadores.
 
-## 📚 Documentación
+## Documentación
 
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Diagrama E/R completo y arquitectura del proyecto
 - **[SETUP.md](SETUP.md)** - Guía de instalación y configuración
 - **[CHECKLIST.md](CHECKLIST.md)** - Checklist completo de requisitos implementados
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Prerequisitos
 
@@ -45,9 +45,9 @@ mvn spring-boot:run
   - Usuario: `sa`
   - Password: `sa`
 
-## 📋 Características
+## Características
 
-### ✅ Completamente Implementado
+### Completamente Implementado
 
 - **5 Entidades** con relaciones complejas (herencia, 1:N, 1:1)
 - **CRUD completo** para todas las entidades
@@ -62,7 +62,7 @@ mvn spring-boot:run
 - **Spring Security básico** configurado
 - **JWT Utils** preparado para autenticación
 
-## 🗂️ Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 backend/
@@ -84,7 +84,7 @@ backend/
 └── run.bat              # Script de ejecución
 ```
 
-## 🎯 Diagrama E/R (Simplificado)
+## Diagrama E/R (Simplificado)
 
 ```
 Liga (1) ─────< (N) Equipo (1) ─────< (N) Jugador
@@ -100,7 +100,7 @@ Liga (1) ─────< (N) Equipo (1) ─────< (N) Jugador
 
 Ver diagrama completo en [ARCHITECTURE.md](ARCHITECTURE.md)
 
-## 📡 Endpoints Principales
+## Endpoints Principales
 
 | Recurso | Método | Endpoint | Descripción |
 |---------|--------|----------|-------------|
@@ -125,7 +125,7 @@ Ver diagrama completo en [ARCHITECTURE.md](ARCHITECTURE.md)
 
 Ver todos los endpoints en [SETUP.md](SETUP.md)
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 - **Java 21**
 - **Spring Boot 3.3.3**
@@ -138,7 +138,7 @@ Ver todos los endpoints en [SETUP.md](SETUP.md)
 - **JWT (jjwt)**
 - **Maven**
 
-## 📊 Estadísticas
+## Estadísticas
 
 - **Entidades**: 6
 - **DTOs**: 5
@@ -149,7 +149,7 @@ Ver todos los endpoints en [SETUP.md](SETUP.md)
 - **Endpoints REST**: 50+
 - **Líneas de código**: 2000+
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Ejecutar tests (cuando estén implementados)
@@ -159,7 +159,7 @@ mvn test
 mvn test jacoco:report
 ```
 
-## 🔐 Seguridad
+## Seguridad
 
 ### Configuración Actual (Desarrollo)
 Todos los endpoints están abiertos para facilitar el desarrollo.
@@ -170,7 +170,7 @@ Descomentar restricciones en `SecurityConfig.java` y completar implementación J
 - UserDetailsService
 - AuthService y AuthController
 
-## 📝 Datos de Prueba
+## Datos de Prueba
 
 El proyecto incluye datos de ejemplo en `data.sql`:
 - 4 Ligas (La Liga, Premier League, Serie A, Bundesliga)
@@ -178,7 +178,7 @@ El proyecto incluye datos de ejemplo en `data.sql`:
 - 3 Entrenadores
 - 12 Jugadores
 
-## 🤝 Contribuir
+## Contribuir
 
 1. Fork el proyecto
 2. Crea tu rama (`git checkout -b feature/amazing-feature`)
@@ -186,15 +186,15 @@ El proyecto incluye datos de ejemplo en `data.sql`:
 4. Push a la rama (`git push origin feature/amazing-feature`)
 5. Abre un Pull Request
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto es parte de un ejercicio académico.
 
-## 👨‍💻 Autor
+## Autor
 
 **Tu Nombre**
 
-## 🎓 Proyecto Académico
+## Proyecto Académico
 
 Proyecto desarrollado como parte del curso de desarrollo backend con Spring Boot.
 

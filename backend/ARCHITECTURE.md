@@ -1,8 +1,8 @@
-# ⚽ Home Football - Sistema de Gestión de Fútbol
+# Home Football - Sistema de Gestión de Fútbol
 
 API REST desarrollada con Spring Boot para la gestión de ligas, equipos, jugadores y entrenadores.
 
-## 📊 Diagrama Entidad-Relación (E/R)
+## Diagrama Entidad-Relación (E/R)
 
 ```
 ┌─────────────────────┐
@@ -78,7 +78,7 @@ API REST desarrollada con Spring Boot para la gestión de ligas, equipos, jugado
 └─────────────────────┘
 ```
 
-### 🔗 Relaciones:
+### Relaciones:
 
 1. **Liga → Equipo** (1:N)
    - Una liga tiene múltiples equipos

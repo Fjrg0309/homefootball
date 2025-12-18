@@ -1,17 +1,17 @@
-# 📋 Fase 2: Servicios y Arquitectura - Proceso de Implementación
+# Fase 2: Servicios y Arquitectura - Proceso de Implementación
 
-## 🎯 Objetivos de la Fase 2
+## Objetivos de la Fase 2
 1. **Tarea 1:** Servicios de comunicación entre componentes hermanos con RxJS
 2. **Tarea 2:** Separación de responsabilidades (componentes presentacionales + servicios de lógica)
 
----
 
-## 🔄 Tarea 1: Servicios de Comunicación
+
+## Tarea 1: Servicios de Comunicación
 
 ### Objetivo
 Implementar un servicio de comunicación que permita compartir datos y notificaciones entre componentes hermanos usando RxJS BehaviorSubject, siguiendo el patrón de flujo unidireccional de datos.
 
-### Estado: ✅ COMPLETADA
+### Estado: COMPLETADA
 
 ---
 
@@ -100,7 +100,7 @@ export class Sender {
 **Template:** `sender.html`
 ```html
 <div class="sender-card">
-  <h3>🔵 Componente Emisor</h3>
+  <h3>Componente Emisor</h3>
   <p>Envía mensajes al hermano receptor</p>
   
   <div class="controls">
@@ -167,7 +167,7 @@ export class Receiver implements OnInit, OnDestroy {
 **Template:** `receiver.html`
 ```html
 <div class="receiver-card">
-  <h3>🟢 Componente Receptor</h3>
+  <h3>Componente Receptor</h3>
   <p>Recibe mensajes del hermano emisor</p>
   
   @if (lastMessage) {
@@ -223,8 +223,8 @@ export class CommunicationDemo {
 ```html
 <div class="communication-container">
   <header class="demo-header">
-    <a routerLink="/" class="back-button">← Volver</a>
-    <h1>🔄 Servicio de Comunicación entre Componentes</h1>
+    <a routerLink="/" class="back-button">Volver</a>
+    <h1>Servicio de Comunicación entre Componentes</h1>
     <p class="subtitle">Patrón Observable/Subject con RxJS BehaviorSubject</p>
   </header>
 
@@ -255,7 +255,7 @@ export class CommunicationDemo {
   </div>
 
   <section class="theory">
-    <h2>📚 Teoría</h2>
+    <h2>Teoría</h2>
     
     <div class="theory-grid">
       <div class="theory-card">
@@ -281,7 +281,7 @@ export class CommunicationDemo {
     </div>
 
     <div class="best-practices">
-      <h3>✅ Mejores Prácticas</h3>
+      <h3>Mejores Prácticas</h3>
       <ul>
         <li>Usar <code>providedIn: 'root'</code> para servicios singleton</li>
         <li>Siempre limpiar suscripciones en <code>ngOnDestroy()</code></li>

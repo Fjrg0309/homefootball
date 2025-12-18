@@ -1,16 +1,16 @@
-# 📦 Entregables del Proyecto - HomeFootball Frontend
+# Entregables del Proyecto - HomeFootball Frontend
 
 Este documento lista todos los entregables completados por fase, con referencias a archivos y rutas para verificación.
 
 ---
 
-## ✅ Fase 1: Arquitectura de Eventos
+## Fase 1: Arquitectura de Eventos
 
 **Estado:** 100% Completado
 
 ### Entregables:
 
-#### ✅ Componentes interactivos funcionando con eventos
+#### Componentes interactivos funcionando con eventos
 - **EventSystem** (`/event-system`): Gestión de eventos DOM
   - Listeners de eventos (click, mouseover, input, submit)
   - Event delegation
@@ -25,7 +25,7 @@ Este documento lista todos los entregables completados por fase, con referencias
 
 ---
 
-#### ✅ Theme switcher completamente funcional
+#### Theme switcher completamente funcional
 - Cambio entre 3 temas: Light, Dark, Auto
 - Persistencia en localStorage
 - Servicio global `ThemeService`
@@ -39,7 +39,7 @@ Este documento lista todos los entregables completados por fase, con referencias
 
 ---
 
-#### ✅ Menú mobile con apertura/cierre
+#### Menú mobile con apertura/cierre
 - Hamburger menu animado
 - Overlay con cierre al hacer click fuera
 - Responsive en < 768px
@@ -52,7 +52,7 @@ Este documento lista todos los entregables completados por fase, con referencias
 
 ---
 
-#### ✅ Mínimo 2 componentes adicionales interactivos
+#### Mínimo 2 componentes adicionales interactivos
 
 **Modal** (componente compartido):
 - Apertura/cierre con animaciones
@@ -84,7 +84,7 @@ Este documento lista todos los entregables completados por fase, con referencias
 
 ---
 
-#### ✅ Documentación de eventos en README
+#### Documentación de eventos en README
 **Archivo:** `README.md` (sección "Arquitectura de Eventos")
 
 **Incluye:**
@@ -96,7 +96,7 @@ Este documento lista todos los entregables completados por fase, con referencias
 
 ---
 
-## ✅ Fase 2: Arquitectura de Servicios
+## Fase 2: Arquitectura de Servicios
 
 **Estado:** 100% Completado
 

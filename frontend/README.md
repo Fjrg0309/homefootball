@@ -1,18 +1,18 @@
-# 🏠⚽ HomeFootball - Frontend Angular 19
+# HomeFootball - Frontend Angular 19
 
 Aplicación web completa desarrollada con Angular 19 (standalone components) que implementa arquitectura de eventos, servicios, formularios reactivos, routing avanzado e integración con APIs REST.
 
-## ✨ Características Principales
+## Características Principales
 
-- ✅ **Arquitectura de Eventos**: Manipulación del DOM, sistema de eventos, componentes interactivos
-- ✅ **Servicios y Comunicación**: RxJS, Observables, BehaviorSubject, sistema de notificaciones
-- ✅ **Formularios Reactivos**: Validadores personalizados (síncronos y asíncronos), FormArray dinámico
-- ✅ **Routing Avanzado**: Lazy loading, Guards, Resolvers, Breadcrumbs dinámicos
-- ✅ **Integración HTTP**: CRUD completo, interceptores, manejo de errores robusto, loading states
-- ✅ **Modo Oscuro**: Theme switcher con detección automática y persistencia
-- ✅ **Docker Ready**: Configuración completa para desarrollo y producción
+- **Arquitectura de Eventos**: Manipulación del DOM, sistema de eventos, componentes interactivos
+- **Servicios y Comunicación**: RxJS, Observables, BehaviorSubject, sistema de notificaciones
+- **Formularios Reactivos**: Validadores personalizados (síncronos y asíncronos), FormArray dinámico
+- **Routing Avanzado**: Lazy loading, Guards, Resolvers, Breadcrumbs dinámicos
+- **Integración HTTP**: CRUD completo, interceptores, manejo de errores robusto, loading states
+- **Modo Oscuro**: Theme switcher con detección automática y persistencia
+- **Docker Ready**: Configuración completa para desarrollo y producción
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Desarrollo Local
 
@@ -38,50 +38,50 @@ docker-compose up prod
 
 Ver [DOCKER.md](DOCKER.md) para documentación completa de Docker.
 
-## 📋 Estado del Proyecto
+## Estado del Proyecto
 
-### Fase 1: Arquitectura de Eventos - ✅ 100% Completada
-- ✅ Manipulación del DOM (ViewChild, ElementRef, Renderer2)
-- ✅ Sistema de eventos (click, keyboard, mouse, custom events)
-- ✅ Componentes interactivos (modal, tabs, accordion, tooltip)
-- ✅ Theme switcher con modo oscuro
-- ✅ Menú mobile responsive
+### Fase 1: Arquitectura de Eventos - 100% Completada
+- Manipulación del DOM (ViewChild, ElementRef, Renderer2)
+- Sistema de eventos (click, keyboard, mouse, custom events)
+- Componentes interactivos (modal, tabs, accordion, tooltip)
+- Theme switcher con modo oscuro
+- Menú mobile responsive
 
-### Fase 2: Arquitectura de Servicios - ✅ 100% Completada  
-- ✅ Servicios de comunicación (Observable, Subject, BehaviorSubject)
-- ✅ Sistema de notificaciones (ToastService)
-- ✅ Loading states (global y local)
-- ✅ Separación clara lógica/presentación
+### Fase 2: Arquitectura de Servicios - 100% Completada  
+- Servicios de comunicación (Observable, Subject, BehaviorSubject)
+- Sistema de notificaciones (ToastService)
+- Loading states (global y local)
+- Separación clara lógica/presentación
 
-### Fase 3: Formularios Reactivos - ✅ 100% Completada
-- ✅ 3 formularios completos (UserForm, InvoiceForm, ProductForm)
-- ✅ 6 validadores síncronos personalizados
-- ✅ 2 validadores asíncronos con debounce
-- ✅ FormArray para listas dinámicas
-- ✅ Feedback visual completo
+### Fase 3: Formularios Reactivos - 100% Completada
+- 3 formularios completos (UserForm, InvoiceForm, ProductForm)
+- 6 validadores síncronos personalizados
+- 2 validadores asíncronos con debounce
+- FormArray para listas dinámicas
+- Feedback visual completo
 
-### Fase 4: Routing Avanzado - ✅ 100% Completada
-- ✅ 30+ rutas implementadas
-- ✅ Lazy loading en 15 rutas con `loadComponent()`
-- ✅ 3 Guards (auth, admin, pendingChanges)
-- ✅ Resolver para pre-carga de datos
-- ✅ Breadcrumbs dinámicos
-- ✅ Navegación programática
+### Fase 4: Routing Avanzado - 100% Completada
+- 30+ rutas implementadas
+- Lazy loading en 15 rutas con `loadComponent()`
+- 3 Guards (auth, admin, pendingChanges)
+- Resolver para pre-carga de datos
+- Breadcrumbs dinámicos
+- Navegación programática
 
-### Fase 5: Integración con APIs - ✅ 100% Completada
-- ✅ CRUD completo (12 métodos en ProductService)
-- ✅ Consumo de API REST (JSONPlaceholder)
-- ✅ 3 interceptores HTTP (auth, error, logging)
-- ✅ Estados loading/error/empty/success
-- ✅ 15+ interfaces TypeScript
-- ✅ Documentación completa de API
+### Fase 5: Integración con APIs - 100% Completada
+- CRUD completo (12 métodos en ProductService)
+- Consumo de API REST (JSONPlaceholder)
+- 3 interceptores HTTP (auth, error, logging)
+- Estados loading/error/empty/success
+- 15+ interfaces TypeScript
+- Documentación completa de API
 
-### 🎨 Extras Implementados
-- ✅ **Modo Oscuro**: Theme switcher con variables CSS, detección de sistema, persistencia
-- ✅ **Docker**: Multi-stage build, Nginx optimizado, hot reload en desarrollo
-- ✅ **Documentación**: 8 archivos MD con 4000+ líneas de documentación técnica
+### Extras Implementados
+- **Modo Oscuro**: Theme switcher con variables CSS, detección de sistema, persistencia
+- **Docker**: Multi-stage build, Nginx optimizado, hot reload en desarrollo
+- **Documentación**: 8 archivos MD con 4000+ líneas de documentación técnica
 
-## 📚 Documentación
+## Documentación
 
 - **[ENTREGABLES.md](ENTREGABLES.md)** - Lista completa de todos los entregables por fase
 - **[DOCKER.md](DOCKER.md)** - Guía completa de Docker (desarrollo y producción)
@@ -93,7 +93,7 @@ Ver [DOCKER.md](DOCKER.md) para documentación completa de Docker.
 
 ---
 
-## 📑 Tabla de Contenidos Técnica
+## Tabla de Contenidos Técnica
 
 - [Fase 1: Arquitectura de Eventos](#arquitectura-de-eventos)
 - [Fase 2: Arquitectura de Servicios](#️-arquitectura-de-servicios)
@@ -190,7 +190,7 @@ export class EventBusService {
 
 ---
 
-## 🏗️ Arquitectura de Servicios
+## Arquitectura de Servicios
 
 La arquitectura de servicios sigue un **patrón jerárquico** con servicios de dominio específicos (`UserService`, `ProductService`) que consumen `HttpService` y emiten a servicios reactivos (`LoadingService`, `ToastService`). La comunicación fluye unidirectionalmente: **Componentes → Services → Estado Global → View**.
 
@@ -249,7 +249,7 @@ La arquitectura de servicios sigue un **patrón jerárquico** con servicios de d
 
 ---
 
-## 📡 Patrones de Comunicación Implementados
+## Patrones de Comunicación Implementados
 
 Se implementan **cuatro patrones principales** para comunicación desacoplada:
 
@@ -341,7 +341,7 @@ users$ = this.userService.getUsers();
 
 ---
 
-## 📋 Buenas Prácticas de Separación de Responsabilidades
+## Buenas Prácticas de Separación de Responsabilidades
 
 ### Componentes "Dumb" (Presentacionales)
 
@@ -514,7 +514,7 @@ Esta documentación valida la **escalabilidad del proyecto**, facilitando **onbo
 
 ---
 
-## 📝 Fase 3: Formularios Reactivos y Validaciones
+## Fase 3: Formularios Reactivos y Validaciones
 
 La aplicación implementa un **sistema completo de formularios reactivos** usando `ReactiveFormsModule` con validadores síncronos, asíncronos, personalizados y cross-field. Se prioriza la **experiencia de usuario** con validación progresiva, estados de carga y feedback visual.
 
@@ -644,7 +644,7 @@ export class UserForm implements OnInit {
     
     <!-- Estado PENDING durante validación -->
     @if (username?.pending) {
-      <div class="loading-message">⏳ Comprobando disponibilidad...</div>
+      <div class="loading-message">Comprobando disponibilidad...</div>
     }
     
     <!-- Errores solo cuando touched y NO pending -->
@@ -654,7 +654,7 @@ export class UserForm implements OnInit {
           <span>El usuario es obligatorio</span>
         }
         @if (username?.errors?.['usernameTaken']) {
-          <span>❌ Este usuario ya está ocupado</span>
+          <span>Este usuario ya está ocupado</span>
         }
       </div>
     }
@@ -754,13 +754,13 @@ export class InvoiceForm implements OnInit {
         type="button" 
         (click)="removePhone($index)"
         [disabled]="phones.length === 1">
-        🗑️ Eliminar
+        Eliminar
       </button>
     </div>
   }
   
   <button type="button" (click)="addPhone()">
-    ➕ Agregar Teléfono
+    Agregar Teléfono
   </button>
 </div>
 ```
@@ -876,18 +876,18 @@ RESULTADO API
 
 ---
 
-## 🗺️ Fase 4: Routing Avanzado y Navegación
+## Fase 4: Routing Avanzado y Navegación
 
 ### Documentación Completa
 
 Para documentación detallada del sistema de routing, consulta **[ROUTING.md](ROUTING.md)**:
 
-- 🗺️ Mapa completo de rutas
-- 🚀 Estrategia de Lazy Loading
-- 🔐 Guards implementados (auth, admin, pendingChanges)
-- 🔄 Resolvers para precarga de datos
-- 🍞 Breadcrumbs dinámicos
-- 🧭 Navegación programática
+- Mapa completo de rutas
+- Estrategia de Lazy Loading
+- Guards implementados (auth, admin, pendingChanges)
+- Resolvers para precarga de datos
+- Breadcrumbs dinámicos
+- Navegación programática
 
 ### Resumen de Features
 
@@ -981,7 +981,7 @@ this.router.events
   .subscribe(() => this.buildBreadcrumbs());
 
 // Renderizado
-// 🏠 Inicio › Productos › Detalle
+// Inicio > Productos > Detalle
 ```
 
 **Features:**
@@ -1064,11 +1064,11 @@ this.location.back();
 
 ---
 
-## 🌐 Fase 5: Integración con APIs REST
+## Fase 5: Integración con APIs REST
 
 **Tareas Completadas**: 7/7 ✅
 
-### 📚 Documentación Completa
+### Documentación Completa
 Ver **[FASE5-PROCESO.md](FASE5-PROCESO.md)** para la guía completa de implementación HTTP.
 
 ### HttpClient y ApiService
@@ -1141,18 +1141,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 ```typescript
 export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
   const startTime = Date.now();
-  console.log(`🚀 HTTP ${req.method} ${req.url}`);
+  console.log(`HTTP ${req.method} ${req.url}`);
   
   return next(req).pipe(
     tap({
       next: (event: any) => {
         if (event.type === 4) { // HttpEventType.Response
           const duration = Date.now() - startTime;
-          console.log(`✅ ${req.method} ${req.url} - ${event.status} (${duration}ms)`);
+          console.log(`${req.method} ${req.url} - ${event.status} (${duration}ms)`);
         }
       },
       error: (error) => {
-        console.error(`❌ ${req.method} ${req.url} - ${error.status}`);
+        console.error(`${req.method} ${req.url} - ${error.status}`);
       }
     })
   );

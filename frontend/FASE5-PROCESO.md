@@ -1,12 +1,12 @@
-# 📋 Fase 5: Peticiones HTTP y Consumo de APIs - Proceso de Implementación
+# Fase 5: Peticiones HTTP y Consumo de APIs - Proceso de Implementación
 
-## 🎯 Objetivos de la Fase 5
-1. **Tarea 1:** Configuración de HttpClient (provideHttpClient, ApiService, interceptores) ✅
-2. **Tarea 2:** Operaciones CRUD completas (GET, POST, PUT/PATCH, DELETE) ✅
+## Objetivos de la Fase 5
+1. **Tarea 1:** Configuración de HttpClient (provideHttpClient, ApiService, interceptores)
+2. **Tarea 2:** Operaciones CRUD completas (GET, POST, PUT/PATCH, DELETE)
 
 ---
 
-## 📝 Tarea 1: Configuración de HttpClient
+## Tarea 1: Configuración de HttpClient
 
 ### Objetivo
 Configurar HttpClient de forma moderna con `provideHttpClient`, crear un servicio base (`ApiService`) para centralizar operaciones HTTP comunes y configurar interceptores funcionales para gestionar headers, autenticación y logging.
@@ -20,16 +20,16 @@ Configurar HttpClient de forma moderna con `provideHttpClient`, crear un servici
 **HttpClient** es el servicio de Angular para realizar peticiones HTTP. Reemplaza al antiguo módulo Http y proporciona una API moderna basada en Observables.
 
 **Características:**
-- ✅ Basado en RxJS Observables
-- ✅ Tipado fuerte con generics `<T>`
-- ✅ Interceptores para middleware (auth, logging, error handling)
-- ✅ Manejo automático de JSON
-- ✅ Testeable con HttpClientTestingModule
-- ✅ Soporte para progress events
+- Basado en RxJS Observables
+- Tipado fuerte con generics `<T>`
+- Interceptores para middleware (auth, logging, error handling)
+- Manejo automático de JSON
+- Testeable con HttpClientTestingModule
+- Soporte para progress events
 
 **Configuración Moderna (Angular 15+):**
-- ❌ ~~`HttpClientModule`~~ (legacy, basado en NgModules)
-- ✅ `provideHttpClient()` (moderna, standalone, funcional)
+- `HttpClientModule` (legacy, basado en NgModules)
+- `provideHttpClient()` (moderna, standalone, funcional)
 
 ---
 

@@ -1,12 +1,12 @@
-# 🚀 Guía de Configuración y Ejecución
+# Guía de Configuración y Ejecución
 
-## 📋 Prerrequisitos
+## Prerrequisitos
 
 - **Java JDK 21** o superior
 - **Maven 3.8+**
 - IDE recomendado: IntelliJ IDEA, VS Code con Extension Pack for Java, o Eclipse
 
-## 🛠️ Instalación
+## Instalación
 
 ### 1. Clonar el repositorio
 ```bash
@@ -25,7 +25,7 @@ mvn spring-boot:run
 
 O desde tu IDE, ejecutar la clase principal con el método `main()`.
 
-## 🌐 Acceso a la Aplicación
+## Acceso a la Aplicación
 
 - **API REST**: http://localhost:8080/api
 - **Consola H2**: http://localhost:8080/h2-console
@@ -33,7 +33,7 @@ O desde tu IDE, ejecutar la clase principal con el método `main()`.
   - Usuario: `sa`
   - Contraseña: `sa`
 
-## 📡 Probar los Endpoints
+## Probar los Endpoints
 
 ### Usando archivo.http (VS Code con REST Client)
 
@@ -77,7 +77,7 @@ curl http://localhost:8080/api/jugadores/top-goleadores
 2. Configura el base URL: `http://localhost:8080`
 3. Ejecuta las peticiones
 
-## 🔧 Configuración Personalizada
+## Configuración Personalizada
 
 ### Cambiar el puerto del servidor
 En `application.properties`:
@@ -111,7 +111,7 @@ Añadir dependencia en `pom.xml`:
 </dependency>
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Ejecutar tests
 ```bash
@@ -123,7 +123,7 @@ mvn test
 mvn test jacoco:report
 ```
 
-## 🔐 Configuración de Seguridad
+## Configuración de Seguridad
 
 ### Modo Desarrollo (Actual)
 Todos los endpoints están abiertos para facilitar el desarrollo.
@@ -145,7 +145,7 @@ Por:
    - `POST /api/auth/register` - Registro
    - `POST /api/auth/login` - Login (retorna JWT)
 
-## 📦 Generar JAR ejecutable
+## Generar JAR ejecutable
 
 ```bash
 mvn clean package
@@ -158,7 +158,7 @@ Ejecutar:
 java -jar target/book-catalog-0.0.1-SNAPSHOT.jar
 ```
 
-## 🐛 Solución de Problemas
+## Solución de Problemas
 
 ### Error: Puerto 8080 en uso
 Cambiar el puerto en `application.properties` o detener la aplicación que usa el puerto:
@@ -181,7 +181,7 @@ mvn clean compile
 ### Base de datos no se inicializa con datos
 Verificar que `spring.jpa.defer-datasource-initialization=true` esté en `application.properties`
 
-## 📚 Endpoints Documentados
+## Endpoints Documentados
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
