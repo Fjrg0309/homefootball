@@ -8,13 +8,13 @@ INSERT INTO Liga (nombre, pais, temporada_actual) VALUES ('Bundesliga', 'Alemani
 
 -- Entrenadores
 INSERT INTO Miembro (nombre, fecha_nacimiento, nacionalidad) VALUES ('Carlo Ancelotti', '1959-06-10', 'Italia');
-INSERT INTO Entrenador (id, años_experiencia, titulos_ganados) VALUES (1, 35, 25);
+INSERT INTO Entrenador (id, anios_experiencia, titulos_ganados) VALUES (1, 35, 25);
 
 INSERT INTO Miembro (nombre, fecha_nacimiento, nacionalidad) VALUES ('Pep Guardiola', '1971-01-18', 'España');
-INSERT INTO Entrenador (id, años_experiencia, titulos_ganados) VALUES (2, 18, 38);
+INSERT INTO Entrenador (id, anios_experiencia, titulos_ganados) VALUES (2, 18, 38);
 
 INSERT INTO Miembro (nombre, fecha_nacimiento, nacionalidad) VALUES ('Xavi Hernández', '1980-01-25', 'España');
-INSERT INTO Entrenador (id, años_experiencia, titulos_ganados) VALUES (3, 5, 4);
+INSERT INTO Entrenador (id, anios_experiencia, titulos_ganados) VALUES (3, 5, 4);
 
 -- Equipos
 INSERT INTO Equipo (nombre, fecha_fundacion, liga_id, entrenador_id) VALUES ('Real Madrid', '1902-03-06', 1, 1);
