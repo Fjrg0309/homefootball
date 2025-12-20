@@ -17,7 +17,9 @@ public class WebConfig {
                         .allowedOrigins(
                             "http://localhost:3000",
                             "http://localhost:4200",
-                            "http://localhost:5173"
+                            "http://localhost:5173",
+                            "https://homefootball-app-qwddo.ondigitalocean.app",
+                            "https://*.ondigitalocean.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                         .allowedHeaders("*")
