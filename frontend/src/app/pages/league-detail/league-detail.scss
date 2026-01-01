@@ -189,12 +189,6 @@
     
     @include tablet {
       gap: var(--spacing-3); // 24px
-      max-width: 25rem; // 400px - Ancho máximo para los botones
-      margin: 0 auto;
-    }
-    
-    @include desktop {
-      max-width: 22rem; // 352px
     }
   }
 
@@ -203,7 +197,7 @@
     align-items: center;
     justify-content: center;
     width: 100%; // Ocupar todo el ancho disponible
-    padding: var(--spacing-2) var(--spacing-4); // 16px 32px
+    padding: var(--spacing-3) var(--spacing-4); // 24px 32px
     background-color: var(--color-accent);
     color: white;
     font-size: var(--font-size-md); // 16px
@@ -213,12 +207,12 @@
     transition: background-color var(--transition-base) var(--transition-ease),
                 transform var(--transition-base) var(--transition-ease),
                 box-shadow var(--transition-base) var(--transition-ease);
-    min-height: var(--spacing-6); // 48px - Touch target mínimo
+    min-height: 3.5rem; // 56px - Touch target
     
     @include tablet {
-      padding: var(--spacing-2) var(--spacing-5); // 16px 40px
-      font-size: 1.125rem; // 18px
-      min-height: 3.5rem; // 56px
+      padding: var(--spacing-3) var(--spacing-5); // 24px 40px
+      font-size: 1.25rem; // 20px
+      min-height: 4rem; // 64px
     }
 
     &:hover {
@@ -240,8 +234,10 @@
     background-color: var(--color-secundary);
     border-radius: var(--radius-lg); // 16px
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    border: var(--border-thin) solid var(--color-neutral-300);
+    box-shadow: 
+      0 0.25rem 0.5rem rgba(0, 0, 0, 0.1),
+      0 0.5rem 1rem rgba(0, 0, 0, 0.08),
+      0 0 0 0.0625rem rgba(0, 0, 0, 0.05); // Sombra pronunciada como en wireframe
     
     @include desktop {
       position: sticky;
@@ -277,6 +273,7 @@
     line-height: var(--line-height-relaxed); // 1.75
     margin: 0;
     white-space: pre-line;
+    text-align: justify; // Alineación justificada
     
     @include tablet {
       font-size: 0.875rem; // 14px
