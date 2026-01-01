@@ -9,34 +9,14 @@
 // Tools
 @use '01-tools/mixins' as *;
 
-// CSS Layers
-@layer reset, base, layout, components, utilities;
-
-// Reset
-@layer reset {
-  @import '02-generic/reset';
-}
-
-// Elements
-@layer base {
-  @import '03-elements/elements';
-}
-
-// Layout
-@layer layout {
-  @import '04-layout/layouts';
-}
-
-// Components
-@layer components {
-  @import 'components/header';
-  @import 'components/main';
-  @import 'components/footer';
-  @import 'components/sidebar';
-  @import 'components/buttons';
-}
-
-// Utilities
-@layer utilities {
-  @import 'utilities/helpers';
-}
+// Import partials (using @use is not allowed inside @layer, so we use the legacy @import)
+// These are scoped within layers for proper CSS cascade
+@use '02-generic/reset';
+@use '03-elements/elements';
+@use '04-layout/layouts';
+@use 'components/header';
+@use 'components/main';
+@use 'components/footer';
+@use 'components/sidebar';
+@use 'components/buttons';
+@use 'utilities/helpers';

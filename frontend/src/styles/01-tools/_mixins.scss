@@ -1,4 +1,5 @@
 @charset "utf-8";
+@use 'sass:map';
 
 // =============================================
 // MIXINS PARA HOMEFOOTBALL
@@ -30,8 +31,8 @@ $breakpoints: (
 // Uso: @include respond-to('md') { ... }
 // Genera: @media (min-width: 768px) { ... }
 @mixin respond-to($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (min-width: map-get($breakpoints, $breakpoint)) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
       @content;
     }
   } @else {
@@ -52,8 +53,8 @@ $breakpoints: (
 // =============================================
 // Uso cuando necesitamos aplicar estilos SOLO en móvil
 @mixin below($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (max-width: calc(map-get($breakpoints, $breakpoint) - 0.0625rem)) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: calc(map.get($breakpoints, $breakpoint) - 0.0625rem)) {
       @content;
     }
   }
@@ -61,8 +62,8 @@ $breakpoints: (
 
 // Rango específico de breakpoints
 @mixin between($min, $max) {
-  @if map-has-key($breakpoints, $min) and map-has-key($breakpoints, $max) {
-    @media (min-width: map-get($breakpoints, $min)) and (max-width: calc(map-get($breakpoints, $max) - 0.0625rem)) {
+  @if map.has-key($breakpoints, $min) and map.has-key($breakpoints, $max) {
+    @media (min-width: map.get($breakpoints, $min)) and (max-width: calc(map.get($breakpoints, $max) - 0.0625rem)) {
       @content;
     }
   }
