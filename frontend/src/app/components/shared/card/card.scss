@@ -1,17 +1,30 @@
-@use '../../../../styles/00-settings/variables' as *;
+// =============================================
+// Card Component - Mobile-First Responsive
+// =============================================
 
-// Card base
+@use '../../../../styles/00-settings/variables' as *;
+@use '../../../../styles/01-tools/mixins' as *;
+
+// Card base - Mobile-first
 .card {
   background: var(--color-secundary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: all var(--transition-base);
   border: 1px solid var(--color-neutral-300);
   
+  @include tablet {
+    border-radius: var(--radius-lg);
+  }
+  
   &:hover {
     box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+    
+    @include tablet {
+      transform: translateY(-4px);
+    }
   }
 }
 
@@ -30,29 +43,54 @@
 
 .card__image {
   width: 100%;
-  height: 200px;
   object-fit: cover;
+  // Mobile-first
+  height: 150px;
+  
+  @include mobile {
+    height: 180px;
+  }
+  
+  @include tablet {
+    height: 200px;
+  }
 }
 
 .card__content {
-  padding: var(--spacing-3);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--spacing-1);
+  // Mobile-first
+  padding: var(--spacing-2);
+  
+  @include tablet {
+    padding: var(--spacing-3);
+    gap: var(--spacing-2);
+  }
 }
 
 .card__title {
-  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text);
   margin: 0;
+  // Mobile-first
+  font-size: var(--font-size-md);
+  
+  @include tablet {
+    font-size: var(--font-size-lg);
+  }
 }
 
 .card__description {
-  font-size: var(--font-size-md);
   color: var(--color-text-secondary);
   line-height: 1.5;
   margin: 0;
+  // Mobile-first
+  font-size: var(--font-size-sm);
+  
+  @include tablet {
+    font-size: var(--font-size-md);
+  }
 }
 
 .card__actions {
@@ -62,25 +100,75 @@
   flex-wrap: wrap;
 }
 
-// Card horizontal
+// Card horizontal - responsive
 .card--horizontal {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  // Mobile: stack vertical
+  grid-template-columns: 1fr;
+  
+  @include mobile {
+    grid-template-columns: 140px 1fr;
+  }
+  
+  @include tablet {
+    grid-template-columns: 200px 1fr;
+  }
   
   .card__picture {
-    height: 100%;
+    height: 150px;
+    
+    @include mobile {
+      height: 100%;
+    }
   }
   
   .card__image {
     height: 100%;
-    min-height: 200px;
+    min-height: 120px;
+    
+    @include mobile {
+      min-height: 150px;
+    }
+    
+    @include tablet {
+      min-height: 200px;
+    }
   }
+}
+
+// Card con Container Query - se adapta a su contenedor
+.card--adaptive {
+  container-type: inline-size;
+  container-name: card;
   
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
+  // Cuando el contenedor es >= 400px, cambiar a horizontal
+  @container card (min-width: 400px) {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    
+    .card__picture {
+      height: 100%;
+    }
     
     .card__image {
-      height: 200px;
+      height: 100%;
+      min-height: 160px;
+    }
+    
+    .card__content {
+      padding: var(--spacing-3);
+    }
+  }
+  
+  @container card (min-width: 500px) {
+    grid-template-columns: 220px 1fr;
+    
+    .card__image {
+      min-height: 200px;
+    }
+    
+    .card__title {
+      font-size: var(--font-size-lg);
     }
   }
 }

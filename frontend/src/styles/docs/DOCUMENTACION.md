@@ -1648,3 +1648,444 @@ La página está organizada en secciones temáticas:
 - Sirve como documentación viva que siempre está actualizada
 
 ---
+
+## 4. Responsive Design
+
+### 4.1 Breakpoints Definidos
+
+El sistema de breakpoints define puntos de ruptura donde el diseño cambia para adaptarse a diferentes tamaños de pantalla.
+
+| Nombre | Valor (rem) | Valor (px) | Dispositivo | Justificación |
+|--------|-------------|------------|-------------|---------------|
+| `xs` | 20rem | 320px | Mobile pequeño | iPhone SE y dispositivos más pequeños del mercado. Es el mínimo viable para garantizar que la app funcione en cualquier smartphone. |
+| `sm` | 23.4375rem | 375px | Mobile estándar | iPhone 12/13/14 y Android equivalentes. Es el tamaño más común de móvil actualmente, representa ~40% del mercado. |
+| `md` | 48rem | 768px | Tablet | iPad en portrait. Punto donde hay suficiente espacio para mostrar más contenido en horizontal y cambiar layouts de 1 a 2 columnas. |
+| `lg` | 64rem | 1024px | Desktop pequeño | iPad Pro landscape, laptops pequeños. Permite layouts más complejos pero aún necesita optimización. |
+| `xl` | 80rem | 1280px | Desktop estándar | Monitores HD (720p). La mayoría de usuarios desktop. Layout completo con sidebar y múltiples columnas. |
+| `xxl` | 90rem | 1440px | Desktop grande | Monitores Full HD (1080p). Para usuarios con pantallas grandes, máximo aprovechamiento del espacio. |
+
+**¿Por qué estos valores específicos?**
+
+1. **Uso de rem en lugar de px:** Los breakpoints en rem respetan la configuración de tamaño de fuente del usuario, mejorando accesibilidad.
+
+2. **Basados en dispositivos reales:** Cada breakpoint corresponde a dispositivos populares del mercado actual.
+
+3. **Espaciado progresivo:** Los saltos entre breakpoints son lo suficientemente grandes para justificar cambios de diseño significativos.
+
+**Implementación en código:**
+
+```scss
+// Archivo: src/styles/01-tools/_mixins.scss
+
+$breakpoints: (
+  'xs': 20rem,      // 320px
+  'sm': 23.4375rem, // 375px  
+  'md': 48rem,      // 768px
+  'lg': 64rem,      // 1024px
+  'xl': 80rem,      // 1280px
+  'xxl': 90rem      // 1440px
+);
+```
+
+---
+
+### 4.2 Estrategia Responsive: Mobile-First
+
+He elegido la estrategia **Mobile-First** para este proyecto. Esto significa que los estilos base están diseñados para móvil, y luego añado complejidad con media queries `min-width` para pantallas más grandes.
+
+#### ¿Por qué Mobile-First?
+
+**1. Rendimiento en móviles**
+Los dispositivos móviles tienen menos potencia de procesamiento y conexiones más lentas. Con Mobile-First, el CSS que cargan es el más ligero (solo los estilos base). Los estilos adicionales para desktop solo se cargan si la pantalla es grande.
+
+**2. Enfoque progresivo (Progressive Enhancement)**
+Diseñamos primero para la experiencia más restrictiva y vamos añadiendo mejoras. Así garantizamos que la app funcione bien en cualquier dispositivo, incluso los más básicos.
+
+**3. Google favorece Mobile-First**
+Google usa "Mobile-First Indexing" para SEO. Si la versión móvil funciona bien, el posicionamiento mejora.
+
+**4. Estadísticas de uso**
+Más del 60% del tráfico web viene de móviles. En apps de fútbol es aún mayor porque la gente consulta resultados desde el móvil.
+
+**5. Código más limpio**
+Con Mobile-First, las media queries "añaden" estilos en lugar de "sobrescribir". El código es más fácil de mantener.
+
+#### Comparación: Mobile-First vs Desktop-First
+
+| Aspecto | Mobile-First ✅ | Desktop-First |
+|---------|-----------------|---------------|
+| Media query | `min-width` (añade estilos) | `max-width` (quita estilos) |
+| CSS base | Ligero (para móvil) | Pesado (para desktop) |
+| Rendimiento móvil | Óptimo | CSS innecesario se carga |
+| SEO (Google) | Favorecido | No favorecido |
+| Mantenibilidad | Alta (progresivo) | Media (regresivo) |
+
+#### Ejemplo de código Mobile-First
+
+```scss
+// Los estilos BASE son para móvil (sin media query)
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr;  // 1 columna en móvil
+  gap: 1rem;
+  padding: 1rem;
+  
+  // Tablet: añadimos 2 columnas
+  @include tablet {  // min-width: 768px
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  // Desktop: añadimos más columnas y espacio
+  @include desktop {  // min-width: 1280px
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+  }
+}
+```
+
+#### Mixins Mobile-First implementados
+
+```scss
+// Mixins semánticos (todos usan min-width)
+@mixin mobile-small { @media (min-width: 20rem) { @content; } }     // >= 320px
+@mixin mobile { @media (min-width: 23.4375rem) { @content; } }      // >= 375px
+@mixin tablet { @media (min-width: 48rem) { @content; } }           // >= 768px
+@mixin desktop-small { @media (min-width: 64rem) { @content; } }    // >= 1024px
+@mixin desktop { @media (min-width: 80rem) { @content; } }          // >= 1280px
+@mixin desktop-large { @media (min-width: 90rem) { @content; } }    // >= 1440px
+
+// Mixin genérico
+@mixin respond-to($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+  @media (min-width: $value) { @content; }
+}
+
+// Mixin para excepciones (solo móvil)
+@mixin below($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+  @media (max-width: calc(#{$value} - 0.0625rem)) { @content; }
+}
+```
+
+---
+
+### 4.3 Container Queries
+
+Las Container Queries son una característica CSS moderna que permite que un componente se adapte basándose en el tamaño de su **contenedor padre**, no del viewport global. Esto hace los componentes verdaderamente reutilizables.
+
+#### ¿Por qué usar Container Queries?
+
+Con Media Queries tradicionales, un componente siempre se adapta al ancho de la ventana. Pero si ese componente está dentro de un sidebar estrecho, seguirá mostrando su versión "desktop" aunque no quepa bien.
+
+Con Container Queries, el componente "mira" cuánto espacio tiene disponible en su contenedor y se adapta a eso.
+
+| Media Queries | Container Queries |
+|---------------|-------------------|
+| Se adapta al viewport | Se adapta al contenedor |
+| Componente depende del contexto global | Componente auto-contenido |
+| Mismo componente = mismo tamaño | Mismo componente = diferente según dónde esté |
+
+#### Componentes con Container Queries implementados
+
+**1. `.cq-adaptive-card` - Tarjeta adaptable**
+
+Esta tarjeta cambia de layout vertical a horizontal según el espacio disponible en su contenedor.
+
+```scss
+// Archivo: src/styles/components/_container-queries.scss
+
+.cq-adaptive-card {
+  container-type: inline-size;  // Define que este elemento es un contenedor
+  
+  &__inner {
+    display: flex;
+    flex-direction: column;  // Por defecto: vertical
+    gap: 1rem;
+  }
+  
+  &__image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+  
+  // Cuando el contenedor tiene >= 400px, cambia a horizontal
+  @container (min-width: 400px) {
+    &__inner {
+      flex-direction: row;
+    }
+    
+    &__image {
+      width: 40%;
+      aspect-ratio: 1;
+    }
+  }
+  
+  // Cuando tiene >= 600px, más espacio para imagen
+  @container (min-width: 600px) {
+    &__image {
+      width: 50%;
+    }
+    
+    &__content {
+      padding: 1.5rem;
+    }
+  }
+}
+```
+
+**¿Por qué este componente?** Las tarjetas de partidos y noticias aparecen en múltiples contextos: en el main content (ancho), en sidebars (estrecho), en grids (variable). Con Container Queries, la misma tarjeta se adapta automáticamente.
+
+**2. `.cq-match-card` - Tarjeta de partidos**
+
+Optimizada para mostrar información de partidos de fútbol.
+
+```scss
+.cq-match-card {
+  container-type: inline-size;
+  
+  &__teams {
+    display: flex;
+    flex-direction: column;  // Equipos apilados en espacios pequeños
+    text-align: center;
+  }
+  
+  &__score {
+    font-size: 1.5rem;
+  }
+  
+  @container (min-width: 280px) {
+    &__teams {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
+  @container (min-width: 400px) {
+    &__score {
+      font-size: 2rem;
+    }
+    
+    &__stats {
+      display: flex;  // Mostrar estadísticas adicionales
+    }
+  }
+}
+```
+
+**¿Por qué este componente?** Los partidos son el contenido principal de HomeFootball. Aparecen en listas, en widgets del sidebar, en la página principal. Container Queries garantizan que siempre se vean bien.
+
+**3. `.card--adaptive` - Modificador para cards existentes**
+
+Un modificador que añade Container Queries al componente Card base.
+
+```scss
+// Archivo: src/app/components/shared/card/card.scss
+
+.card--adaptive {
+  container-type: inline-size;
+  
+  @container (min-width: 350px) {
+    .card__content {
+      padding: var(--space-5);
+    }
+  }
+  
+  @container (min-width: 500px) {
+    display: flex;
+    flex-direction: row;
+    
+    .card__image {
+      width: 40%;
+      flex-shrink: 0;
+    }
+  }
+}
+```
+
+#### Ejemplo de uso en HTML
+
+```html
+<!-- La card se adapta al ancho de su contenedor, no de la ventana -->
+<div class="sidebar" style="width: 300px;">
+  <article class="cq-adaptive-card">
+    <div class="cq-adaptive-card__inner">
+      <img class="cq-adaptive-card__image" src="match.jpg" alt="">
+      <div class="cq-adaptive-card__content">
+        <h3>Real Madrid vs Barcelona</h3>
+        <p>El Clásico de la temporada</p>
+      </div>
+    </div>
+  </article>
+</div>
+
+<!-- La misma card en el main content (más ancho) se ve diferente -->
+<main class="main-content" style="width: 800px;">
+  <article class="cq-adaptive-card">
+    <!-- Mismo HTML, pero layout horizontal automático -->
+  </article>
+</main>
+```
+
+---
+
+### 4.4 Adaptaciones Principales
+
+Esta tabla resume cómo se adapta cada elemento de la aplicación en los tres tamaños principales:
+
+| Elemento | Mobile (375px) | Tablet (768px) | Desktop (1280px) |
+|----------|----------------|----------------|------------------|
+| **Header** | Logo + hamburger menu. Nav oculta. | Logo + nav horizontal reducida. | Logo + nav completa + usuario. |
+| **Navegación** | Menú desplegable fullscreen. | Links horizontales, algunos iconos. | Links completos con texto + iconos. |
+| **Grid de productos** | 1 columna | 2 columnas | 3-4 columnas auto-fit |
+| **Cards** | Layout vertical (imagen arriba, contenido abajo). | Algunas horizontales con Container Queries. | Horizontal con más espacio para contenido. |
+| **Sidebar** | Oculto o debajo del main content. | Visible pero estrecho (200px). | Completo (280px) con más widgets. |
+| **Tablas** | Convertidas a cards apiladas. | Tabla con scroll horizontal si necesario. | Tabla completa sin restricciones. |
+| **Formularios** | Inputs full width, stacked. | Inputs más anchos, algunos inline. | Layout en columnas para forms largos. |
+| **Footer** | Links apilados en columna. | 2 columnas de links. | 4 columnas + sección de copyright. |
+| **Tipografía** | Base 14px, H1 1.75rem | Base 16px, H1 2rem | Base 16px, H1 2.5rem |
+| **Spacing** | Gap 1rem, padding 1rem | Gap 1.5rem, padding 1.5rem | Gap 2rem, padding 2rem |
+| **Touch targets** | Mínimo 44x44px obligatorio | 44x44px | No aplica (mouse) |
+| **Imágenes** | Aspect ratio 16:9, full width | Aspect ratio variable | Tamaño original respetado |
+
+#### Comportamientos específicos
+
+**Header responsive:**
+- En móvil: Hamburger menu que abre navegación fullscreen con overlay
+- En tablet: Nav horizontal condensada, algunos elementos en iconos
+- En desktop: Nav completa con todos los elementos visibles
+
+**Tablas → Cards en móvil:**
+Las tablas de datos (como lista de partidos) se convierten en cards apiladas en móvil para evitar scroll horizontal:
+
+```scss
+.data-table {
+  @include below('md') {  // Solo en móvil
+    thead { display: none; }
+    
+    tr {
+      display: block;
+      margin-bottom: 1rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+    
+    td {
+      display: flex;
+      justify-content: space-between;
+      
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+      }
+    }
+  }
+}
+```
+
+---
+
+### 4.5 Páginas Implementadas
+
+Lista de todas las páginas con diseño responsive implementado:
+
+| Página | Ruta | Descripción | Adaptaciones responsive |
+|--------|------|-------------|-------------------------|
+| **Home** | `/` | Página principal con partidos destacados y noticias | Grid de 1→2→3 columnas. Sidebar se oculta en móvil. Match cards con Container Queries. |
+| **Login** | `/login` | Formulario de inicio de sesión | Centrado vertical. Form full-width en móvil. Touch targets de 44px. Quick-login buttons stacked en móvil. |
+| **Product List** | `/products` | Lista de productos con filtros | Grid responsive auto-fit. Filtros en drawer lateral en móvil. Cards adaptables. |
+| **Product Detail** | `/products/:id` | Detalle de un producto | Imagen full-width en móvil. Layout 2 columnas en desktop. Galería con swipe en móvil. |
+| **Style Guide** | `/style-guide` | Documentación de componentes UI | Secciones stacked en móvil. Ejemplos se adaptan al viewport. |
+| **About** | `/about` | Información sobre la aplicación | Texto centrado. Márgenes ajustados por viewport. |
+| **Profile** | `/profile` | Perfil del usuario | Avatar y datos en columna (móvil) o fila (desktop). |
+| **Admin Dashboard** | `/admin` | Panel de administración | Sidebar colapsable. Tablas responsive. Métricas en grid adaptable. |
+| **404 Not Found** | `**` | Página de error | Centrado. Botones stacked en móvil. |
+
+---
+
+### 4.6 Screenshots Comparativos
+
+A continuación se muestran capturas de pantalla de 3 páginas en los 3 viewports principales:
+
+#### Home Page
+
+**Mobile (375px)**
+![Home - Mobile 375px](images/responsive/home-mobile.png)
+- Navegación colapsada en hamburger menu
+- Cards de partidos en columna única
+- Sidebar oculto, contenido accesible via botón
+
+**Tablet (768px)**
+![Home - Tablet 768px](images/responsive/home-tablet.png)
+- Navegación horizontal visible
+- Grid de 2 columnas para partidos
+- Sidebar visible pero estrecho
+
+**Desktop (1280px)**
+![Home - Desktop 1280px](images/responsive/home-desktop.png)
+- Navegación completa con todos los elementos
+- Grid de 3+ columnas con auto-fit
+- Sidebar completo con widgets adicionales
+
+---
+
+#### Login Page
+
+**Mobile (375px)**
+![Login - Mobile 375px](images/responsive/login-mobile.png)
+- Formulario centrado con padding reducido
+- Inputs ocupan 100% del ancho
+- Botones de login social apilados verticalmente
+
+**Tablet (768px)**
+![Login - Tablet 768px](images/responsive/login-tablet.png)
+- Card del formulario con max-width
+- Más espacio alrededor del formulario
+- Botones sociales en fila
+
+**Desktop (1280px)**
+![Login - Desktop 1280px](images/responsive/login-desktop.png)
+- Formulario centrado con máximo ancho
+- Espaciado generoso
+- Posible imagen/ilustración lateral
+
+---
+
+#### Product List Page
+
+**Mobile (375px)**
+![Product List - Mobile 375px](images/responsive/products-mobile.png)
+- Products en columna única
+- Filtros en drawer/modal
+- Cards compactas
+
+**Tablet (768px)**
+![Product List - Tablet 768px](images/responsive/products-tablet.png)
+- Grid de 2 columnas
+- Filtros visibles en sidebar
+- Cards con más información visible
+
+**Desktop (1280px)**
+![Product List - Desktop 1280px](images/responsive/products-desktop.png)
+- Grid de 3-4 columnas auto-fit
+- Sidebar de filtros completo
+- Cards con layout horizontal disponible
+
+---
+
+#### Cómo generar tus propios screenshots
+
+1. Abre la aplicación en Chrome
+2. Abre DevTools (F12)
+3. Click en "Toggle Device Toolbar" (Ctrl+Shift+M)
+4. Selecciona dimensiones: 375×667, 768×1024, 1280×800
+5. Click derecho → "Capture screenshot"
+6. Guarda las imágenes en `src/styles/docs/images/responsive/`
+
+**Nota:** Crear la carpeta `images/responsive/` si no existe y añadir las capturas con los nombres indicados.
+
+---

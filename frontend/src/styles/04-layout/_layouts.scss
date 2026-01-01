@@ -1,0 +1,402 @@
+// =============================================
+// LAYOUT UTILITIES - RESPONSIVE LAYOUTS
+// Estrategia: Mobile-First
+// =============================================
+
+@use '../00-settings/variables' as *;
+@use '../01-tools/mixins' as *;
+
+// =============================================
+// CONTAINER SYSTEM
+// =============================================
+
+// Container base - ancho máximo con padding responsive
+.container {
+  width: 100%;
+  max-width: var(--breakpoint-xl);
+  margin-inline: auto;
+  padding-inline: var(--spacing-2);
+  
+  @include tablet {
+    padding-inline: var(--spacing-3);
+  }
+  
+  @include desktop {
+    padding-inline: var(--spacing-4);
+  }
+  
+  // Variantes de ancho
+  &--sm {
+    max-width: var(--breakpoint-sm);
+  }
+  
+  &--md {
+    max-width: var(--breakpoint-md);
+  }
+  
+  &--lg {
+    max-width: var(--breakpoint-lg);
+  }
+  
+  &--fluid {
+    max-width: 100%;
+  }
+}
+
+// =============================================
+// RESPONSIVE GRID SYSTEM
+// =============================================
+
+// Grid auto-fit responsive
+.grid {
+  display: grid;
+  gap: var(--spacing-3);
+  
+  @include tablet {
+    gap: var(--spacing-4);
+  }
+  
+  // Grid con columnas automáticas
+  &--auto {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+  
+  &--auto-sm {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+  
+  &--auto-lg {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  }
+  
+  // Grid fijo responsive
+  &--2 {
+    grid-template-columns: 1fr;
+    
+    @include tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  &--3 {
+    grid-template-columns: 1fr;
+    
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include tablet {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  &--4 {
+    grid-template-columns: 1fr;
+    
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include tablet {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    @include desktop {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  &--6 {
+    grid-template-columns: repeat(2, 1fr);
+    
+    @include mobile {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    @include tablet {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    
+    @include desktop {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+}
+
+// =============================================
+// FLEXBOX UTILITIES
+// =============================================
+
+.flex {
+  display: flex;
+  
+  &--column {
+    flex-direction: column;
+  }
+  
+  &--wrap {
+    flex-wrap: wrap;
+  }
+  
+  &--center {
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &--between {
+    justify-content: space-between;
+  }
+  
+  &--around {
+    justify-content: space-around;
+  }
+  
+  &--start {
+    align-items: flex-start;
+  }
+  
+  &--end {
+    align-items: flex-end;
+  }
+  
+  // Gap responsive
+  &--gap-sm {
+    gap: var(--spacing-1);
+    
+    @include tablet {
+      gap: var(--spacing-2);
+    }
+  }
+  
+  &--gap-md {
+    gap: var(--spacing-2);
+    
+    @include tablet {
+      gap: var(--spacing-3);
+    }
+  }
+  
+  &--gap-lg {
+    gap: var(--spacing-3);
+    
+    @include tablet {
+      gap: var(--spacing-4);
+    }
+  }
+}
+
+// =============================================
+// LAYOUT PATTERNS
+// =============================================
+
+// Layout principal con sidebar
+.layout-sidebar {
+  display: grid;
+  gap: var(--spacing-3);
+  grid-template-columns: 1fr;
+  
+  @include tablet {
+    gap: var(--spacing-4);
+  }
+  
+  @include desktop-small {
+    grid-template-columns: 1fr 18rem;
+  }
+  
+  @include desktop {
+    grid-template-columns: 1fr 20rem;
+  }
+  
+  // Variante con sidebar a la izquierda
+  &--left {
+    @include desktop-small {
+      grid-template-columns: 18rem 1fr;
+    }
+    
+    @include desktop {
+      grid-template-columns: 20rem 1fr;
+    }
+  }
+}
+
+// Layout de 2 columnas iguales
+.layout-split {
+  display: grid;
+  gap: var(--spacing-3);
+  grid-template-columns: 1fr;
+  
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-4);
+  }
+}
+
+// Layout centrado (login, formularios)
+.layout-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3);
+  
+  @include tablet {
+    padding: var(--spacing-4);
+  }
+}
+
+// =============================================
+// STACK (Espaciado vertical)
+// =============================================
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  
+  &--sm { gap: var(--spacing-1); }
+  &--md { gap: var(--spacing-3); }
+  &--lg { gap: var(--spacing-4); }
+  &--xl { gap: var(--spacing-6); }
+}
+
+// =============================================
+// RESPONSIVE VISIBILITY
+// =============================================
+
+// Ocultar en móvil (mostrar en tablet+)
+.hide-mobile {
+  display: none !important;
+  
+  @include tablet {
+    display: block !important;
+  }
+}
+
+.hide-mobile-flex {
+  display: none !important;
+  
+  @include tablet {
+    display: flex !important;
+  }
+}
+
+// Ocultar en tablet+ (mostrar solo en móvil)
+.show-mobile-only {
+  display: block !important;
+  
+  @include tablet {
+    display: none !important;
+  }
+}
+
+.show-mobile-only-flex {
+  display: flex !important;
+  
+  @include tablet {
+    display: none !important;
+  }
+}
+
+// Ocultar en desktop
+.hide-desktop {
+  @include desktop {
+    display: none !important;
+  }
+}
+
+// =============================================
+// ASPECT RATIOS
+// =============================================
+
+.aspect {
+  &-square { aspect-ratio: 1 / 1; }
+  &-video { aspect-ratio: 16 / 9; }
+  &-portrait { aspect-ratio: 3 / 4; }
+  &-wide { aspect-ratio: 21 / 9; }
+}
+
+// =============================================
+// RESPONSIVE SPACING
+// =============================================
+
+// Sección con padding vertical responsive
+.section {
+  padding-block: var(--spacing-4);
+  
+  @include tablet {
+    padding-block: var(--spacing-6);
+  }
+  
+  @include desktop {
+    padding-block: var(--spacing-8);
+  }
+  
+  &--sm {
+    padding-block: var(--spacing-3);
+    
+    @include tablet {
+      padding-block: var(--spacing-4);
+    }
+  }
+  
+  &--lg {
+    padding-block: var(--spacing-6);
+    
+    @include tablet {
+      padding-block: var(--spacing-8);
+    }
+    
+    @include desktop {
+      padding-block: var(--spacing-10);
+    }
+  }
+}
+
+// =============================================
+// RESPONSIVE TEXT ALIGNMENT
+// =============================================
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// Centrado solo en móvil
+.text-center-mobile {
+  text-align: center;
+  
+  @include tablet {
+    text-align: left;
+  }
+}
+
+// =============================================
+// MAIN CONTENT WRAPPER
+// =============================================
+
+.page {
+  min-height: calc(100vh - var(--header-height-mobile, 3.5rem));
+  padding-block: var(--spacing-3);
+  
+  @include tablet {
+    min-height: calc(100vh - var(--header-height, 4rem));
+    padding-block: var(--spacing-4);
+  }
+}
+
+// =============================================
+// SAFE AREAS (para móviles con notch)
+// =============================================
+
+.safe-area-inset {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}

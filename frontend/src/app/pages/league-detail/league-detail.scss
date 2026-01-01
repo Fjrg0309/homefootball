@@ -1,0 +1,277 @@
+// =============================================
+// League Detail Page - Mobile-First Responsive
+// =============================================
+
+@use '../../../styles/01-tools/mixins' as *;
+
+.league-detail {
+  min-height: calc(100vh - 160px);
+  background-color: var(--color-primary);
+  padding: 1rem;
+  
+  @include tablet {
+    padding: 1.5rem 2rem;
+  }
+  
+  @include desktop {
+    padding: 2rem 3rem;
+  }
+
+  // =============================================
+  // CONTAINER
+  // =============================================
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // =============================================
+  // HEADER
+  // =============================================
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    
+    @include tablet {
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__icon {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    
+    @include tablet {
+      font-size: 2rem;
+    }
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin: 0;
+    
+    @include mobile {
+      font-size: 1.5rem;
+    }
+    
+    @include tablet {
+      font-size: 1.75rem;
+    }
+  }
+
+  // =============================================
+  // LAYOUT - Grid de 3 columnas
+  // =============================================
+  &__layout {
+    display: grid;
+    gap: 1.5rem;
+    
+    // Mobile: stack vertical
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "social"
+      "content"
+      "about";
+    
+    // Tablet: 2 columnas
+    @include tablet {
+      grid-template-columns: 100px 1fr;
+      grid-template-areas:
+        "social content"
+        "social about";
+      gap: 2rem;
+    }
+    
+    // Desktop: 3 columnas como en la imagen
+    @include desktop {
+      grid-template-columns: 120px 1fr 280px;
+      grid-template-areas: "social content about";
+      gap: 2rem;
+      align-items: start;
+    }
+  }
+
+  // =============================================
+  // SIDEBAR IZQUIERDO - REDES SOCIALES
+  // =============================================
+  &__social {
+    grid-area: social;
+  }
+
+  &__social-title {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    margin: 0 0 1rem;
+    text-align: center;
+    
+    @include tablet {
+      text-align: left;
+    }
+  }
+
+  &__social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    
+    @include tablet {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+  }
+
+  &__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    color: white;
+    transition: transform var(--transition-base) var(--transition-ease),
+                box-shadow var(--transition-base) var(--transition-ease);
+    
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-md);
+    }
+
+    &--twitter {
+      background-color: #000000;
+    }
+
+    &--instagram {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    &--tiktok {
+      background-color: #000000;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #69C9D0, #EE1D52);
+        opacity: 0.3;
+      }
+    }
+
+    svg {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  // =============================================
+  // CONTENIDO CENTRAL - BOTONES DE NAVEGACIÓN
+  // =============================================
+  &__content {
+    grid-area: content;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    @include tablet {
+      gap: 1.25rem;
+    }
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    background-color: var(--color-accent);
+    color: white;
+    font-size: 1rem;
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    border-radius: 9999px; // Pill shape
+    transition: background-color var(--transition-base) var(--transition-ease),
+                transform var(--transition-base) var(--transition-ease),
+                box-shadow var(--transition-base) var(--transition-ease);
+    min-height: 48px; // Touch target
+    
+    @include tablet {
+      padding: 1.25rem 2.5rem;
+      font-size: 1.125rem;
+    }
+    
+    @include desktop {
+      padding: 1rem 2rem;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    &:hover {
+      background-color: var(--color-accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 217, 95, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // =============================================
+  // SIDEBAR DERECHO - ACERCA DE
+  // =============================================
+  &__about {
+    grid-area: about;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    
+    @include desktop {
+      position: sticky;
+      top: 100px;
+    }
+  }
+
+  &__about-title {
+    background-color: var(--color-header);
+    color: var(--color-header-text);
+    padding: 0.75rem 1rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: var(--font-weight-semibold);
+    
+    @include tablet {
+      padding: 1rem 1.25rem;
+      font-size: 1.125rem;
+    }
+  }
+
+  &__about-content {
+    padding: 1rem;
+    
+    @include tablet {
+      padding: 1.25rem;
+    }
+  }
+
+  &__about-text {
+    color: white;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-line;
+    
+    @include tablet {
+      font-size: 0.9375rem;
+    }
+  }
+}

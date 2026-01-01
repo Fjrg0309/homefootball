@@ -1,0 +1,40 @@
+<app-header />
+
+<main class="league-matches">
+  <div class="league-matches__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="league-matches__header">
+      <h1 class="league-matches__title">Partidos</h1>
+    </header>
+
+    <!-- Lista de partidos -->
+    <section class="league-matches__content">
+      <div class="matches-list">
+        @for (match of matches(); track match.id) {
+          <article class="match-row">
+            <span class="match-row__team match-row__team--home" [class.match-row__team--winner]="getWinnerClass(match, 'home') === 'winner'">
+              {{ match.homeTeam }}
+            </span>
+            <span class="match-row__score">
+              {{ match.homeScore }} - {{ match.awayScore }}
+            </span>
+            <span class="match-row__team match-row__team--away" [class.match-row__team--winner]="getWinnerClass(match, 'away') === 'winner'">
+              {{ match.awayTeam }}
+            </span>
+          </article>
+        }
+      </div>
+    </section>
+
+    <!-- Botón volver -->
+    <nav class="league-matches__nav">
+      <a [routerLink]="['/liga', leagueId()]" class="league-matches__back">
+        ← Volver a {{ leagueName() }}
+      </a>
+    </nav>
+
+  </div>
+</main>
+
+<app-footer />

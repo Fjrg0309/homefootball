@@ -149,6 +149,20 @@ export const routes: Routes = [
     data: { breadcrumb: 'Editar (con Feedback)' }
   },
   
+  // Liga detalle - Página de liga seleccionada
+  {
+    path: 'liga/:id',
+    loadComponent: () => import('./pages/league-detail/league-detail').then(m => m.LeagueDetail),
+    data: { breadcrumb: 'Liga' }
+  },
+  
+  // Liga partidos - Página de partidos de una liga
+  {
+    path: 'liga/:id/partidos',
+    loadComponent: () => import('./pages/league-matches/league-matches').then(m => m.LeagueMatches),
+    data: { breadcrumb: 'Partidos' }
+  },
+  
   // Wildcard 404 - SIEMPRE AL FINAL
   { path: '**', component: NotFound }
 ];

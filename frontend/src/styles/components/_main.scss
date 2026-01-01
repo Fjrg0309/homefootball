@@ -1,56 +1,77 @@
-// Main content
+// =============================================
+// Main Content - Mobile-First Styles
+// =============================================
 
 @use '../00-settings/variables' as *;
 @use '../01-tools/mixins' as *;
 
 .main {
   width: 100%;
-  min-height: calc(100vh - var(--header-height, 4rem) - 3.75rem);
-  
-  // Padding consistente (base-8)
-  padding: var(--spacing-4) 0;
-  
   background-color: var(--color-primary);
+  
+  // Mobile-first: estilos base
+  min-height: calc(100vh - var(--header-height-mobile, 3.5rem) - 3.75rem);
+  padding: var(--spacing-3) 0;
   
   // Transición para cambios de fondo
   transition: background-color var(--transition-base) var(--transition-ease);
 
-  @media (max-width: 48rem) {
-    min-height: calc(100vh - var(--header-height-mobile, 3.5rem) - 3.75rem);
-    padding: var(--spacing-3) 0;
+  // Tablet+
+  @include tablet {
+    min-height: calc(100vh - var(--header-height, 4rem) - 3.75rem);
+    padding: var(--spacing-4) 0;
   }
 
   &__container {
     // Ancho máximo contenido
     max-width: var(--breakpoint-xl);
     margin: 0 auto;
-    
-    // Padding lateral consistente (base-8)
-    padding: 0 var(--spacing-4);
     width: 100%;
+    
+    // Mobile-first
+    padding: 0 var(--spacing-2);
     
     // Transición para efectos de estado (loading, etc.)
     transition: opacity var(--transition-base) var(--transition-ease);
 
-    @media (max-width: 48rem) {
-      padding: 0 var(--spacing-2);
+    @include tablet {
+      padding: 0 var(--spacing-3);
+    }
+    
+    @include desktop {
+      padding: 0 var(--spacing-4);
     }
   }
 
-  // Búsqueda
+  // =============================================
+  // BÚSQUEDA
+  // =============================================
   &__search {
     position: relative;
-    max-width: 37.5rem;
-    margin: 0 auto var(--spacing-4);
+    margin: 0 auto var(--spacing-3);
+    
+    // Mobile: ancho completo
+    max-width: 100%;
+    
+    @include tablet {
+      max-width: 37.5rem;
+      margin-bottom: var(--spacing-4);
+    }
 
     &-input {
       width: 100%;
-      padding: var(--spacing-2) var(--spacing-6) var(--spacing-2) var(--spacing-3);
       border: 0.125rem solid var(--color-neutral-300);
       border-radius: 3.125rem;
-      font-size: var(--font-size-md);
       background-color: var(--color-secundary);
       transition: all var(--transition-base) var(--transition-ease);
+      
+      // Mobile
+      padding: var(--spacing-2) var(--spacing-6) var(--spacing-2) var(--spacing-3);
+      font-size: var(--font-size-md);
+
+      @include tablet {
+        padding: var(--spacing-2) var(--spacing-6) var(--spacing-2) var(--spacing-4);
+      }
 
       &::placeholder {
         color: var(--color-text-secondary);
@@ -78,6 +99,9 @@
       justify-content: center;
       border-radius: 50%;
       transition: all var(--transition-base) var(--transition-ease);
+      // Touch target
+      min-width: 2.75rem;
+      min-height: 2.75rem;
 
       &:hover {
         color: var(--color-accent);
@@ -91,59 +115,81 @@
     }
   }
 
-  // Layout dos columnas
+  // =============================================
+  // LAYOUT DOS COLUMNAS
+  // =============================================
   &__layout {
-    // Grid para distribución de contenido + sidebar
     display: grid;
-    grid-template-columns: 1fr var(--sidebar-width, 18.75rem);
-    gap: var(--spacing-4);
     
-    // Transición suave para cambios de layout
-    transition: gap var(--transition-base) var(--transition-ease);
-
-    @media (max-width: 64rem) {
-      grid-template-columns: 1fr 15.625rem;
-      gap: var(--spacing-3);
+    // Mobile: columna única
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+    
+    // Tablet
+    @include tablet {
+      gap: var(--spacing-4);
     }
-
-    @media (max-width: 48rem) {
-      grid-template-columns: 1fr;
+    
+    // Desktop pequeño: 2 columnas
+    @include desktop-small {
+      grid-template-columns: 1fr 16rem;
+    }
+    
+    // Desktop estándar
+    @include desktop {
+      grid-template-columns: 1fr var(--sidebar-width, 18.75rem);
     }
   }
 
   &__content {
-    min-height: 25rem;
+    // Mobile
+    min-height: 15rem;
+    order: 1;
     
     // Transición para efectos de carga
     transition: opacity var(--transition-base) var(--transition-ease);
+    
+    @include tablet {
+      min-height: 25rem;
+    }
   }
 
-  // Wrapper del sidebar - contiene título y aside
+  // =============================================
+  // SIDEBAR
+  // =============================================
   &__sidebar-wrapper {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-3);
     height: fit-content;
-    // Margen inferior consistente con competiciones
-    margin-bottom: var(--spacing-4);
+    
+    // Mobile: después del contenido
+    order: 2;
+    margin-bottom: var(--spacing-3);
 
-    @media (max-width: 48rem) {
-      margin-bottom: var(--spacing-3);
+    @include tablet {
+      margin-bottom: var(--spacing-4);
     }
   }
 
-  // Título de noticias - FUERA del recuadro blanco
   &__sidebar-title {
-    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: #FFFFFF;
     background-color: var(--color-accent);
-    padding: var(--spacing-2) var(--spacing-3);
     border-radius: var(--radius-md);
     margin: 0;
     text-align: center;
     
-    // Modo oscuro - fondo más suave
+    // Mobile
+    font-size: var(--font-size-md);
+    padding: var(--spacing-2);
+    
+    @include tablet {
+      font-size: var(--font-size-lg);
+      padding: var(--spacing-2) var(--spacing-3);
+    }
+    
+    // Modo oscuro
     [data-theme="dark"] & {
       background-color: rgba(16, 185, 129, 0.2);
       color: var(--color-accent);
@@ -151,31 +197,23 @@
     }
   }
 
-  // Sidebar noticias - recuadro blanco
   &__sidebar {
-    // Layout
     width: 100%;
     background-color: var(--color-secundary);
     border-radius: var(--radius-lg);
-    
-    // Padding reducido para items más compactos
-    padding: var(--spacing-2);
-    
     height: fit-content;
     box-shadow: var(--shadow-sm);
-    
-    // Sticky para mantener visible al hacer scroll
-    position: sticky;
-    top: calc(var(--header-height, 4rem) + var(--spacing-4));
-    
-    // Z-index para controlar apilamiento
     z-index: var(--z-sidebar, 10);
-    
-    // Transiciones para efectos hover
     transition: box-shadow var(--transition-base) var(--transition-ease);
-
-    @media (max-width: 48rem) {
-      position: static;
+    
+    // Mobile
+    padding: var(--spacing-2);
+    position: static;
+    
+    // Desktop: sticky
+    @include desktop-small {
+      position: sticky;
+      top: calc(var(--header-height, 4rem) + var(--spacing-4));
     }
 
     &-header {
@@ -199,19 +237,23 @@
 
     &-link {
       display: block;
-      // Padding reducido para noticias más compactas
-      padding: var(--spacing-2);
       background-color: var(--color-neutral-100);
       color: var(--color-text);
       text-decoration: none;
       border-radius: var(--radius-md);
       font-weight: var(--font-weight-medium);
-      // Tamaño de fuente reducido
-      font-size: var(--font-size-sm);
       transition: all var(--transition-base) var(--transition-ease);
       border: 0.125rem solid transparent;
       
-      // Modo oscuro - mejor contraste
+      // Mobile
+      padding: var(--spacing-2);
+      font-size: var(--font-size-sm);
+      
+      @include tablet {
+        padding: var(--spacing-2) var(--spacing-3);
+      }
+      
+      // Modo oscuro
       [data-theme="dark"] & {
         border-color: var(--color-neutral-300);
       }
@@ -232,20 +274,34 @@
   }
 }
 
-// Partidos
+// =============================================
+// PARTIDOS - MATCHES
+// =============================================
 .matches {
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-4);
+  
+  @include tablet {
+    margin-bottom: var(--spacing-6);
+  }
 
   &__title {
-    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: #FFFFFF;
     background-color: var(--color-accent);
-    padding: var(--spacing-2) var(--spacing-3);
     border-radius: var(--radius-md);
-    margin: 0 0 var(--spacing-3);
     
-    // Modo oscuro - fondo más suave
+    // Mobile
+    font-size: var(--font-size-md);
+    padding: var(--spacing-2);
+    margin: 0 0 var(--spacing-2);
+    
+    @include tablet {
+      font-size: var(--font-size-lg);
+      padding: var(--spacing-2) var(--spacing-3);
+      margin-bottom: var(--spacing-3);
+    }
+    
+    // Modo oscuro
     [data-theme="dark"] & {
       background-color: rgba(16, 185, 129, 0.2);
       color: var(--color-accent);
@@ -255,20 +311,39 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
     gap: var(--spacing-2);
+    
+    // Mobile: 1 columna, luego 2
+    grid-template-columns: 1fr;
+    
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include tablet {
+      grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    }
   }
 }
 
+// =============================================
+// MATCH CARD
+// =============================================
 .match-card {
   background-color: var(--color-secundary);
   border-radius: var(--radius-md);
-  padding: var(--spacing-3);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-base) var(--transition-ease);
   border: 0.125rem solid transparent;
   
-  // Modo oscuro - borde sutil
+  // Mobile
+  padding: var(--spacing-2);
+  
+  @include tablet {
+    padding: var(--spacing-3);
+  }
+  
+  // Modo oscuro
   [data-theme="dark"] & {
     border-color: var(--color-neutral-300);
   }
@@ -283,7 +358,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--spacing-2);
+    gap: var(--spacing-1);
+    
+    @include tablet {
+      gap: var(--spacing-2);
+    }
   }
 
   &__team {
@@ -296,37 +375,63 @@
   }
 
   &__name {
-    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    
+    // Mobile
+    font-size: var(--font-size-xs);
+    
+    @include mobile {
+      font-size: var(--font-size-sm);
+    }
   }
 
   &__score {
-    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
     padding: 0 var(--spacing-1);
     white-space: nowrap;
+    
+    // Mobile
+    font-size: var(--font-size-md);
+    
+    @include tablet {
+      font-size: var(--font-size-lg);
+    }
   }
 }
 
-// Competiciones
+// =============================================
+// COMPETICIONES
+// =============================================
 .competitions {
-  margin-bottom: var(--spacing-4);
+  margin-bottom: var(--spacing-3);
+  
+  @include tablet {
+    margin-bottom: var(--spacing-4);
+  }
 
   &__title {
-    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: #FFFFFF;
     background-color: var(--color-accent);
-    padding: var(--spacing-2) var(--spacing-3);
     border-radius: var(--radius-md);
-    margin: 0 0 var(--spacing-3);
     
-    // Modo oscuro - fondo más suave
+    // Mobile
+    font-size: var(--font-size-md);
+    padding: var(--spacing-2);
+    margin: 0 0 var(--spacing-2);
+    
+    @include tablet {
+      font-size: var(--font-size-lg);
+      padding: var(--spacing-2) var(--spacing-3);
+      margin-bottom: var(--spacing-3);
+    }
+    
+    // Modo oscuro
     [data-theme="dark"] & {
       background-color: rgba(16, 185, 129, 0.2);
       color: var(--color-accent);
@@ -336,23 +441,29 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     gap: var(--spacing-2);
-
-    @media (max-width: 64rem) {
-      grid-template-columns: repeat(2, 1fr);
+    
+    // Mobile: 2 columnas
+    grid-template-columns: repeat(2, 1fr);
+    
+    // Tablet: 3 columnas
+    @include tablet {
+      grid-template-columns: repeat(3, 1fr);
     }
-
-    @media (max-width: 48rem) {
-      grid-template-columns: 1fr;
+    
+    // Desktop: 4 columnas
+    @include desktop-small {
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 }
 
+// =============================================
+// COMPETITION CARD
+// =============================================
 .competition-card {
   background-color: var(--color-secundary);
   border-radius: var(--radius-md);
-  padding: var(--spacing-3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -361,8 +472,18 @@
   transition: all var(--transition-base) var(--transition-ease);
   border: 0.125rem solid transparent;
   cursor: pointer;
+  text-decoration: none; // Para enlaces
   
-  // Modo oscuro - borde sutil
+  // Mobile
+  padding: var(--spacing-2);
+  min-height: 3rem;
+  
+  @include tablet {
+    padding: var(--spacing-3);
+    min-height: auto;
+  }
+  
+  // Modo oscuro
   [data-theme="dark"] & {
     border-color: var(--color-neutral-300);
   }
@@ -372,71 +493,30 @@
     box-shadow: var(--shadow-md);
   }
 
-  // Colores específicos por liga
-  &:nth-child(1):hover { // LaLiga
-    border-color: var(--color-laliga);
-    background-color: rgba(255, 23, 68, 0.05);
-  }
-
-  &:nth-child(2):hover { // Ligue 1
-    border-color: var(--color-ligue1);
-    background-color: rgba(30, 58, 138, 0.05);
-  }
-
-  &:nth-child(3):hover { // Premier League
-    border-color: var(--color-premierleague);
-    background-color: rgba(63, 31, 128, 0.05);
-  }
-
-  &:nth-child(4):hover { // Primeira Liga
-    border-color: var(--color-primeiraliga);
-    background-color: rgba(5, 150, 105, 0.05);
-  }
-
-  &:nth-child(5):hover { // Serie A
-    border-color: var(--color-seriea);
-    background-color: rgba(0, 102, 204, 0.05);
-  }
-
-  &:nth-child(6):hover { // Eredivisie
-    border-color: var(--color-eredivisie);
-    background-color: rgba(249, 115, 22, 0.05);
-  }
-
-  &:nth-child(7):hover { // Bundesliga
-    border-color: var(--color-bundesliga);
-    background-color: rgba(211, 47, 47, 0.05);
-  }
-
-  &:nth-child(8):hover { // Süper Lig
-    border-color: var(--color-superlig);
-    background-color: rgba(220, 38, 38, 0.05);
-  }
-
-  &:nth-child(9):hover { // MLS
-    border-color: var(--color-mls);
-    background-color: rgba(0, 76, 151, 0.05);
-  }
-
-  &:nth-child(10):hover { // Liga MX
-    border-color: var(--color-ligamx);
-    background-color: rgba(6, 95, 70, 0.05);
-  }
-
-  &:nth-child(11):hover { // Championship
-    border-color: var(--color-championship);
-    background-color: rgba(30, 64, 175, 0.05);
-  }
-
-  &:nth-child(12):hover { // Ligue 2
-    border-color: var(--color-ligue2);
-    background-color: rgba(75, 85, 99, 0.05);
-  }
+  // Colores por liga al hover
+  &:nth-child(1):hover { border-color: var(--color-laliga); background-color: rgba(255, 23, 68, 0.05); }
+  &:nth-child(2):hover { border-color: var(--color-ligue1); background-color: rgba(30, 58, 138, 0.05); }
+  &:nth-child(3):hover { border-color: var(--color-premierleague); background-color: rgba(63, 31, 128, 0.05); }
+  &:nth-child(4):hover { border-color: var(--color-primeiraliga); background-color: rgba(5, 150, 105, 0.05); }
+  &:nth-child(5):hover { border-color: var(--color-seriea); background-color: rgba(0, 102, 204, 0.05); }
+  &:nth-child(6):hover { border-color: var(--color-eredivisie); background-color: rgba(249, 115, 22, 0.05); }
+  &:nth-child(7):hover { border-color: var(--color-bundesliga); background-color: rgba(211, 47, 47, 0.05); }
+  &:nth-child(8):hover { border-color: var(--color-superlig); background-color: rgba(220, 38, 38, 0.05); }
+  &:nth-child(9):hover { border-color: var(--color-mls); background-color: rgba(0, 76, 151, 0.05); }
+  &:nth-child(10):hover { border-color: var(--color-ligamx); background-color: rgba(6, 95, 70, 0.05); }
+  &:nth-child(11):hover { border-color: var(--color-championship); background-color: rgba(30, 64, 175, 0.05); }
+  &:nth-child(12):hover { border-color: var(--color-ligue2); background-color: rgba(75, 85, 99, 0.05); }
 
   &__name {
-    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text);
     text-align: center;
+    
+    // Mobile
+    font-size: var(--font-size-xs);
+    
+    @include mobile {
+      font-size: var(--font-size-sm);
+    }
   }
 }

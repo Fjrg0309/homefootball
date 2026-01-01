@@ -1,5 +1,11 @@
-// Estilos específicos del header
+// =============================================
+// Header Component - Estilos Responsive
+// Estrategia: Mobile-First
+// =============================================
 
+@use '../../../../styles/01-tools/mixins' as *;
+
+// Logo styles
 .header__logo {
   &-img {
     object-fit: contain;
@@ -8,6 +14,7 @@
   }
 }
 
+// Navigation link active state
 .header__nav {
   &-link {
     &:active {
@@ -16,6 +23,7 @@
   }
 }
 
+// Theme toggle button
 .header__theme-btn {
   display: flex;
   align-items: center;
@@ -29,10 +37,17 @@
   color: var(--text-on-dark);
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
+  // Touch target mínimo en móvil
+  @include touch-target(2.75rem);
 
   svg {
     width: 1.25rem;
     height: 1.25rem;
+    
+    @include tablet {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
   }
 
   &:hover {
@@ -49,6 +64,7 @@
   }
 }
 
+// Style guide button
 .header__style-guide-btn {
   display: flex;
   align-items: center;
@@ -63,6 +79,7 @@
   cursor: pointer;
   text-decoration: none;
   transition: background-color 0.2s ease, transform 0.1s ease;
+  @include touch-target(2.75rem);
 
   svg {
     width: 1.125rem;
@@ -81,8 +98,14 @@
     outline: 2px solid var(--border-focus);
     outline-offset: 2px;
   }
+  
+  // Ocultar en mobile pequeño
+  @include below('sm') {
+    display: none;
+  }
 }
 
+// User dropdown container
 .header__user {
   position: relative;
 
@@ -97,6 +120,79 @@
       transform: translateY(-0.0625rem);
     }
   }
+}
+
+// =============================================
+// RESPONSIVE UTILITIES PARA HEADER
+// =============================================
+
+// Overlay para menú móvil (bloquear interacción con contenido)
+.header__overlay {
+  display: none;
+  
+  @include below('md') {
+    position: fixed;
+    top: var(--header-height-mobile, 3.5rem);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base) var(--transition-ease);
+    
+    &.is-visible {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+// Grupo de acciones responsive
+.header__actions-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  
+  @include tablet {
+    gap: var(--spacing-2);
+  }
+}
+
+// =============================================
+// MOBILE MENU ANIMATIONS
+// =============================================
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Prevenir scroll cuando menú está abierto
+body.menu-open {
+  overflow: hidden;
+  
+  @include tablet {
+    overflow: auto;
+  }
+}
 
   // Indicador de notificación
   &.has-notification::after {
