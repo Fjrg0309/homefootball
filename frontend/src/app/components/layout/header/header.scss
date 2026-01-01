@@ -194,20 +194,6 @@ body.menu-open {
   }
 }
 
-  // Indicador de notificación
-  &.has-notification::after {
-    content: '';
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    background-color: var(--color-error);
-    border-radius: 50%;
-    border: 0.125rem solid var(--color-header);
-  }
-}
-
 // ============================================
 // ANIMACIONES ESPECÍFICAS
 // ============================================
