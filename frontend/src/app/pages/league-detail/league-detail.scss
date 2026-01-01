@@ -1,5 +1,6 @@
 // =============================================
 // League Detail Page - Mobile-First Responsive
+// Sistema de espaciado base 8px
 // =============================================
 
 @use '../../../styles/01-tools/mixins' as *;
@@ -7,60 +8,56 @@
 .league-detail {
   min-height: calc(100vh - 160px);
   background-color: var(--color-primary);
-  padding: 1rem;
+  padding: var(--spacing-2); // 16px
   
   @include tablet {
-    padding: 1.5rem 2rem;
+    padding: var(--spacing-3) var(--spacing-4); // 24px 32px
   }
   
   @include desktop {
-    padding: 2rem 3rem;
+    padding: var(--spacing-4) var(--spacing-6); // 32px 48px
   }
 
   // =============================================
   // CONTAINER
   // =============================================
   &__container {
-    max-width: 1200px;
+    max-width: 75rem; // 1200px
     margin: 0 auto;
   }
 
   // =============================================
-  // HEADER
+  // HEADER - Título con estrella
   // =============================================
   &__header {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    gap: var(--spacing-2); // 16px
+    margin-bottom: var(--spacing-4); // 32px
     
     @include tablet {
-      gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: var(--spacing-5); // 40px
     }
   }
 
   &__icon {
-    font-size: 1.5rem;
+    font-size: var(--spacing-4); // 32px - Estrella más grande
     color: var(--color-text);
+    line-height: 1;
     
     @include tablet {
-      font-size: 2rem;
+      font-size: var(--spacing-5); // 40px
     }
   }
 
   &__title {
-    font-size: 1.25rem;
+    font-size: var(--font-size-lg); // 24px
     font-weight: var(--font-weight-semibold);
     color: var(--color-text);
     margin: 0;
     
-    @include mobile {
-      font-size: 1.5rem;
-    }
-    
     @include tablet {
-      font-size: 1.75rem;
+      font-size: var(--font-size-xl); // 32px
     }
   }
 
@@ -69,7 +66,7 @@
   // =============================================
   &__layout {
     display: grid;
-    gap: 1.5rem;
+    gap: var(--spacing-3); // 24px
     
     // Mobile: stack vertical
     grid-template-columns: 1fr;
@@ -80,22 +77,23 @@
     
     // Tablet: 2 columnas
     @include tablet {
-      grid-template-columns: 100px 1fr;
+      grid-template-columns: 7rem 1fr; // 112px columna social
       grid-template-areas:
         "social content"
         "social about";
-      gap: 2rem;
+      gap: var(--spacing-4); // 32px
     }
     
-    // Desktop: 3 columnas como en la imagen
+    // Desktop: 3 columnas como en el wireframe
     @include desktop {
-      grid-template-columns: 120px 1fr 280px;
+      grid-template-columns: 8rem 1fr 18rem; // 128px | flexible | 288px
       grid-template-areas: "social content about";
-      gap: 2rem;
+      gap: var(--spacing-5); // 40px
       align-items: start;
     }
   }
 
+  // =============================================
   // =============================================
   // SIDEBAR IZQUIERDO - REDES SOCIALES
   // =============================================
@@ -104,26 +102,27 @@
   }
 
   &__social-title {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm); // 12px
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
-    margin: 0 0 1rem;
+    margin: 0 0 var(--spacing-2); // 0 0 16px
     text-align: center;
     
     @include tablet {
       text-align: left;
+      margin-bottom: var(--spacing-3); // 24px
     }
   }
 
   &__social-links {
     display: flex;
-    gap: 1rem;
+    gap: var(--spacing-2); // 16px
     justify-content: center;
     
     @include tablet {
       flex-direction: column;
       align-items: flex-start;
-      gap: 1.25rem;
+      gap: var(--spacing-3); // 24px
     }
   }
 
@@ -131,9 +130,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+    width: var(--spacing-6); // 48px
+    height: var(--spacing-6); // 48px
+    border-radius: var(--radius-full);
     color: white;
     transition: transform var(--transition-base) var(--transition-ease),
                 box-shadow var(--transition-base) var(--transition-ease);
@@ -159,7 +158,7 @@
         content: '';
         position: absolute;
         inset: 2px;
-        border-radius: 50%;
+        border-radius: var(--radius-full);
         background: linear-gradient(45deg, #69C9D0, #EE1D52);
         opacity: 0.3;
       }
@@ -168,6 +167,8 @@
     svg {
       position: relative;
       z-index: 1;
+      width: var(--spacing-3); // 24px
+      height: var(--spacing-3); // 24px
     }
   }
 
@@ -176,15 +177,24 @@
   // =============================================
   &__content {
     grid-area: content;
+    display: flex;
+    align-items: center;
   }
 
   &__nav {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-2); // 16px
+    width: 100%;
     
     @include tablet {
-      gap: 1.25rem;
+      gap: var(--spacing-3); // 24px
+      max-width: 25rem; // 400px - Ancho máximo para los botones
+      margin: 0 auto;
+    }
+    
+    @include desktop {
+      max-width: 22rem; // 352px
     }
   }
 
@@ -192,33 +202,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 2rem;
+    width: 100%; // Ocupar todo el ancho disponible
+    padding: var(--spacing-2) var(--spacing-4); // 16px 32px
     background-color: var(--color-accent);
     color: white;
-    font-size: 1rem;
+    font-size: var(--font-size-md); // 16px
     font-weight: var(--font-weight-semibold);
     text-decoration: none;
-    border-radius: 9999px; // Pill shape
+    border-radius: var(--radius-full); // Pill shape
     transition: background-color var(--transition-base) var(--transition-ease),
                 transform var(--transition-base) var(--transition-ease),
                 box-shadow var(--transition-base) var(--transition-ease);
-    min-height: 48px; // Touch target
+    min-height: var(--spacing-6); // 48px - Touch target mínimo
     
     @include tablet {
-      padding: 1.25rem 2.5rem;
-      font-size: 1.125rem;
-    }
-    
-    @include desktop {
-      padding: 1rem 2rem;
-      max-width: 320px;
-      margin: 0 auto;
+      padding: var(--spacing-2) var(--spacing-5); // 16px 40px
+      font-size: 1.125rem; // 18px
+      min-height: 3.5rem; // 56px
     }
 
     &:hover {
       background-color: var(--color-accent-hover);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 217, 95, 0.3);
+      box-shadow: 0 var(--spacing-1) var(--spacing-2) rgba(0, 217, 95, 0.3);
     }
 
     &:active {
@@ -231,47 +237,49 @@
   // =============================================
   &__about {
     grid-area: about;
-    background-color: var(--color-accent);
-    border-radius: var(--radius-lg);
+    background-color: var(--color-secundary);
+    border-radius: var(--radius-lg); // 16px
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: var(--border-thin) solid var(--color-neutral-300);
     
     @include desktop {
       position: sticky;
-      top: 100px;
+      top: 6.5rem; // 104px
     }
   }
 
   &__about-title {
-    background-color: var(--color-header);
-    color: var(--color-header-text);
-    padding: 0.75rem 1rem;
+    background-color: var(--color-accent); // Verde como en el wireframe
+    color: white;
+    padding: var(--spacing-1) var(--spacing-2); // 8px 16px
     margin: 0;
-    font-size: 1rem;
+    font-size: var(--font-size-md); // 16px
     font-weight: var(--font-weight-semibold);
     
     @include tablet {
-      padding: 1rem 1.25rem;
-      font-size: 1.125rem;
+      padding: var(--spacing-2) var(--spacing-3); // 16px 24px
     }
   }
 
   &__about-content {
-    padding: 1rem;
+    padding: var(--spacing-2); // 16px
+    background-color: var(--color-secundary);
     
     @include tablet {
-      padding: 1.25rem;
+      padding: var(--spacing-3); // 24px
     }
   }
 
   &__about-text {
-    color: white;
-    font-size: 0.875rem;
-    line-height: 1.6;
+    color: var(--color-text);
+    font-size: var(--font-size-sm); // 12px
+    line-height: var(--line-height-relaxed); // 1.75
     margin: 0;
     white-space: pre-line;
     
     @include tablet {
-      font-size: 0.9375rem;
+      font-size: 0.875rem; // 14px
     }
   }
 }
