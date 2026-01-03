@@ -89,7 +89,7 @@
       grid-template-columns: 8rem 1fr 18rem; // 128px | flexible | 288px
       grid-template-areas: "social content about";
       gap: var(--spacing-5); // 40px
-      align-items: start;
+      align-items: stretch; // Ambas columnas tienen la misma altura
     }
   }
 
@@ -184,19 +184,13 @@
   &__nav {
     display: flex;
     flex-direction: column;
-    justify-content: stretch; // Estirar para ocupar todo el espacio
-    gap: var(--spacing-4); // 32px entre botones
+    justify-content: space-between; // Distribuir botones uniformemente
+    gap: var(--spacing-3); // 24px entre botones
     width: 100%;
     height: 100%;
-    margin-bottom: var(--spacing-4); // 32px al footer - consistente con About
     
     @include tablet {
-      gap: var(--spacing-5); // 40px entre botones
-      margin-bottom: var(--spacing-5); // 40px al footer
-    }
-    
-    @include desktop {
-      margin-bottom: var(--spacing-6); // 48px al footer
+      gap: var(--spacing-4); // 32px entre botones
     }
   }
 
@@ -247,16 +241,11 @@
       0 0.25rem 0.5rem rgba(0, 0, 0, 0.1),
       0 0.5rem 1rem rgba(0, 0, 0, 0.08),
       0 0 0 0.0625rem rgba(0, 0, 0, 0.05); // Sombra pronunciada como en wireframe
-    margin-bottom: var(--spacing-4); // 32px al footer - consistente con Nav
-    
-    @include tablet {
-      margin-bottom: var(--spacing-5); // 40px al footer
-    }
+    align-self: start; // El card no se estira, mantiene su altura natural
     
     @include desktop {
       position: sticky;
       top: 6.5rem; // 104px
-      margin-bottom: var(--spacing-6); // 48px al footer
     }
   }
 
