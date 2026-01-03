@@ -5,7 +5,14 @@
     
     <!-- Título de la liga -->
     <header class="league-detail__header">
-      <span class="league-detail__icon">☆</span>
+      <button 
+        class="league-detail__icon" 
+        [class.league-detail__icon--active]="isFavorite()"
+        (click)="toggleFavorite()"
+        [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+        type="button">
+        {{ isFavorite() ? '★' : '☆' }}
+      </button>
       <h1 class="league-detail__title">{{ leagueName() }}</h1>
     </header>
 

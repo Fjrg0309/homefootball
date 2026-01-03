@@ -47,11 +47,43 @@
 
   &__icon {
     font-size: 2.5rem; // 40px - Estrella destacada
-    color: var(--color-accent); // Verde para que destaque
+    color: var(--color-text-secondary, #666);
     line-height: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color var(--transition-base) var(--transition-ease),
+                transform var(--transition-base) var(--transition-ease);
     
     @include tablet {
       font-size: 3rem; // 48px
+    }
+    
+    // Hover: amarillo poco saturado
+    &:hover {
+      color: #f4d03f; // Amarillo suave poco saturado
+      transform: scale(1.1);
+    }
+    
+    // Activo (favorito): amarillo dorado
+    &--active {
+      color: #ffd700; // Dorado cuando está en favoritos
+      
+      &:hover {
+        color: #ffed4e; // Amarillo más claro al hacer hover
+      }
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    // Accesibilidad
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 4px;
+      border-radius: 4px;
     }
   }
 

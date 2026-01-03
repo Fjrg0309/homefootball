@@ -23,6 +23,9 @@ export class LeagueDetail implements OnInit {
   // Signal para la liga actual
   league = signal<League | null>(null);
   
+  // Signal para estado de favorito
+  isFavorite = signal<boolean>(false);
+  
   // Computed para el nombre de la liga
   leagueName = computed(() => this.league()?.name || 'Liga seleccionada');
   
@@ -71,6 +74,66 @@ export class LeagueDetail implements OnInit {
     };
 
     this.league.set(leagues[id] || { id, name: id, country: 'Desconocido' });
+    
+    // Verificar si la liga está en favoritos
+    this.checkFavoriteStatus(id);
+  }
+
+  /**
+   * Verificar si la liga actual está en favoritos
+   */
+  private checkFavoriteStatus(leagueId: string): void {
+    const favorites = this.getFavorites();
+    this.isFavorite.set(favorites.includes(leagueId));
+  }
+
+  /**
+   * Obtener lista de favoritos desde localStorage
+   */
+  private getFavorites(): string[] {
+    try {
+      const favoritesJson = localStorage.getItem('favorite-leagues');
+      return favoritesJson ? JSON.parse(favoritesJson) : [];
+    } catch (error) {
+      console.error('Error al leer favoritos:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Guardar lista de favoritos en localStorage
+   */
+  private saveFavorites(favorites: string[]): void {
+    try {
+      localStorage.setItem('favorite-leagues', JSON.stringify(favorites));
+    } catch (error) {
+      console.error('Error al guardar favoritos:', error);
+    }
+  }
+
+  /**
+   * Toggle favorito - añadir o quitar liga de favoritos
+   */
+  toggleFavorite(): void {
+    const league = this.league();
+    if (!league) return;
+
+    const favorites = this.getFavorites();
+    const index = favorites.indexOf(league.id);
+
+    if (index > -1) {
+      // Quitar de favoritos
+      favorites.splice(index, 1);
+      this.isFavorite.set(false);
+      console.log(`${league.name} quitada de favoritos`);
+    } else {
+      // Añadir a favoritos
+      favorites.push(league.id);
+      this.isFavorite.set(true);
+      console.log(`${league.name} añadida a favoritos`);
+    }
+
+    this.saveFavorites(favorites);
   }
 
   // Navegación a secciones
