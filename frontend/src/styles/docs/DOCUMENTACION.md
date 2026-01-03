@@ -2009,83 +2009,38 @@ Lista de todas las páginas con diseño responsive implementado:
 
 ### 4.6 Screenshots Comparativos
 
-A continuación se muestran capturas de pantalla de 3 páginas en los 3 viewports principales:
+A continuación se muestran capturas de pantalla de 3 páginas en los 4 viewports principales:
 
 #### Home Page
 
+**Mobile Small (320px)**
+![Home - Mobile Small 320px](images/mobilesmall.png)
+- Navegación colapsada en hamburger menu
+- Cards de partidos en columna única optimizada para pantallas pequeñas
+- Sidebar oculto, contenido accesible via botón
+- Espaciado reducido para maximizar contenido visible
+
 **Mobile (375px)**
-![Home - Mobile 375px](images/responsive/home-mobile.png)
+![Home - Mobile 375px](images/mobilemid.png)
 - Navegación colapsada en hamburger menu
 - Cards de partidos en columna única
 - Sidebar oculto, contenido accesible via botón
 
 **Tablet (768px)**
-![Home - Tablet 768px](images/responsive/home-tablet.png)
+![Home - Tablet 768px](images/tablet.png)
 - Navegación horizontal visible
 - Grid de 2 columnas para partidos
 - Sidebar visible pero estrecho
 
+**Desktop (1024px)**
+![Home - Desktop 1024px](images/desktop1024.png)
+- Navegación completa visible
+- Grid de 2-3 columnas para partidos
+- Layout de 3 columnas iniciándose (sidebar + contenido + aside)
+- Mayor espaciado y breathing room
+
 **Desktop (1280px)**
-![Home - Desktop 1280px](images/responsive/home-desktop.png)
+![Home - Desktop 1280px](images/desktop1280.png)
 - Navegación completa con todos los elementos
 - Grid de 3+ columnas con auto-fit
 - Sidebar completo con widgets adicionales
-
----
-
-#### Login Page
-
-**Mobile (375px)**
-![Login - Mobile 375px](images/responsive/login-mobile.png)
-- Formulario centrado con padding reducido
-- Inputs ocupan 100% del ancho
-- Botones de login social apilados verticalmente
-
-**Tablet (768px)**
-![Login - Tablet 768px](images/responsive/login-tablet.png)
-- Card del formulario con max-width
-- Más espacio alrededor del formulario
-- Botones sociales en fila
-
-**Desktop (1280px)**
-![Login - Desktop 1280px](images/responsive/login-desktop.png)
-- Formulario centrado con máximo ancho
-- Espaciado generoso
-- Posible imagen/ilustración lateral
-
----
-
-#### Product List Page
-
-**Mobile (375px)**
-![Product List - Mobile 375px](images/responsive/products-mobile.png)
-- Products en columna única
-- Filtros en drawer/modal
-- Cards compactas
-
-**Tablet (768px)**
-![Product List - Tablet 768px](images/responsive/products-tablet.png)
-- Grid de 2 columnas
-- Filtros visibles en sidebar
-- Cards con más información visible
-
-**Desktop (1280px)**
-![Product List - Desktop 1280px](images/responsive/products-desktop.png)
-- Grid de 3-4 columnas auto-fit
-- Sidebar de filtros completo
-- Cards con layout horizontal disponible
-
----
-
-#### Cómo generar tus propios screenshots
-
-1. Abre la aplicación en Chrome
-2. Abre DevTools (F12)
-3. Click en "Toggle Device Toolbar" (Ctrl+Shift+M)
-4. Selecciona dimensiones: 375×667, 768×1024, 1280×800
-5. Click derecho → "Capture screenshot"
-6. Guarda las imágenes en `src/styles/docs/images/responsive/`
-
-**Nota:** Crear la carpeta `images/responsive/` si no existe y añadir las capturas con los nombres indicados.
-
----
