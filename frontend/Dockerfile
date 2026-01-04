@@ -28,11 +28,20 @@ FROM nginx:alpine
 # Copiar archivos build al servidor Nginx
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
-# Copiar configuración personalizada de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copiar configuración de Nginx como template
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+
+# Copiar y configurar script de arranque
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Variable de entorno para el backend
+# En DigitalOcean App Platform, configura esta variable con la URL del backend
+# Ejemplo: https://backend-xxxxx.ondigitalocean.app
+ENV BACKEND_URL=http://backend:8080
 
 # Exponer puerto 80
 EXPOSE 80
 
-# Comando para iniciar Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Usar script de arranque que procesa el template de nginx
+ENTRYPOINT ["/docker-entrypoint.sh"]
