@@ -25,20 +25,14 @@ RUN npm run build -- --configuration production
 # Etapa 2: Servidor de produccion con Nginx
 FROM nginx:alpine
 
-# Instalar gettext para envsubst
-RUN apk add --no-cache gettext
-
 # Copiar archivos build al servidor Nginx
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
-# Copiar configuracion de Nginx como template
-COPY nginx.conf /etc/nginx/nginx.conf.template
-
-# Variable de entorno para el backend (valor por defecto para docker-compose)
-ENV BACKEND_URL=http://backend:8080
+# Copiar configuracion de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Exponer puerto 80
 EXPOSE 80
 
-# Procesar template y arrancar nginx
-CMD ["/bin/sh", "-c", "envsubst '$$BACKEND_URL' < /etc/nginx/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+# Arrancar nginx
+CMD ["nginx", "-g", "daemon off;"]
