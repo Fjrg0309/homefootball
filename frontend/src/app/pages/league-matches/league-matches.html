@@ -5,27 +5,99 @@
     
     <!-- Título con fondo verde -->
     <header class="league-matches__header">
-      <h1 class="league-matches__title">Partidos</h1>
+      <h1 class="league-matches__title">Partidos - {{ leagueName() }}</h1>
     </header>
 
-    <!-- Lista de partidos -->
-    <section class="league-matches__content">
-      <div class="matches-list">
-        @for (match of matches(); track match.id) {
-          <article class="match-row">
-            <span class="match-row__team match-row__team--home" [class.match-row__team--winner]="getWinnerClass(match, 'home') === 'winner'">
-              {{ match.homeTeam }}
-            </span>
-            <span class="match-row__score">
-              {{ match.homeScore }} - {{ match.awayScore }}
-            </span>
-            <span class="match-row__team match-row__team--away" [class.match-row__team--winner]="getWinnerClass(match, 'away') === 'winner'">
-              {{ match.awayTeam }}
-            </span>
-          </article>
+    <!-- Navegación de fechas -->
+    <nav class="date-navigation">
+      <button class="date-navigation__btn date-navigation__btn--prev" (click)="goToPreviousDay()" [disabled]="loading()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      
+      <div class="date-navigation__center">
+        <span class="date-navigation__date">{{ formattedDate() }}</span>
+        @if (!isToday()) {
+          <button class="date-navigation__today" (click)="goToToday()">Ir a hoy</button>
         }
       </div>
-    </section>
+      
+      <button class="date-navigation__btn date-navigation__btn--next" (click)="goToNextDay()" [disabled]="loading()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Estado de carga -->
+    @if (loading()) {
+      <section class="league-matches__loading">
+        <div class="spinner"></div>
+        <p>Cargando partidos...</p>
+      </section>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <section class="league-matches__error">
+        <p>{{ error() }}</p>
+        <button class="league-matches__retry" (click)="loadMatchesForDate(currentDate())">
+          Reintentar
+        </button>
+      </section>
+    }
+
+    <!-- Lista de partidos -->
+    @if (!loading() && !error()) {
+      <section class="league-matches__content">
+        @if (matches().length === 0) {
+          <div class="no-matches">
+            <p class="no-matches__text">No hay partidos programados para este día</p>
+            <div class="no-matches__actions">
+              <button class="no-matches__btn" (click)="findPreviousDayWithMatches()">
+                ← Buscar día anterior con partidos
+              </button>
+              <button class="no-matches__btn" (click)="findNextDayWithMatches()">
+                Buscar día siguiente con partidos →
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="matches-list">
+            @for (match of matches(); track match.id) {
+              <article class="match-row" [class.match-row--live]="match.status === 'live'">
+                <!-- Equipo local -->
+                <div class="match-row__team match-row__team--home" [class.match-row__team--winner]="getWinnerClass(match, 'home') === 'winner'">
+                  <img [src]="match.homeLogo" [alt]="match.homeTeam" class="match-row__logo">
+                  <span class="match-row__name">{{ match.homeTeam }}</span>
+                </div>
+                
+                <!-- Marcador o Hora -->
+                <div class="match-row__center">
+                  <span class="match-row__score" 
+                        [class.match-row__score--live]="match.status === 'live'"
+                        [class.match-row__score--upcoming]="match.status === 'upcoming'">
+                    {{ getScoreDisplay(match) }}
+                  </span>
+                  @if (match.status !== 'upcoming') {
+                    <span class="match-row__status" [class.match-row__status--live]="match.status === 'live'">
+                      {{ getStatusText(match) }}
+                    </span>
+                  }
+                </div>
+                
+                <!-- Equipo visitante -->
+                <div class="match-row__team match-row__team--away" [class.match-row__team--winner]="getWinnerClass(match, 'away') === 'winner'">
+                  <span class="match-row__name">{{ match.awayTeam }}</span>
+                  <img [src]="match.awayLogo" [alt]="match.awayTeam" class="match-row__logo">
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    }
 
     <!-- Botón volver -->
     <nav class="league-matches__nav">

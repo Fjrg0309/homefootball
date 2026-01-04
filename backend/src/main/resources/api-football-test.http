@@ -1,0 +1,141 @@
+### ============================================
+### API-FOOTBALL - Endpoints de prueba
+### ============================================
+### Usa la extensión "REST Client" de VS Code
+### para ejecutar estas peticiones
+### ============================================
+
+@baseUrl = http://localhost:8080/api/football
+@season = 2024
+
+### ==================== STATUS ====================
+
+### Verificar estado de la API (si está configurada)
+GET {{baseUrl}}/status
+
+### ==================== LIGAS ====================
+
+### Obtener todas las ligas
+GET {{baseUrl}}/leagues
+
+### Obtener ligas de España
+GET {{baseUrl}}/leagues/country/Spain
+
+### Obtener ligas de Inglaterra
+GET {{baseUrl}}/leagues/country/England
+
+### Obtener liga por ID (La Liga = 140)
+GET {{baseUrl}}/leagues/140
+
+### Obtener liga por ID (Premier League = 39)
+GET {{baseUrl}}/leagues/39
+
+### ==================== EQUIPOS ====================
+
+### Obtener equipos de La Liga 2024
+GET {{baseUrl}}/teams?league=140&season={{season}}
+
+### Obtener equipos de la Premier League 2024
+GET {{baseUrl}}/teams?league=39&season={{season}}
+
+### Obtener equipo por ID (Barcelona = 529)
+GET {{baseUrl}}/teams/529
+
+### Obtener equipo por ID (Real Madrid = 541)
+GET {{baseUrl}}/teams/541
+
+### Buscar equipo por nombre
+GET {{baseUrl}}/teams/search?name=Barcelona
+
+### Buscar equipo por nombre
+GET {{baseUrl}}/teams/search?name=Manchester
+
+### ==================== JUGADORES ====================
+
+### Obtener jugadores del Barcelona
+GET {{baseUrl}}/players?team=529&season={{season}}
+
+### Obtener jugadores del Real Madrid
+GET {{baseUrl}}/players?team=541&season={{season}}
+
+### Obtener jugador por ID
+GET {{baseUrl}}/players/154?season={{season}}
+
+### Buscar jugadores por nombre en La Liga
+GET {{baseUrl}}/players/search?name=Messi&league=140&season={{season}}
+
+### Máximos goleadores de La Liga
+GET {{baseUrl}}/players/topscorers?league=140&season={{season}}
+
+### Máximos goleadores de la Premier League
+GET {{baseUrl}}/players/topscorers?league=39&season={{season}}
+
+### ==================== PARTIDOS ====================
+
+### Obtener partidos de La Liga 2024
+GET {{baseUrl}}/fixtures?league=140&season={{season}}
+
+### Obtener partidos de la Premier League 2024
+GET {{baseUrl}}/fixtures?league=39&season={{season}}
+
+### Obtener partidos EN VIVO
+GET {{baseUrl}}/fixtures/live
+
+### Obtener partidos de hoy
+GET {{baseUrl}}/fixtures/date/2026-01-04
+
+### Obtener partidos de una fecha específica
+GET {{baseUrl}}/fixtures/date/2026-01-05
+
+### Obtener partidos del Barcelona
+GET {{baseUrl}}/fixtures/team/529?season={{season}}
+
+### Obtener partidos del Real Madrid
+GET {{baseUrl}}/fixtures/team/541?season={{season}}
+
+### ==================== CLASIFICACIÓN ====================
+
+### Clasificación de La Liga
+GET {{baseUrl}}/standings?league=140&season={{season}}
+
+### Clasificación de la Premier League
+GET {{baseUrl}}/standings?league=39&season={{season}}
+
+### Clasificación de la Serie A
+GET {{baseUrl}}/standings?league=135&season={{season}}
+
+### Clasificación de la Bundesliga
+GET {{baseUrl}}/standings?league=78&season={{season}}
+
+### ==================== IDs ÚTILES ====================
+### 
+### LIGAS:
+### - La Liga (España): 140
+### - La Liga 2 (España): 141
+### - Premier League (Inglaterra): 39
+### - Championship (Inglaterra): 40
+### - Serie A (Italia): 135
+### - Bundesliga (Alemania): 78
+### - Ligue 1 (Francia): 61
+### - Primeira Liga (Portugal): 94
+### - Champions League: 2
+### - Europa League: 3
+###
+### EQUIPOS (España):
+### - Barcelona: 529
+### - Real Madrid: 541
+### - Atlético Madrid: 530
+### - Sevilla: 536
+### - Valencia: 532
+### - Athletic Bilbao: 531
+### - Real Sociedad: 548
+### - Betis: 543
+###
+### EQUIPOS (Inglaterra):
+### - Manchester United: 33
+### - Manchester City: 50
+### - Liverpool: 40
+### - Chelsea: 49
+### - Arsenal: 42
+### - Tottenham: 47
+###

@@ -163,6 +163,13 @@ export const routes: Routes = [
     data: { breadcrumb: 'Partidos' }
   },
   
+  // Demo de API-Football
+  {
+    path: 'football-demo',
+    loadComponent: () => import('./pages/football-demo/football-demo.component').then(m => m.FootballDemoComponent),
+    data: { breadcrumb: 'Football Demo' }
+  },
+  
   // Wildcard 404 - SIEMPRE AL FINAL
   { path: '**', component: NotFound }
 ];
