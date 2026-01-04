@@ -11,7 +11,6 @@ import java.util.Map;
  * Controller de debug para verificar que Spring Boot funciona
  */
 @RestController
-@RequestMapping("/api/debug")
 @CrossOrigin(origins = "*")
 public class DebugController {
 
@@ -21,7 +20,7 @@ public class DebugController {
     @Value("${api.football.base-url:NOT_SET}")
     private String baseUrl;
 
-    @GetMapping("/ping")
+    @GetMapping("/debug/ping")
     public ResponseEntity<Map<String, Object>> ping() {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "ok");
@@ -30,12 +29,20 @@ public class DebugController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/config")
+    @GetMapping("/debug/config")
     public ResponseEntity<Map<String, Object>> config() {
         Map<String, Object> response = new HashMap<>();
         response.put("apiKeyConfigured", apiKey != null && !apiKey.isEmpty() && !apiKey.equals("NOT_SET"));
         response.put("apiKeyLength", apiKey != null ? apiKey.length() : 0);
         response.put("baseUrl", baseUrl);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/api/test")
+    public ResponseEntity<Map<String, Object>> apiTest() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "ok");
+        response.put("path", "/api/test");
         return ResponseEntity.ok(response);
     }
 }
