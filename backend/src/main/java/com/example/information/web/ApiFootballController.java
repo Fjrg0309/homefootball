@@ -23,15 +23,34 @@ public class ApiFootballController {
     private final ApiFootballService apiFootballService;
 
     /**
+     * Endpoint de prueba simple (sin dependencias)
+     */
+    @GetMapping("/ping")
+    public ResponseEntity<Map<String, Object>> ping() {
+        return ResponseEntity.ok(Map.of(
+            "status", "ok",
+            "timestamp", System.currentTimeMillis()
+        ));
+    }
+
+    /**
      * Verificar estado de la configuración
      */
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getStatus() {
-        boolean configured = apiFootballService.isConfigured();
-        return ResponseEntity.ok(Map.of(
-            "configured", configured,
-            "message", configured ? "API-Football está configurado correctamente" : "Falta configurar la API key"
-        ));
+        try {
+            boolean configured = apiFootballService.isConfigured();
+            return ResponseEntity.ok(Map.of(
+                "configured", configured,
+                "message", configured ? "API-Football está configurado correctamente" : "Falta configurar la API key"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of(
+                "configured", false,
+                "message", "Error: " + e.getMessage(),
+                "error", e.getClass().getName()
+            ));
+        }
     }
 
     // ==================== LIGAS ====================
