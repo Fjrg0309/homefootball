@@ -104,11 +104,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex, HttpServletRequest request) {
 
+        // Log the actual exception for debugging
+        ex.printStackTrace();
+
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error("Error interno del servidor")
-                .message("Ha ocurrido un error inesperado. Por favor, inténtelo más tarde.")
+                .message("Error: " + ex.getClass().getName() + " - " + ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
 
