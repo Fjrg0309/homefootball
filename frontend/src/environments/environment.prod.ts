@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '/api'  // Usa proxy de nginx en producción
+  apiUrl: 'https://homefootballapp-v3nd4.ondigitalocean.app/homefootball-backend/api'
 };
