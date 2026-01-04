@@ -1,5 +1,5 @@
 # Dockerfile multi-stage para Angular App
-# Etapa 1: Build de la aplicación
+# Etapa 1: Build de la aplicacion
 FROM node:20-alpine AS build
 
 # Establecer directorio de trabajo
@@ -16,32 +16,29 @@ COPY package*.json ./
 # Instalar dependencias con reintentos
 RUN npm install --legacy-peer-deps || npm install --legacy-peer-deps
 
-# Copiar código fuente
+# Copiar codigo fuente
 COPY . .
 
-# Build de la aplicación en modo producción
+# Build de la aplicacion en modo produccion
 RUN npm run build -- --configuration production
 
-# Etapa 2: Servidor de producción con Nginx
+# Etapa 2: Servidor de produccion con Nginx
 FROM nginx:alpine
+
+# Instalar gettext para envsubst
+RUN apk add --no-cache gettext
 
 # Copiar archivos build al servidor Nginx
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
-# Copiar configuración de Nginx como template
-COPY nginx.conf /etc/nginx/templates/default.conf.template
+# Copiar configuracion de Nginx como template
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
-# Copiar y configurar script de arranque
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# Variable de entorno para el backend
-# En DigitalOcean App Platform, configura esta variable con la URL del backend
-# Ejemplo: https://backend-xxxxx.ondigitalocean.app
+# Variable de entorno para el backend (valor por defecto para docker-compose)
 ENV BACKEND_URL=http://backend:8080
 
 # Exponer puerto 80
 EXPOSE 80
 
-# Usar script de arranque que procesa el template de nginx
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# Procesar template y arrancar nginx
+CMD ["/bin/sh", "-c", "envsubst '$$BACKEND_URL' < /etc/nginx/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
