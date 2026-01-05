@@ -2208,3 +2208,232 @@ Estas propiedades se procesan en la GPU (compositor), no provocan reflow ni repa
 ```
 
 **Archivo:** `src/styles/components/_animations.scss`
+
+---
+
+## 6. Sistema de Temas
+
+Documentación del sistema de temas claro/oscuro implementado con CSS Custom Properties.
+
+---
+
+### 6.1 Variables de tema
+
+Las variables CSS se definen en `:root` para el tema claro y en `[data-theme="dark"]` para el tema oscuro.
+
+#### Tema claro (por defecto)
+
+```scss
+:root {
+  // Colores de fondo
+  --bg-primary: #F5F5F5;
+  --bg-secondary: #FFFFFF;
+  --bg-header: #363871;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  
+  // Fondos de estado
+  --bg-hover: rgba(255, 255, 255, 0.1);
+  --bg-active: rgba(255, 255, 255, 0.15);
+  --bg-disabled: #E0E0E0;
+  
+  // Colores de texto
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --text-tertiary: #9E9E9E;
+  --text-disabled: #BDBDBD;
+  --text-on-dark: #FFFFFF;
+  
+  // Colores de borde
+  --border-primary: #E0E0E0;
+  --border-secondary: #EEEEEE;
+  --border-hover: #BDBDBD;
+  --border-focus: #00D95F;
+  
+  // Sombras
+  --shadow-color: rgba(0, 0, 0, 0.12);
+  --shadow-color-hover: rgba(0, 0, 0, 0.18);
+}
+```
+
+#### Tema oscuro
+
+```scss
+[data-theme="dark"] {
+  // Colores de fondo
+  --bg-primary: #121212;
+  --bg-secondary: #1E1E1E;
+  --bg-header: #1A1A2E;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  
+  // Fondos de estado
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --bg-active: rgba(255, 255, 255, 0.1);
+  --bg-disabled: #2C2C2C;
+  
+  // Colores de texto
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --text-tertiary: #808080;
+  --text-disabled: #4A4A4A;
+  
+  // Colores de borde
+  --border-primary: #2C2C2C;
+  --border-secondary: #1E1E1E;
+  --border-hover: #3C3C3C;
+  
+  // Sombras más pronunciadas
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --shadow-color-hover: rgba(0, 0, 0, 0.6);
+}
+```
+
+**Archivo:** `src/styles/00-settings/_css-variables.scss`
+
+---
+
+### 6.2 Implementación del Theme Switcher
+
+#### Componente visual en el header
+
+El toggle de tema está en el header, visible en todas las páginas:
+
+```html
+<!-- src/app/components/layout/header/header.html -->
+<button 
+  class="header__theme-btn" 
+  (click)="toggleTheme()"
+  [attr.aria-label]="isDarkTheme() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+>
+  @if (isDarkTheme()) {
+    <!-- Sol: indica que se puede cambiar a claro -->
+    <svg>...</svg>
+  } @else {
+    <!-- Luna: indica que se puede cambiar a oscuro -->
+    <svg>...</svg>
+  }
+</button>
+```
+
+#### ThemeService (lógica)
+
+```typescript
+// src/app/services/theme.service.ts
+@Injectable({ providedIn: 'root' })
+export class ThemeService {
+  currentTheme = signal<'light' | 'dark'>('light');
+
+  constructor() {
+    this.initializeTheme();
+  }
+
+  initializeTheme(): void {
+    // 1. Leer localStorage
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') {
+      this.setTheme(saved);
+      return;
+    }
+    
+    // 2. Detectar preferencia del sistema
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.setTheme(prefersDark ? 'dark' : 'light');
+  }
+
+  setTheme(theme: 'light' | 'dark'): void {
+    this.currentTheme.set(theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }
+
+  toggleTheme(): void {
+    this.setTheme(this.currentTheme() === 'light' ? 'dark' : 'light');
+  }
+}
+```
+
+#### Prioridad de temas
+
+1. **Tema guardado en localStorage** → Se aplica si existe
+2. **Preferencia del sistema** → Se detecta con `prefers-color-scheme`
+3. **Tema claro por defecto** → Si no hay ninguno de los anteriores
+
+#### Detección de preferencia del sistema
+
+```scss
+// CSS: Aplica tema oscuro automáticamente si el sistema lo prefiere
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    // Variables de tema oscuro
+    --bg-primary: #121212;
+    --text-primary: #FFFFFF;
+    // ...
+  }
+}
+```
+
+```typescript
+// TypeScript: Detectar preferencia
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+```
+
+---
+
+### 6.3 Transiciones suaves
+
+Las transiciones entre temas usan duraciones de 200-300ms:
+
+```scss
+// Variables de transición
+:root {
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-ease: ease-in-out;
+}
+
+// Aplicación en elementos principales
+body {
+  transition: background-color var(--transition-base) var(--transition-ease);
+}
+
+.header {
+  transition: background-color 0.2s ease;
+}
+
+.card {
+  transition: background-color var(--transition-base),
+              border-color var(--transition-base),
+              box-shadow var(--transition-base);
+}
+```
+
+---
+
+### 6.4 Capturas de pantalla
+
+#### Página Home
+
+**Modo claro:**
+![Home - Modo claro](images/home-light.png)
+
+**Modo oscuro:**
+![Home - Modo oscuro](images/home-dark.png)
+
+---
+
+#### Página Style Guide
+
+**Modo claro:**
+![Style Guide - Modo claro](images/style-guide-light.png)
+
+**Modo oscuro:**
+![Style Guide - Modo oscuro](images/style-guide-dark.png)
+
+---
+
+#### Página Login Modal
+
+**Modo claro:**
+![Login - Modo claro](images/login-light.png)
+
+**Modo oscuro:**
+![Login - Modo oscuro](images/login-dark.png)

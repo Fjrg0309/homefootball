@@ -861,6 +861,72 @@ sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
 
 ---
 
+## ✅ Fase 6-Diseño: Sistema de Temas
+
+**Estado:** 100% Completado
+
+### Entregables:
+
+#### ✅ Sistema de temas con CSS Custom Properties
+
+**Variables implementadas en `:root` y `[data-theme="dark"]`:**
+- Colores de fondo (`--bg-primary`, `--bg-secondary`, etc.)
+- Colores de texto (`--text-primary`, `--text-secondary`, etc.)
+- Colores de borde (`--border-primary`, `--border-hover`, etc.)
+- Colores de sombra (`--shadow-color`, `--shadow-color-hover`)
+- Estados (`--bg-hover`, `--bg-active`, `--bg-disabled`)
+
+**Archivo:** `src/styles/00-settings/_css-variables.scss`
+
+---
+
+#### ✅ Theme Switcher funcional
+
+- Toggle visual en el header (sol/luna)
+- Cambia atributo `data-theme` en `<html>`
+- Guarda preferencia en localStorage
+- Carga preferencia al iniciar
+
+**Archivos:**
+- `src/app/services/theme.service.ts`
+- `src/app/components/layout/header/header.html`
+- `src/app/components/layout/header/header.ts`
+
+---
+
+#### ✅ Detección de preferencia del sistema
+
+**Prioridad implementada:**
+1. Tema guardado en localStorage
+2. Preferencia del sistema (`prefers-color-scheme`)
+3. Tema claro por defecto
+
+**Archivo:** `src/app/services/theme.service.ts`
+
+---
+
+#### ✅ Transiciones suaves entre temas
+
+- Transiciones de 150-300ms
+- Variables: `--transition-fast: 150ms`, `--transition-base: 300ms`
+- Aplicadas en body, header, cards, botones
+
+**Archivo:** `src/styles/00-settings/_variables.scss`
+
+---
+
+#### ✅ Documentación Sección 6
+
+**Incluye:**
+- 6.1 Variables de tema (código CSS para ambos temas)
+- 6.2 Implementación del Theme Switcher
+- 6.3 Transiciones suaves
+- 6.4 Capturas de pantalla (3 páginas en modo claro/oscuro)
+
+**Archivo:** `src/styles/docs/DOCUMENTACION.md` - Sección 6
+
+---
+
 ## 📊 Resumen Global
 
 ### Totales por Fase:
@@ -873,21 +939,23 @@ sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
 | **Fase 4** | 7/7 | ✅ 100% | 8+ archivos | 30+ rutas (15 lazy) |
 | **Fase 5** | 7/7 | ✅ 100% | 26 archivos | 5 demos |
 | **Fase 5-Diseño** | 6/6 | ✅ 100% | 15+ archivos | 2 componentes |
+| **Fase 6-Diseño** | 5/5 | ✅ 100% | 3 archivos | Header toggle |
 
 ### Totales del Proyecto:
 
 - **📁 Archivos creados:** 95+ archivos
 - **🛣️ Rutas implementadas:** 30+ rutas
 - **📋 Componentes:** 42+ componentes
-- **⚙️ Servicios:** 15+ servicios
+- **⚙️ Servicios:** 16+ servicios
 - **🎨 Estilos SCSS:** 55+ archivos de estilos
-- **📝 Documentación:** 9 archivos MD (README, FASE1-5-PROCESO, FASE5-DISENO-PROCESO, ENTREGABLES)
+- **📝 Documentación:** 9 archivos MD
 - **✅ Validadores custom:** 8 validadores (6 síncronos + 2 asíncronos)
 - **🛡️ Guards:** 3 guards (auth, admin, pendingChanges)
 - **🔗 Interceptores:** 3 interceptores HTTP
 - **📡 Interfaces TypeScript:** 15+ interfaces
 - **🖼️ Formatos de imagen:** AVIF, WebP, JPEG, SVG
-- **🎬 Animaciones CSS:** 4 spinners, 8+ hover, 9+ micro-interacciones
+- **🎬 Animaciones CSS:** 4 spinners, 8+ hover
+- **🌓 Sistema de temas:** Claro/Oscuro con persistencia
 
 ### Estado Final:
 
@@ -898,6 +966,7 @@ sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
 ✅ Fase 4: Routing Avanzado - 100% COMPLETADO
 ✅ Fase 5: Integración con APIs REST - 100% COMPLETADO
 ✅ Fase 5-Diseño: Optimización Multimedia - 100% COMPLETADO
+✅ Fase 6-Diseño: Sistema de Temas - 100% COMPLETADO
 
 🎉 PROYECTO COMPLETADO AL 100% 🎉
 ```
@@ -1012,6 +1081,12 @@ ng serve
 - Verificar spinners de carga en loading-demo
 - Verificar animaciones hover en cards de productos
 
+**Fase 6-Diseño:**
+- Verificar toggle de tema en header (icono sol/luna)
+- Hacer click para cambiar entre modo claro y oscuro
+- Recargar página para verificar persistencia
+- Revisar transiciones suaves al cambiar tema
+
 ---
 
 **✅ Todos los entregables verificables y funcionales**
@@ -1019,5 +1094,6 @@ ng serve
 **✅ Código profesional con TypeScript strict mode**
 **✅ Arquitectura escalable y mantenible**
 **✅ Optimización multimedia completa (AVIF/WebP/JPEG + animaciones CSS)**
+**✅ Sistema de temas claro/oscuro con persistencia**
 
 **🎉 PROYECTO ANGULAR 19 - 100% COMPLETADO 🎉**
