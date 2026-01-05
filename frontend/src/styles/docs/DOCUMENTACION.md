@@ -2378,7 +2378,7 @@ const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 ---
 
-### 6.3 Transiciones suaves
+### Transiciones suaves
 
 Las transiciones entre temas usan duraciones de 200-300ms:
 
@@ -2408,32 +2408,32 @@ body {
 
 ---
 
-### 6.4 Capturas de pantalla
+### 6.3 Capturas de pantalla
 
-#### Página Home
+#### Página Principal
 
 **Modo claro:**
-![Home - Modo claro](images/home-light.png)
+![Página Principal - Modo claro](images/paginaprincipal.PNG)
 
 **Modo oscuro:**
-![Home - Modo oscuro](images/home-dark.png)
+![Página Principal - Modo oscuro](images/paginaprincipaldark.PNG)
 
 ---
 
-#### Página Style Guide
+#### Página de Liga
 
 **Modo claro:**
-![Style Guide - Modo claro](images/style-guide-light.png)
+![Liga - Modo claro](images/liga.PNG)
 
 **Modo oscuro:**
-![Style Guide - Modo oscuro](images/style-guide-dark.png)
+![Liga - Modo oscuro](images/ligadark.PNG)
 
 ---
 
-#### Página Login Modal
+#### Página de Partidos
 
 **Modo claro:**
-![Login - Modo claro](images/login-light.png)
+![Partidos - Modo claro](images/partidos.PNG)
 
 **Modo oscuro:**
-![Login - Modo oscuro](images/login-dark.png)
+![Partidos - Modo oscuro](images/partidosdark.PNG)
