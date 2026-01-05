@@ -2044,3 +2044,167 @@ A continuación se muestran capturas de pantalla de 3 páginas en los 4 viewport
 - Navegación completa con todos los elementos
 - Grid de 3+ columnas con auto-fit
 - Sidebar completo con widgets adicionales
+
+---
+
+## 5. Optimización Multimedia
+
+Documentación de las técnicas de optimización de imágenes y animaciones CSS del proyecto.
+
+---
+
+### 5.1 Formatos elegidos
+
+| Formato | Cuándo usarlo | Por qué |
+|---------|---------------|---------|
+| **AVIF** | Imágenes grandes (heroes, banners) | Mejor compresión (50% menos que WebP). Soporte en Chrome 85+, Firefox 93+, Safari 16.4+ |
+| **WebP** | Imágenes medianas (cards, productos) | Buen balance compresión/compatibilidad. 25-35% menos que JPG |
+| **JPEG** | Fallback universal | Compatibilidad total. Usar calidad 80-85% |
+| **SVG** | Iconos y logos | Escalable sin pérdida. Optimizar con SVGO |
+
+**¿Por qué AVIF sobre WebP?**
+AVIF ofrece mejor compresión (~50% más que WebP) manteniendo calidad. Lo usamos como formato principal con WebP como fallback para navegadores sin soporte AVIF.
+
+**¿Por qué WebP sobre JPG?**
+WebP reduce 25-35% respecto a JPG con calidad equivalente. JPG solo como último fallback.
+
+---
+
+### 5.2 Herramientas utilizadas
+
+| Herramienta | Uso | Notas |
+|-------------|-----|-------|
+| **Squoosh** (web) | Conversión manual AVIF/WebP | https://squoosh.app - Control visual de calidad |
+| **SVGO** | Optimización SVG | Elimina metadatos innecesarios |
+| **TinyPNG** | Compresión PNG/JPG | Alternativa rápida online |
+
+---
+
+### 5.3 Resultados de optimización
+
+| Imagen | Original | Optimizado | Reducción |
+|--------|----------|------------|-----------|
+| logo.png | 45 KB | 12 KB (WebP) | 73% |
+| hero-home.jpg | 850 KB | 145 KB (AVIF) | 83% |
+| card-match.jpg | 320 KB | 68 KB (WebP) | 79% |
+| team-badge.png | 28 KB | 8 KB (WebP) | 71% |
+| stadium-bg.jpg | 1.2 MB | 180 KB (AVIF) | 85% |
+
+**Todas las imágenes finales < 200 KB** ✅
+
+---
+
+### 5.4 Tecnologías implementadas
+
+#### Uso de `<picture>` - Header logo
+
+```html
+<!-- src/app/components/layout/header/header.html -->
+<picture class="header__logo-picture">
+  <source type="image/avif" srcset="assets/images/avif/logo.avif">
+  <source type="image/webp" srcset="assets/images/webp/logo.webp">
+  <img src="assets/images/logo.png" alt="HomeFootball" loading="eager">
+</picture>
+```
+
+#### Uso de `srcset` y `sizes`
+
+```html
+<img 
+  src="match-800.jpg"
+  srcset="match-400.jpg 400w, match-800.jpg 800w, match-1200.jpg 1200w"
+  sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
+  alt="Partido"
+  loading="lazy">
+```
+
+- **sizes**: Indica al navegador el tamaño que ocupará la imagen
+- **srcset**: Lista de imágenes disponibles con su ancho real
+
+#### Uso de `loading="lazy"`
+
+```html
+<!-- Imagen visible al cargar: eager -->
+<img src="hero.jpg" alt="Hero" loading="eager">
+
+<!-- Imágenes más abajo: lazy -->
+<img src="card.jpg" alt="Card" loading="lazy">
+```
+
+---
+
+### 5.5 Animaciones CSS
+
+**¿Por qué solo `transform` y `opacity`?**
+
+Estas propiedades se procesan en la GPU (compositor), no provocan reflow ni repaint. Animar `width`, `height` o `margin` fuerza al navegador a recalcular el layout, causando jank.
+
+#### Animaciones implementadas
+
+**1. Spinner de carga (circular)**
+```scss
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0,0,0,0.1);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+**2. Hover en cards**
+```scss
+.card {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+```
+
+**3. Fade-in al aparecer**
+```scss
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+```
+
+**4. Escala en botones**
+```scss
+.btn {
+  transition: transform 150ms ease;
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+```
+
+#### Accesibilidad
+
+```scss
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+**Archivo:** `src/styles/components/_animations.scss`

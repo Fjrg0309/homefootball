@@ -1,0 +1,108 @@
+// =============================================
+// Responsive Image Component - Estilos
+// =============================================
+
+@use '../../../../styles/00-settings/variables' as *;
+@use '../../../../styles/01-tools/mixins' as *;
+
+.responsive-image {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  overflow: hidden;
+  background-color: var(--color-neutral-100);
+  border-radius: var(--radius-md);
+
+  // Eliminamos el layout shift
+  &__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity var(--transition-base) var(--transition-ease),
+                transform var(--transition-slow) var(--transition-ease);
+    
+    // Object fit variants
+    &--cover {
+      object-fit: cover;
+      height: 100%;
+    }
+
+    &--contain {
+      object-fit: contain;
+    }
+
+    // Efecto de hover suave
+    .responsive-image:hover & {
+      transform: scale(1.02);
+    }
+  }
+
+  // Imagen prioritaria (sin lazy loading)
+  &--priority {
+    .responsive-image__img {
+      // Sin transición para LCP
+      transition: none;
+    }
+  }
+
+  // Placeholder con spinner de carga
+  &__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-neutral-100);
+    z-index: 1;
+    
+    // Animación de fade out cuando carga
+    animation: placeholder-fade-in 300ms ease-out;
+  }
+
+  // Spinner de carga optimizado (solo transform)
+  &__spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid var(--color-neutral-300);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: image-spinner 800ms linear infinite;
+  }
+
+  // Caption de la imagen
+  &__caption {
+    padding: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-align: center;
+    background-color: var(--color-neutral-50);
+    line-height: var(--line-height-normal);
+  }
+}
+
+// Animación del spinner (solo transform - GPU optimizado)
+@keyframes image-spinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Animación del placeholder
+@keyframes placeholder-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

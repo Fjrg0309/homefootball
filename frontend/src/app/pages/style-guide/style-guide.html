@@ -358,5 +358,169 @@
         </app-pagination>
       </section>
     </section>
+
+    <!-- SECCIÓN: ANIMACIONES CSS (Fase 5 Diseño) -->
+    <section class="style-guide__section">
+      <h2 class="style-guide__section-title">🎨 Animaciones CSS</h2>
+      <p class="style-guide__description">Animaciones optimizadas usando solo <code>transform</code> y <code>opacity</code> (150ms-500ms).</p>
+      
+      <!-- Loading Spinners -->
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Loading Spinners</h3>
+        <section class="style-guide__row style-guide__row--spaced">
+          <!-- Spinner circular -->
+          <section class="style-guide__demo-item">
+            <div class="spinner"></div>
+            <span class="style-guide__demo-label">Circular</span>
+          </section>
+          
+          <!-- Spinner dots -->
+          <section class="style-guide__demo-item">
+            <div class="spinner-dots">
+              <div class="spinner-dots__dot"></div>
+              <div class="spinner-dots__dot"></div>
+              <div class="spinner-dots__dot"></div>
+            </div>
+            <span class="style-guide__demo-label">Dots</span>
+          </section>
+          
+          <!-- Spinner pulse -->
+          <section class="style-guide__demo-item">
+            <div class="spinner-pulse"></div>
+            <span class="style-guide__demo-label">Pulse</span>
+          </section>
+          
+          <!-- Spinner bars -->
+          <section class="style-guide__demo-item">
+            <div class="spinner-bars">
+              <div class="spinner-bars__bar"></div>
+              <div class="spinner-bars__bar"></div>
+              <div class="spinner-bars__bar"></div>
+              <div class="spinner-bars__bar"></div>
+            </div>
+            <span class="style-guide__demo-label">Bars</span>
+          </section>
+        </section>
+        
+        <!-- Tamaños de spinner -->
+        <h4 class="style-guide__subtitle">Tamaños de Spinner</h4>
+        <section class="style-guide__row style-guide__row--spaced">
+          <section class="style-guide__demo-item">
+            <div class="spinner spinner--sm"></div>
+            <span class="style-guide__demo-label">Small</span>
+          </section>
+          <section class="style-guide__demo-item">
+            <div class="spinner spinner--md"></div>
+            <span class="style-guide__demo-label">Medium</span>
+          </section>
+          <section class="style-guide__demo-item">
+            <div class="spinner spinner--lg"></div>
+            <span class="style-guide__demo-label">Large</span>
+          </section>
+          <section class="style-guide__demo-item">
+            <div class="spinner spinner--xl"></div>
+            <span class="style-guide__demo-label">XL</span>
+          </section>
+        </section>
+      </section>
+      
+      <!-- Skeleton Loaders -->
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Skeleton Loaders</h3>
+        <section class="style-guide__row">
+          <section class="style-guide__skeleton-demo">
+            <div class="skeleton skeleton--avatar"></div>
+            <div class="skeleton skeleton--text" style="width: 80%"></div>
+            <div class="skeleton skeleton--text" style="width: 60%"></div>
+            <div class="skeleton skeleton--button"></div>
+          </section>
+        </section>
+      </section>
+      
+      <!-- Transiciones Hover/Focus -->
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Transiciones Hover/Focus</h3>
+        <p class="style-guide__description-small">Pasa el mouse sobre los elementos para ver las animaciones.</p>
+        
+        <section class="style-guide__row style-guide__row--spaced">
+          <button class="btn btn--primary hover-lift">Hover Lift</button>
+          <button class="btn btn--secondary hover-scale">Hover Scale</button>
+          <a href="#" class="hover-underline style-guide__demo-link">Hover Underline</a>
+          <button class="btn btn--ghost hover-pulse">Hover Pulse</button>
+        </section>
+        
+        <section class="style-guide__row style-guide__row--spaced" style="margin-top: var(--spacing-4);">
+          <section class="style-guide__hover-card hover-zoom">
+            <img src="https://via.placeholder.com/200x120/363871/ffffff?text=Zoom" alt="Demo zoom" class="style-guide__hover-card-img">
+            <span>Hover Zoom</span>
+          </section>
+          
+          <section class="style-guide__avatar-demo">
+            <div class="style-guide__avatar hover-avatar">👤</div>
+            <span>Hover Avatar</span>
+          </section>
+          
+          <section class="style-guide__icon-demo hover-rotate">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span>Hover Rotate</span>
+          </section>
+        </section>
+        
+        <!-- Focus Glow -->
+        <h4 class="style-guide__subtitle">Focus Glow</h4>
+        <input type="text" class="style-guide__input focus-glow" placeholder="Haz click para ver focus glow">
+      </section>
+      
+      <!-- Micro-interacciones -->
+      <section class="style-guide__subsection">
+        <h3 class="style-guide__subsection-title">Micro-interacciones</h3>
+        <p class="style-guide__description-small">Haz click en los botones para activar las animaciones.</p>
+        
+        <section class="style-guide__row style-guide__row--wrap">
+          <button class="btn btn--secondary" (click)="triggerAnimation($event, 'animate-bounce')">
+            Bounce
+          </button>
+          <button class="btn btn--secondary" (click)="triggerAnimation($event, 'animate-shake')">
+            Shake
+          </button>
+          <button class="btn btn--secondary" (click)="triggerAnimation($event, 'animate-pop-in')">
+            Pop In
+          </button>
+          <button class="btn btn--secondary" (click)="triggerAnimation($event, 'animate-heartbeat')">
+            ❤️ Heartbeat
+          </button>
+          <button class="btn btn--secondary" (click)="triggerAnimation($event, 'animate-wiggle')">
+            Wiggle
+          </button>
+        </section>
+        
+        <!-- Demo de slide-in -->
+        <h4 class="style-guide__subtitle">Animaciones de Entrada</h4>
+        <section class="style-guide__row style-guide__row--spaced">
+          <section class="style-guide__slide-demo">
+            <div class="style-guide__slide-box" [class.animate-slide-in-left]="showSlideLeft" (click)="toggleSlide('left')">
+              Slide Left
+            </div>
+          </section>
+          <section class="style-guide__slide-demo">
+            <div class="style-guide__slide-box" [class.animate-slide-in-right]="showSlideRight" (click)="toggleSlide('right')">
+              Slide Right
+            </div>
+          </section>
+          <section class="style-guide__slide-demo">
+            <div class="style-guide__slide-box" [class.animate-slide-in-up]="showSlideUp" (click)="toggleSlide('up')">
+              Slide Up
+            </div>
+          </section>
+          <section class="style-guide__slide-demo">
+            <div class="style-guide__slide-box" [class.animate-fade-in]="showFade" (click)="toggleSlide('fade')">
+              Fade In
+            </div>
+          </section>
+        </section>
+      </section>
+    </section>
   </section>
 </section>

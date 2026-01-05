@@ -70,7 +70,55 @@ export class StyleGuide {
   currentPage: number = 1;
   totalPages: number = 10;
 
+  // Animation states (Fase 5 Diseño)
+  showSlideLeft: boolean = false;
+  showSlideRight: boolean = false;
+  showSlideUp: boolean = false;
+  showFade: boolean = false;
+
   onPageChange(page: number): void {
     this.currentPage = page;
+  }
+
+  /**
+   * Activa una animación en un elemento
+   * Fase 5 Diseño: Micro-interacciones
+   */
+  triggerAnimation(event: Event, animationClass: string): void {
+    const button = event.target as HTMLElement;
+    
+    // Remover la clase si ya existe
+    button.classList.remove(animationClass);
+    
+    // Forzar reflow para reiniciar la animación
+    void button.offsetWidth;
+    
+    // Añadir la clase de animación
+    button.classList.add(animationClass);
+    
+    // Remover la clase después de que termine la animación
+    setTimeout(() => {
+      button.classList.remove(animationClass);
+    }, 500);
+  }
+
+  /**
+   * Toggle para animaciones de slide/fade
+   */
+  toggleSlide(type: 'left' | 'right' | 'up' | 'fade'): void {
+    switch (type) {
+      case 'left':
+        this.showSlideLeft = !this.showSlideLeft;
+        break;
+      case 'right':
+        this.showSlideRight = !this.showSlideRight;
+        break;
+      case 'up':
+        this.showSlideUp = !this.showSlideUp;
+        break;
+      case 'fade':
+        this.showFade = !this.showFade;
+        break;
+    }
   }
 }

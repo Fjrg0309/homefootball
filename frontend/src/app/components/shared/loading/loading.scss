@@ -1,3 +1,10 @@
+// =============================================
+// Loading Overlay Component - Optimizado
+// =============================================
+// Animaciones solo con transform y opacity
+// Duración entre 150ms y 500ms
+// =============================================
+
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -10,24 +17,109 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  
+  // Entrada suave
+  animation: loading-fade-in 200ms ease-out;
 
   p {
     color: white;
     font-size: 1.1rem;
     font-weight: 500;
+    animation: loading-text-fade 300ms ease-out 150ms both;
   }
 }
 
+// Spinner principal optimizado (solo transform)
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--color-accent, #00D95F);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: loading-spin 800ms linear infinite;
 }
 
-@keyframes spin {
+// Variante: Spinner con dots
+.spinner-dots {
+  display: flex;
+  gap: 0.5rem;
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-accent, #00D95F);
+    border-radius: 50%;
+    animation: loading-bounce 500ms ease-in-out infinite;
+    
+    &:nth-child(2) { animation-delay: 100ms; }
+    &:nth-child(3) { animation-delay: 200ms; }
+  }
+}
+
+// Variante: Spinner pulse
+.spinner-pulse {
+  width: 50px;
+  height: 50px;
+  background-color: var(--color-accent, #00D95F);
+  border-radius: 50%;
+  animation: loading-pulse 500ms ease-in-out infinite alternate;
+}
+
+// =============================================
+// KEYFRAMES - Solo transform y opacity
+// =============================================
+
+// Fade in del overlay
+@keyframes loading-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Fade del texto con delay
+@keyframes loading-text-fade {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Spin del spinner (solo transform)
+@keyframes loading-spin {
+  from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+// Bounce de dots (solo transform)
+@keyframes loading-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+// Pulse (solo transform y opacity)
+@keyframes loading-pulse {
+  from { 
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+  to { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Respeto preferencias de movimiento reducido
+@media (prefers-reduced-motion: reduce) {
+  .loading-overlay,
+  .loading-overlay p,
+  .spinner,
+  .spinner-dots .dot,
+  .spinner-pulse {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

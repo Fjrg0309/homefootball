@@ -1,14 +1,23 @@
 <header class="header">
   <section class="header__container">
-    <!-- Logo y marca -->
+    <!-- Logo y marca con imagen responsive -->
     <a href="/" class="header__logo" aria-label="Ir a página principal">
-      <img 
-        src="/logo.png" 
-        alt="HomeFootball" 
-        class="header__logo-img"
-        width="56" 
-        height="56"
-      >
+      <picture class="header__logo-picture">
+        <!-- WebP para navegadores modernos -->
+        <source 
+          srcset="/logo.webp" 
+          type="image/webp">
+        <!-- PNG como fallback -->
+        <img 
+          src="/logo.png" 
+          alt="HomeFootball" 
+          class="header__logo-img"
+          width="56" 
+          height="56"
+          loading="eager"
+          decoding="async"
+        >
+      </picture>
     </a>
 
     <!-- Botón hamburguesa (mobile) -->
