@@ -1,73 +1,215 @@
 <div class="product-list-container">
   <div class="list-header">
     <h1>📦 Catálogo de Productos</h1>
-    <p>Navegación con Resolvers y Breadcrumbs</p>
+    <p>Store con Signals + OnPush (Tareas 2 y 3)</p>
+    
+    <!-- Botón de refrescar -->
+    <button class="btn-refresh" (click)="refreshList()">
+      🔄 Refrescar Lista
+    </button>
   </div>
 
-  <!-- Error Alert -->
-  @if (errorMessage()) {
+  <!-- ==========================================
+       ESTADÍSTICAS EN TIEMPO REAL (Con Signals)
+       
+       TAREA 2: Ahora usamos Signals en lugar de Observables
+       - Sintaxis: store.totalCount() en lugar de totalCount$ | async
+       - No hay suscripciones, no hay memory leaks
+       - Angular detecta cambios automáticamente con OnPush
+       ========================================== -->
+  <div class="stats-dashboard">
+    <h3>📊 Estadísticas en Tiempo Real (Signals)</h3>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">📦</span>
+        <div class="stat-content">
+          <!-- Signal: store.totalCount() - llamada directa, sin | async -->
+          <span class="stat-value">{{ store.totalCount() }}</span>
+          <span class="stat-label">Total Productos</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="stat-icon">💰</span>
+        <div class="stat-content">
+          <span class="stat-value">{{ store.totalPrice() | currency:'EUR' }}</span>
+          <span class="stat-label">Valor Total</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="stat-icon">📈</span>
+        <div class="stat-content">
+          <span class="stat-value">{{ store.averagePrice() | currency:'EUR' }}</span>
+          <span class="stat-label">Precio Promedio</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="stat-icon">🏭</span>
+        <div class="stat-content">
+          <span class="stat-value">{{ store.totalStock() }}</span>
+          <span class="stat-label">Stock Total</span>
+        </div>
+      </div>
+      
+      <div class="stat-card" [class.warning]="store.lowStockCount() > 0">
+        <span class="stat-icon">⚠️</span>
+        <div class="stat-content">
+          <span class="stat-value">{{ store.lowStockCount() }}</span>
+          <span class="stat-label">Bajo Stock (&lt;10)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Alert - Ahora con Signals -->
+  @if (store.error(); as errorMsg) {
     <div class="alert alert-error">
       <span class="alert-icon">⚠️</span>
       <div class="alert-content">
-        <strong>Error:</strong> {{ errorMessage() }}
+        <strong>Error:</strong> {{ errorMsg }}
       </div>
       <button class="alert-close" (click)="clearError()">✕</button>
     </div>
   }
 
-  <!-- Loading State -->
-  @if (loading()) {
+  <!-- Loading State - Ahora con Signals -->
+  @if (store.loading()) {
     <div class="loading-state">
       <div class="spinner"></div>
       <p>Cargando productos...</p>
     </div>
   }
 
-  <!-- Products Grid -->
-  @if (!loading() && products().length > 0) {
-    <div class="products-grid">
-      @for (product of products(); track product.id) {
-        <div class="product-card" [routerLink]="['/productos', product.id]">
-          <div class="product-image">
-            {{ product.image }}
-          </div>
-          <div class="product-info">
-            <span class="category-badge">{{ product.category }}</span>
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-description">{{ product.description }}</p>
-            <div class="product-footer">
-              <span class="price">{{ product.price | currency:'EUR' }}</span>
-              <span class="stock" [class.low-stock]="product.stock < 10">
-                📦 Stock: {{ product.stock }}
-              </span>
+  <!-- Products Grid con trackBy para preservar scroll -->
+  @if (!store.loading()) {
+    @if (store.hasProducts()) {
+      <div class="products-grid">
+        <!--
+          TAREA 3: trackBy para optimizar rendimiento
+          
+          Con @for de Angular 17+, usamos `track` directamente:
+          - track trackById($index, product)
+          
+          Angular compara IDs para:
+          1. Reutilizar nodos DOM existentes
+          2. Solo actualizar elementos que cambiaron
+          3. Preservar el scroll y estado del DOM
+        -->
+        @for (product of store.products(); track trackById($index, product)) {
+          <div class="product-card">
+            <!-- Área clickeable para ir al detalle -->
+            <div class="product-link" [routerLink]="['/productos', product.id]">
+              <div class="product-image">
+                {{ product.image }}
+              </div>
+              <div class="product-info">
+                <span class="category-badge">{{ product.category }}</span>
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-description">{{ product.description }}</p>
+                <div class="product-footer">
+                  <span class="price">{{ product.price | currency:'EUR' }}</span>
+                  <span class="stock" [class.low-stock]="product.stock < 10">
+                    📦 Stock: {{ product.stock }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Acciones del producto -->
+            <div class="product-actions">
+              <button 
+                class="btn-edit" 
+                [routerLink]="['/productos', product.id, 'editar']"
+                title="Editar producto"
+              >
+                ✏️
+              </button>
+              <button 
+                class="btn-delete" 
+                (click)="deleteProduct(product, $event)"
+                title="Eliminar producto"
+              >
+                🗑️
+              </button>
             </div>
           </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty State - usando computed isEmpty -->
+      @if (store.isEmpty()) {
+        <div class="empty-state">
+          <span class="empty-icon">📭</span>
+          <h3>No hay productos disponibles</h3>
+          <p>Vuelve más tarde para ver nuestro catálogo</p>
+          <a routerLink="/productos/nuevo" class="btn-add">
+            ➕ Crear Producto
+          </a>
         </div>
       }
-    </div>
+    }
   }
 
-  <!-- Empty State -->
-  @if (!loading() && products().length === 0) {
-    <div class="empty-state">
-      <span class="empty-icon">📭</span>
-      <h3>No hay productos disponibles</h3>
-      <p>Vuelve más tarde para ver nuestro catálogo</p>
-    </div>
-  }
+  <!-- Botón flotante para crear producto -->
+  <a routerLink="/productos/nuevo" class="fab-button" title="Crear nuevo producto">
+    ➕
+  </a>
 
-  <!-- Info Section -->
+  <!-- Info Section - Actualizada para Tareas 2 y 3 -->
   <div class="info-section">
-    <h2>🔍 Resolver en Acción</h2>
+    <h2>⚡ Tareas 2 y 3: Signals + OnPush</h2>
+    
+    <h3>📋 Tarea 2: Gestión de Estado con Signals</h3>
     <p>
-      Al hacer clic en un producto, el <code>productResolver</code> precargará los datos
-      antes de navegar al detalle. Si el producto no existe, redirigirá aquí con un mensaje de error.
+      Este componente usa <code>ProductsSignalStore</code> basado en 
+      <code>signal()</code> y <code>computed()</code> de Angular.
     </p>
     <ul>
-      <li>✅ Datos precargados antes de mostrar la página</li>
-      <li>✅ Loading state durante la carga del resolver</li>
-      <li>✅ Redirección automática en caso de error</li>
-      <li>✅ Mensaje de error propagado vía navigation state</li>
+      <li>✅ <strong>signal():</strong> Estado mutable privado (_products, _loading, _error)</li>
+      <li>✅ <strong>asReadonly():</strong> Expone signals de solo lectura</li>
+      <li>✅ <strong>computed():</strong> Valores derivados (totalCount, averagePrice, etc.)</li>
+      <li>✅ <strong>Sin | async:</strong> Acceso directo con store.products()</li>
+      <li>✅ <strong>Sin memory leaks:</strong> No hay suscripciones manuales</li>
     </ul>
+    
+    <h3>🚀 Tarea 3: Optimización de Rendimiento</h3>
+    <ul>
+      <li>✅ <strong>OnPush:</strong> Solo detecta cambios cuando Signals cambian</li>
+      <li>✅ <strong>trackBy:</strong> Reutiliza nodos DOM, preserva scroll</li>
+      <li>✅ <strong>Inmutabilidad:</strong> .update() crea nuevos arrays</li>
+      <li>✅ <strong>computed():</strong> Valores cacheados y lazy</li>
+    </ul>
+    
+    <h3>📝 Comparación Signals vs BehaviorSubject:</h3>
+    <div class="comparison-table">
+      <table>
+        <thead>
+          <tr>
+            <th>BehaviorSubject (Tarea 1)</th>
+            <th>Signals (Tarea 2)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>products$ | async</code></td>
+            <td><code>store.products()</code></td>
+          </tr>
+          <tr>
+            <td><code>subject.next(value)</code></td>
+            <td><code>signal.set(value)</code></td>
+          </tr>
+          <tr>
+            <td><code>pipe(map(...))</code></td>
+            <td><code>computed(() => ...)</code></td>
+          </tr>
+          <tr>
+            <td>Requiere unsubscribe</td>
+            <td>Sin suscripciones</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

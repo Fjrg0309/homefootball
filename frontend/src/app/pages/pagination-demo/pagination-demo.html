@@ -1,0 +1,278 @@
+<div class="pagination-demo-container">
+  <!-- Header -->
+  <div class="demo-header">
+    <h1>📄 Paginación y Scroll Infinito</h1>
+    <p>TAREA 4: Dos estrategias para cargar datos en listas largas</p>
+  </div>
+
+  <!-- Mode Selector -->
+  <div class="mode-selector">
+    <button 
+      class="mode-btn"
+      [class.active]="viewMode() === 'pagination'"
+      (click)="setViewMode('pagination')"
+    >
+      📋 Paginación Clásica
+    </button>
+    <button 
+      class="mode-btn"
+      [class.active]="viewMode() === 'infinite'"
+      (click)="setViewMode('infinite')"
+    >
+      ♾️ Infinite Scroll
+    </button>
+  </div>
+
+  <!-- ==========================================
+       PAGINACIÓN CLÁSICA
+       ========================================== -->
+  @if (viewMode() === 'pagination') {
+    <section class="pagination-section">
+      <div class="section-header">
+        <h2>📋 Paginación Clásica</h2>
+        <p>
+          Carga una página a la vez. Los botones permiten navegar entre páginas.
+          Ideal para tablas de administración y búsquedas con filtros.
+        </p>
+      </div>
+
+      <!-- Loading overlay para paginación -->
+      @if (paginationState().loading) {
+        <div class="loading-overlay">
+          <div class="spinner"></div>
+          <p>Cargando página {{ paginationState().page }}...</p>
+        </div>
+      }
+
+      <!-- Lista de productos -->
+      <div class="products-grid" [class.loading]="paginationState().loading">
+        @for (product of paginationState().data; track trackById($index, product)) {
+          <div class="product-card">
+            <div class="product-icon">{{ product.image }}</div>
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+              <p class="category">{{ product.category }}</p>
+              <p class="price">{{ product.price | currency:'EUR' }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Empty State -->
+      @if (!paginationState().loading && paginationState().data.length === 0) {
+        <div class="empty-state">
+          <span>📭</span>
+          <p>No hay productos en esta página</p>
+        </div>
+      }
+
+      <!-- Controles de paginación -->
+      <div class="pagination-controls">
+        <!-- Botón Anterior -->
+        <button 
+          class="pagination-btn"
+          (click)="previousPage()"
+          [disabled]="!canGoPrevious() || paginationState().loading"
+        >
+          ◀ Anterior
+        </button>
+
+        <!-- Números de página -->
+        <div class="page-numbers">
+          @if (pageNumbers()[0] > 1) {
+            <button class="page-btn" (click)="goToPage(1)">1</button>
+            @if (pageNumbers()[0] > 2) {
+              <span class="ellipsis">...</span>
+            }
+          }
+          
+          @for (pageNum of pageNumbers(); track pageNum) {
+            <button 
+              class="page-btn"
+              [class.active]="pageNum === paginationState().page"
+              (click)="goToPage(pageNum)"
+              [disabled]="paginationState().loading"
+            >
+              {{ pageNum }}
+            </button>
+          }
+          
+          @if (pageNumbers()[pageNumbers().length - 1] < totalPages()) {
+            @if (pageNumbers()[pageNumbers().length - 1] < totalPages() - 1) {
+              <span class="ellipsis">...</span>
+            }
+            <button class="page-btn" (click)="goToPage(totalPages())">
+              {{ totalPages() }}
+            </button>
+          }
+        </div>
+
+        <!-- Botón Siguiente -->
+        <button 
+          class="pagination-btn"
+          (click)="nextPage()"
+          [disabled]="!canGoNext() || paginationState().loading"
+        >
+          Siguiente ▶
+        </button>
+      </div>
+
+      <!-- Info de paginación -->
+      <div class="pagination-info">
+        <p>
+          Página <strong>{{ paginationState().page }}</strong> de <strong>{{ totalPages() }}</strong>
+          · Total: <strong>{{ paginationState().total }}</strong> productos
+          · Mostrando <strong>{{ paginationState().pageSize }}</strong> por página
+        </p>
+      </div>
+    </section>
+  }
+
+  <!-- ==========================================
+       INFINITE SCROLL
+       ========================================== -->
+  @if (viewMode() === 'infinite') {
+    <section class="infinite-section">
+      <div class="section-header">
+        <h2>♾️ Infinite Scroll</h2>
+        <p>
+          Carga automática al hacer scroll. Usa IntersectionObserver para detectar
+          cuándo el usuario llega al final. Ideal para feeds y catálogos.
+        </p>
+      </div>
+
+      <!-- Contador de elementos cargados -->
+      <div class="load-counter">
+        <span class="counter-value">{{ infiniteState().data.length }}</span>
+        <span class="counter-label">productos cargados</span>
+      </div>
+
+      <!-- Lista de productos (scroll container) -->
+      <div class="infinite-list">
+        @for (product of infiniteState().data; track trackById($index, product)) {
+          <div class="product-card-horizontal">
+            <div class="product-icon">{{ product.image }}</div>
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+              <p class="description">{{ product.description }}</p>
+              <div class="product-meta">
+                <span class="category">{{ product.category }}</span>
+                <span class="price">{{ product.price | currency:'EUR' }}</span>
+                <span class="stock" [class.low]="product.stock < 10">
+                  Stock: {{ product.stock }}
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- 
+          ANCHOR ELEMENT para IntersectionObserver
+          
+          Este div vacío se observa con IntersectionObserver.
+          Cuando entra en el viewport, se dispara loadMore().
+          Está al final de la lista, así que cuando el usuario
+          hace scroll hasta aquí, cargamos más datos.
+        -->
+        <div #scrollAnchor class="scroll-anchor"></div>
+
+        <!-- Loading indicator (solo en el footer) -->
+        @if (infiniteState().loading) {
+          <div class="infinite-loading">
+            <div class="spinner-small"></div>
+            <span>Cargando más productos...</span>
+          </div>
+        }
+
+        <!-- End of data message -->
+        @if (infiniteState().eof && !infiniteState().loading) {
+          <div class="end-of-data">
+            <span>🏁</span>
+            <p>No hay más productos para cargar</p>
+          </div>
+        }
+      </div>
+
+      <!-- Manual load button (backup) -->
+      @if (!infiniteState().eof && !infiniteState().loading) {
+        <button class="load-more-btn" (click)="loadMore()">
+          Cargar más productos
+        </button>
+      }
+    </section>
+  }
+
+  <!-- ==========================================
+       DOCUMENTACIÓN
+       ========================================== -->
+  <div class="info-section">
+    <h2>📚 Documentación - Tarea 4</h2>
+
+    <div class="info-grid">
+      <!-- Paginación Clásica -->
+      <div class="info-card">
+        <h3>📋 Paginación Clásica</h3>
+        <p>Reemplaza los datos al cambiar de página.</p>
+        
+        <h4>Implementación:</h4>
+        <ul>
+          <li>Query params: <code>page</code> y <code>pageSize</code></li>
+          <li>Estado: <code>{{ '{' }} loading, data, total, page {{ '}' }}</code></li>
+          <li>Loading bloquea toda la lista</li>
+        </ul>
+        
+        <h4>Cuándo usar:</h4>
+        <ul>
+          <li>✅ Tablas de administración</li>
+          <li>✅ Búsquedas con filtros</li>
+          <li>✅ Cuando el usuario necesita ir a una página específica</li>
+        </ul>
+      </div>
+
+      <!-- Infinite Scroll -->
+      <div class="info-card">
+        <h3>♾️ Infinite Scroll</h3>
+        <p>Acumula datos al hacer scroll.</p>
+        
+        <h4>Implementación:</h4>
+        <ul>
+          <li>IntersectionObserver detecta el anchor</li>
+          <li>Estado: <code>{{ '{' }} loading, data, page, eof {{ '}' }}</code></li>
+          <li>Loading solo en el footer</li>
+        </ul>
+        
+        <h4>Cuándo usar:</h4>
+        <ul>
+          <li>✅ Feeds de redes sociales</li>
+          <li>✅ Catálogos de productos</li>
+          <li>✅ Listados de contenido continuo</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>🔄 Loading States</h3>
+    <div class="loading-comparison">
+      <div class="comparison-item">
+        <h4>Paginación</h4>
+        <p>
+          Loading <strong>bloquea toda la lista</strong> porque los datos 
+          se reemplazan completamente. Se muestra un spinner central.
+        </p>
+      </div>
+      <div class="comparison-item">
+        <h4>Infinite Scroll</h4>
+        <p>
+          Loading <strong>solo afecta al footer</strong> porque los datos 
+          previos siguen visibles. Mejor experiencia de usuario.
+        </p>
+      </div>
+    </div>
+
+    <h3>⚠️ Flag EOF (End Of File)</h3>
+    <p>
+      En ambos casos, usamos un flag <code>eof</code> para detectar cuando 
+      no hay más datos. Esto evita llamadas innecesarias a la API y muestra 
+      un mensaje al usuario.
+    </p>
+  </div>
+</div>

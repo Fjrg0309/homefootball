@@ -1,0 +1,235 @@
+<div class="search-demo-container">
+  <!-- Header -->
+  <div class="demo-header">
+    <h1>🔍 Búsqueda y Filtrado en Tiempo Real</h1>
+    <p>TAREA 5: debounceTime + distinctUntilChanged + trackBy</p>
+  </div>
+
+  <!-- ==========================================
+       BARRA DE BÚSQUEDA
+       ========================================== -->
+  <div class="search-section">
+    <div class="search-bar">
+      <!-- 
+        INPUT REACTIVO CON FormControl
+        El observable valueChanges emite cada cambio
+        debounceTime(300) espera 300ms de inactividad
+        distinctUntilChanged() evita búsquedas duplicadas
+      -->
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="search" 
+          [formControl]="searchControl"
+          placeholder="Buscar productos..."
+          class="search-input"
+        >
+        @if (searchControl.value) {
+          <button class="clear-btn" (click)="clearSearch()">✕</button>
+        }
+      </div>
+
+      <!-- Filtro por categoría -->
+      <select [formControl]="categoryFilter" class="category-select">
+        @for (cat of categories(); track cat) {
+          <option [value]="cat">
+            {{ cat === 'all' ? '📁 Todas las categorías' : cat }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Mode toggle -->
+    <div class="mode-toggle">
+      <span class="mode-label">Modo de filtrado:</span>
+      <button 
+        class="mode-btn"
+        [class.active]="searchMode() === 'local'"
+        (click)="switchToLocalMode()"
+      >
+        💾 Local
+      </button>
+      <button 
+        class="mode-btn"
+        [class.active]="searchMode() === 'remote'"
+        (click)="switchToRemoteMode()"
+      >
+        🌐 Remoto
+      </button>
+      @if (searchMode() === 'remote') {
+        <button class="search-btn" (click)="performRemoteSearch()">
+          Buscar
+        </button>
+      }
+    </div>
+
+    <!-- Search info -->
+    <div class="search-info">
+      @if (searchTerm()) {
+        <span class="search-term">
+          Buscando: "<strong>{{ searchTerm() }}</strong>"
+        </span>
+      }
+      <span class="results-count">
+        {{ totalFound() }} productos encontrados
+      </span>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       RESULTADOS DE BÚSQUEDA
+       ========================================== -->
+  <div class="results-section">
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Buscando productos...</p>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!loading() && results().length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <h3>Sin resultados</h3>
+        <p>No se encontraron productos para "{{ searchTerm() }}"</p>
+        <button class="clear-search-btn" (click)="clearSearch()">
+          Limpiar búsqueda
+        </button>
+      </div>
+    }
+
+    <!-- Results Grid -->
+    @if (!loading() && results().length > 0) {
+      <div class="results-grid">
+        <!-- 
+          @for con track: trackById
+          
+          IMPORTANTE: track evita recrear elementos DOM
+          Si el ID no cambia, Angular reutiliza el elemento
+          Esto evita el "flickering" al actualizar resultados
+        -->
+        @for (product of results(); track trackById($index, product)) {
+          <div class="product-card" [attr.data-id]="product.id">
+            <div class="product-image">{{ product.image }}</div>
+            <div class="product-content">
+              <!-- Nombre con highlight del término -->
+              <h3 class="product-name" [innerHTML]="highlightTerm(product.name)"></h3>
+              <p class="product-description" [innerHTML]="highlightTerm(product.description)"></p>
+              <div class="product-meta">
+                <span class="category-badge">{{ product.category }}</span>
+                <span class="price">{{ product.price | currency:'EUR' }}</span>
+              </div>
+              <div class="stock-info" [class.low]="product.stock < 20">
+                Stock: {{ product.stock }} unidades
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ==========================================
+       DOCUMENTACIÓN
+       ========================================== -->
+  <div class="info-section">
+    <h2>📚 Documentación - Tarea 5</h2>
+
+    <div class="info-grid">
+      <!-- debounceTime -->
+      <div class="info-card">
+        <h3>⏱️ debounceTime(300)</h3>
+        <p>Espera 300ms de inactividad antes de emitir el valor.</p>
+        <code>
+searchControl.valueChanges.pipe(
+  debounceTime(300),
+  distinctUntilChanged()
+)
+        </code>
+        <p class="benefit">
+          ✅ Evita llamadas innecesarias mientras el usuario escribe
+        </p>
+      </div>
+
+      <!-- distinctUntilChanged -->
+      <div class="info-card">
+        <h3>🔄 distinctUntilChanged()</h3>
+        <p>Solo emite si el valor cambió respecto al anterior.</p>
+        <code>
+// Si el usuario escribe "abc"
+// y luego borra y vuelve a escribir "abc"
+// distinctUntilChanged evita la 2da búsqueda
+        </code>
+        <p class="benefit">
+          ✅ Evita búsquedas duplicadas
+        </p>
+      </div>
+
+      <!-- trackBy -->
+      <div class="info-card">
+        <h3>🆔 trackBy (track en &#64;for)</h3>
+        <p>Identifica elementos por ID para reutilizar DOM.</p>
+        <code>
+&#64;for (p of results(); track trackById($index, p)) {{ '{' }}
+  // Angular reutiliza el elemento si el ID existe
+{{ '}' }}
+        </code>
+        <p class="benefit">
+          ✅ Evita flickering, mejora rendimiento
+        </p>
+      </div>
+
+      <!-- Inmutabilidad -->
+      <div class="info-card">
+        <h3>📦 Inmutabilidad</h3>
+        <p>Crear nuevos arrays en vez de mutar los existentes.</p>
+        <code>
+// ❌ Mutar (malo)
+this.results.push(newItem);
+
+// ✅ Inmutable (bien)
+this.results = [...this.results, newItem];
+        </code>
+        <p class="benefit">
+          ✅ Change Detection funciona correctamente
+        </p>
+      </div>
+    </div>
+
+    <h3>🔀 Local vs Remoto</h3>
+    <div class="comparison-table">
+      <div class="comparison-row header">
+        <span>Aspecto</span>
+        <span>Filtrado Local</span>
+        <span>Filtrado Remoto</span>
+      </div>
+      <div class="comparison-row">
+        <span>Datos</span>
+        <span>Cargados en memoria</span>
+        <span>API externa (paginados)</span>
+      </div>
+      <div class="comparison-row">
+        <span>Latencia</span>
+        <span>Instantáneo</span>
+        <span>Depende de la red</span>
+      </div>
+      <div class="comparison-row">
+        <span>Volumen ideal</span>
+        <span>&lt; 1000 elementos</span>
+        <span>Miles o millones</span>
+      </div>
+      <div class="comparison-row">
+        <span>Offline</span>
+        <span>✅ Funciona</span>
+        <span>❌ Requiere conexión</span>
+      </div>
+      <div class="comparison-row">
+        <span>Operador RxJS</span>
+        <span>subscribe directo</span>
+        <span>switchMap (cancela previas)</span>
+      </div>
+    </div>
+  </div>
+</div>

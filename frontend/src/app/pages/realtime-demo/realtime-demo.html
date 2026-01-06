@@ -1,0 +1,267 @@
+<div class="realtime-demo-container">
+  <!-- Header -->
+  <div class="demo-header">
+    <h1>🔄 WebSockets y Polling</h1>
+    <p>TAREA 6 (OPCIONAL): Actualización de datos sin intervención del usuario</p>
+  </div>
+
+  <!-- ==========================================
+       PANEL DE CONTROL
+       ========================================== -->
+  <div class="control-panel">
+    <div class="connection-status">
+      <div class="status-indicator" [class.connected]="isConnected()">
+        <span class="status-dot"></span>
+        <span class="status-text">
+          @switch (currentMode()) {
+            @case ('websocket') { 🔌 WebSocket Conectado }
+            @case ('polling') { 🔄 Polling Activo }
+            @default { ⭕ Desconectado }
+          }
+        </span>
+      </div>
+      
+      @if (connectionState().lastUpdate) {
+        <span class="last-update">
+          Última actualización: {{ connectionState().lastUpdate | date:'HH:mm:ss' }}
+        </span>
+      }
+    </div>
+
+    <div class="control-buttons">
+      <!-- WebSocket Button -->
+      <button 
+        class="control-btn websocket"
+        [class.active]="currentMode() === 'websocket'"
+        (click)="connectWebSocket()"
+        [disabled]="currentMode() === 'websocket'"
+      >
+        🔌 Conectar WebSocket
+      </button>
+
+      <!-- Polling Button -->
+      <button 
+        class="control-btn polling"
+        [class.active]="currentMode() === 'polling'"
+        (click)="startPolling()"
+        [disabled]="currentMode() === 'polling'"
+      >
+        🔄 Iniciar Polling
+      </button>
+
+      <!-- Disconnect Button -->
+      <button 
+        class="control-btn disconnect"
+        (click)="disconnect()"
+        [disabled]="!isConnected()"
+      >
+        ⏹️ Desconectar
+      </button>
+    </div>
+
+    <!-- Polling Config -->
+    @if (currentMode() === 'polling' || currentMode() === 'disconnected') {
+      <div class="polling-config">
+        <label>Intervalo de polling:</label>
+        <div class="interval-buttons">
+          @for (sec of [3, 5, 10, 15]; track sec) {
+            <button 
+              class="interval-btn"
+              [class.active]="pollingInterval() === sec"
+              (click)="setPollingInterval(sec)"
+            >
+              {{ sec }}s
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ==========================================
+       ESTADÍSTICAS
+       ========================================== -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value">{{ connectionState().messageCount }}</span>
+      <span class="stat-label">Mensajes recibidos</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value highlight">{{ unreadCount() }}</span>
+      <span class="stat-label">Sin leer</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">{{ notifications().length }}</span>
+      <span class="stat-label">Total notificaciones</span>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       LISTA DE NOTIFICACIONES
+       ========================================== -->
+  <div class="notifications-section">
+    <div class="notifications-header">
+      <h2>📬 Notificaciones en Tiempo Real</h2>
+      <div class="notifications-actions">
+        <button 
+          class="action-btn"
+          (click)="markAllAsRead()"
+          [disabled]="unreadCount() === 0"
+        >
+          ✓ Marcar todas leídas
+        </button>
+        <button 
+          class="action-btn danger"
+          (click)="clearNotifications()"
+          [disabled]="notifications().length === 0"
+        >
+          🗑️ Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    @if (notifications().length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">📭</span>
+        <h3>No hay notificaciones</h3>
+        <p>Conecta WebSocket o inicia Polling para recibir notificaciones en tiempo real</p>
+      </div>
+    }
+
+    <!-- Notifications List -->
+    @if (notifications().length > 0) {
+      <div class="notifications-list">
+        @for (notification of notifications(); track trackById($index, notification)) {
+          <div 
+            class="notification-item"
+            [class.unread]="!notification.read"
+            [attr.data-type]="notification.type"
+            (click)="markAsRead(notification.id)"
+          >
+            <span class="notification-icon">{{ getNotificationIcon(notification.type) }}</span>
+            <div class="notification-content">
+              <h4>{{ notification.title }}</h4>
+              <p>{{ notification.message }}</p>
+              <span class="notification-time">{{ notification.timestamp | date:'HH:mm:ss' }}</span>
+            </div>
+            @if (!notification.read) {
+              <span class="unread-badge"></span>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ==========================================
+       DOCUMENTACIÓN
+       ========================================== -->
+  <div class="info-section">
+    <h2>📚 Documentación - Tarea 6 (Opcional)</h2>
+
+    <div class="info-grid">
+      <!-- WebSocket -->
+      <div class="info-card websocket-card">
+        <h3>🔌 WebSocket</h3>
+        <p>Conexión bidireccional persistente con el servidor.</p>
+        
+        <h4>Implementación:</h4>
+        <code>
+import {{ '{' }} webSocket {{ '}' }} from 'rxjs/webSocket';
+
+socket$ = webSocket('wss://api.example.com/ws');
+
+// Escuchar mensajes
+socket$.subscribe(msg => {{ '{' }}
+  this.notifications = [msg, ...this.notifications];
+{{ '}' }});
+
+// Enviar mensaje
+socket$.next({{ '{' }} type: 'subscribe', channel: 'products' {{ '}' }});
+        </code>
+
+        <h4>Cuándo usar:</h4>
+        <ul>
+          <li>✅ Chat en tiempo real</li>
+          <li>✅ Notificaciones push</li>
+          <li>✅ Paneles de monitoreo</li>
+          <li>✅ Juegos multijugador</li>
+        </ul>
+      </div>
+
+      <!-- Polling -->
+      <div class="info-card polling-card">
+        <h3>🔄 Polling</h3>
+        <p>Peticiones HTTP periódicas al servidor.</p>
+        
+        <h4>Implementación:</h4>
+        <code>
+import {{ '{' }} timer, switchMap {{ '}' }} from 'rxjs';
+
+notifications$ = timer(0, 30000).pipe(
+  switchMap(() => this.http.get('/api/notifications')),
+  shareReplay(1)
+);
+
+// En template:
+&#64;for (n of notifications$ | async) {{ '{' }} ... {{ '}' }}
+        </code>
+
+        <h4>Cuándo usar:</h4>
+        <ul>
+          <li>✅ API sin soporte WebSocket</li>
+          <li>✅ Datos que cambian poco</li>
+          <li>✅ Implementación simple</li>
+          <li>✅ Menor complejidad server</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>⚖️ Comparación</h3>
+    <div class="comparison-table">
+      <div class="comparison-row header">
+        <span>Aspecto</span>
+        <span>WebSocket</span>
+        <span>Polling</span>
+      </div>
+      <div class="comparison-row">
+        <span>Conexión</span>
+        <span>Persistente</span>
+        <span>Múltiples HTTP</span>
+      </div>
+      <div class="comparison-row">
+        <span>Latencia</span>
+        <span>Muy baja (~ms)</span>
+        <span>Depende del intervalo</span>
+      </div>
+      <div class="comparison-row">
+        <span>Eficiencia</span>
+        <span>Alta (solo datos nuevos)</span>
+        <span>Baja (pide todo)</span>
+      </div>
+      <div class="comparison-row">
+        <span>Bidireccional</span>
+        <span>✅ Sí</span>
+        <span>❌ No (solo request)</span>
+      </div>
+      <div class="comparison-row">
+        <span>Complejidad servidor</span>
+        <span>Alta</span>
+        <span>Baja (REST normal)</span>
+      </div>
+      <div class="comparison-row">
+        <span>Firewall/Proxy</span>
+        <span>⚠️ Puede bloquear</span>
+        <span>✅ Sin problemas</span>
+      </div>
+    </div>
+
+    <h3>🎯 Resumen</h3>
+    <p>
+      Ambas técnicas permiten <strong>actualizar datos sin intervención del usuario</strong>. 
+      WebSocket es ideal para casos de alta frecuencia (chat, gaming), mientras que 
+      Polling es más simple y compatible cuando los cambios son menos frecuentes.
+    </p>
+  </div>
+</div>

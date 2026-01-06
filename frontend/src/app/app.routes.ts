@@ -169,6 +169,27 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/football-demo/football-demo.component').then(m => m.FootballDemoComponent),
     data: { breadcrumb: 'Football Demo' }
   },
+
+  // TAREA 4: Demo de Paginación y Infinite Scroll
+  {
+    path: 'pagination-demo',
+    loadComponent: () => import('./pages/pagination-demo/pagination-demo').then(m => m.PaginationDemo),
+    data: { breadcrumb: 'Paginación Demo' }
+  },
+
+  // TAREA 5: Búsqueda y Filtrado en Tiempo Real
+  {
+    path: 'search-demo',
+    loadComponent: () => import('./pages/search-demo/search-demo').then(m => m.SearchDemo),
+    data: { breadcrumb: 'Búsqueda Demo' }
+  },
+
+  // TAREA 6: WebSockets y Polling (OPCIONAL)
+  {
+    path: 'realtime-demo',
+    loadComponent: () => import('./pages/realtime-demo/realtime-demo').then(m => m.RealtimeDemo),
+    data: { breadcrumb: 'Tiempo Real Demo' }
+  },
   
   // Wildcard 404 - SIEMPRE AL FINAL
   { path: '**', component: NotFound }
