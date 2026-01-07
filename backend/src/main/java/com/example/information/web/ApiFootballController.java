@@ -202,6 +202,42 @@ public class ApiFootballController {
         return ResponseEntity.ok(apiFootballService.getFixturesByTeam(teamId, season));
     }
 
+    /**
+     * Obtener la última jornada completada de una liga
+     * Devuelve los partidos más recientes finalizados
+     */
+    @GetMapping("/fixtures/latest-round")
+    public ResponseEntity<FixtureResponse> getLatestRound(
+            @RequestParam int league,
+            @RequestParam(defaultValue = "2024") int season) {
+        log.info("GET /api/football/fixtures/latest-round?league={}&season={}", league, season);
+        return ResponseEntity.ok(apiFootballService.getLatestRound(league, season));
+    }
+
+    /**
+     * Obtener partidos de una jornada específica
+     */
+    @GetMapping("/fixtures/round")
+    public ResponseEntity<FixtureResponse> getFixturesByRound(
+            @RequestParam int league,
+            @RequestParam(defaultValue = "2024") int season,
+            @RequestParam String round) {
+        log.info("GET /api/football/fixtures/round?league={}&season={}&round={}", league, season, round);
+        return ResponseEntity.ok(apiFootballService.getFixturesByRound(league, season, round));
+    }
+
+    /**
+     * Obtener la última fecha con datos disponibles para una liga
+     */
+    @GetMapping("/fixtures/latest-date")
+    public ResponseEntity<Map<String, String>> getLatestAvailableDate(
+            @RequestParam int league,
+            @RequestParam(defaultValue = "2024") int season) {
+        log.info("GET /api/football/fixtures/latest-date?league={}&season={}", league, season);
+        String latestDate = apiFootballService.getLatestAvailableDate(league, season);
+        return ResponseEntity.ok(Map.of("date", latestDate));
+    }
+
     // ==================== CLASIFICACIÓN ====================
 
     /**

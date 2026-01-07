@@ -1,0 +1,46 @@
+### API-FOOTBALL - Tests para Última Jornada y Datos Actuales
+### Usa estos endpoints para obtener datos recientes (no en vivo)
+
+@baseUrl = http://localhost:8080/api/football
+
+### 1. Verificar estado de la API
+GET {{baseUrl}}/status
+
+### 2. Obtener última jornada de La Liga (España - Liga 140)
+GET {{baseUrl}}/fixtures/latest-round?league=140&season=2024
+
+### 3. Obtener última jornada de Premier League (Inglaterra - Liga 39)
+GET {{baseUrl}}/fixtures/latest-round?league=39&season=2024
+
+### 4. Obtener última jornada de Serie A (Italia - Liga 135)
+GET {{baseUrl}}/fixtures/latest-round?league=135&season=2024
+
+### 5. Obtener última jornada de Bundesliga (Alemania - Liga 78)
+GET {{baseUrl}}/fixtures/latest-round?league=78&season=2024
+
+### 6. Obtener última jornada de Ligue 1 (Francia - Liga 61)
+GET {{baseUrl}}/fixtures/latest-round?league=61&season=2024
+
+### 7. Obtener última fecha con datos disponibles de La Liga
+GET {{baseUrl}}/fixtures/latest-date?league=140&season=2024
+
+### 8. Obtener partidos de una jornada específica (ejemplo: Regular Season - 15)
+GET {{baseUrl}}/fixtures/round?league=140&season=2024&round=Regular Season - 15
+
+### 9. Obtener todos los partidos de La Liga 2024 (para ver todas las jornadas)
+GET {{baseUrl}}/fixtures?league=140&season=2024
+
+### 10. Obtener clasificación actual de La Liga
+GET {{baseUrl}}/standings?league=140&season=2024
+
+### NOTAS:
+# - Los datos en vivo no están disponibles con planes gratuitos
+# - Use latest-round para obtener la última jornada completada
+# - Use latest-date para encontrar la fecha más reciente con datos
+# - IDs de ligas principales:
+#   * La Liga (España): 140
+#   * Premier League (Inglaterra): 39
+#   * Serie A (Italia): 135
+#   * Bundesliga (Alemania): 78
+#   * Ligue 1 (Francia): 61
+#   * Champions League: 2

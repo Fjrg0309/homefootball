@@ -360,6 +360,34 @@ export class FootballApiService {
     });
   }
 
+  /**
+   * Obtiene la última jornada completada de una liga
+   * Devuelve los partidos más recientes finalizados
+   */
+  getLatestRound(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<FixtureData>> {
+    return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures/latest-round`, {
+      params: { league: leagueId.toString(), season: season.toString() }
+    });
+  }
+
+  /**
+   * Obtiene partidos de una jornada específica
+   */
+  getFixturesByRound(leagueId: number, season: number, round: string): Observable<ApiFootballResponse<FixtureData>> {
+    return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures/round`, {
+      params: { league: leagueId.toString(), season: season.toString(), round }
+    });
+  }
+
+  /**
+   * Obtiene la última fecha con datos disponibles para una liga
+   */
+  getLatestAvailableDate(leagueId: number, season: number = 2024): Observable<{ date: string }> {
+    return this.http.get<{ date: string }>(`${this.baseUrl}/fixtures/latest-date`, {
+      params: { league: leagueId.toString(), season: season.toString() }
+    });
+  }
+
   // ==================== CLASIFICACIÓN ====================
 
   /**

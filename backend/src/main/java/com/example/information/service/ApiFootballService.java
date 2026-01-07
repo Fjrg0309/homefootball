@@ -7,8 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Servicio para consumir la API de API-Football
@@ -39,18 +46,45 @@ public class ApiFootballService {
     }
 
     /**
+     * Método genérico para hacer peticiones con manejo de errores
+     */
+    private <T> T executeRequest(String url, Class<T> responseType) {
+        try {
+            log.info("Ejecutando petición a API-Football: {}", url);
+            
+            if (apiKey == null || apiKey.isEmpty()) {
+                log.error("API Key no configurada");
+                throw new RuntimeException("API Key de API-Football no está configurada");
+            }
+            
+            HttpEntity<String> entity = new HttpEntity<>(createHeaders());
+            ResponseEntity<T> response = restTemplate.exchange(
+                url, HttpMethod.GET, entity, responseType
+            );
+            
+            if (response.getStatusCode() == HttpStatus.OK) {
+                log.info("Petición exitosa a: {}", url);
+                return response.getBody();
+            } else {
+                log.error("Error en la petición. Status: {}", response.getStatusCode());
+                throw new RuntimeException("Error en la respuesta de la API: " + response.getStatusCode());
+            }
+            
+        } catch (RestClientException e) {
+            log.error("Error de conexión con API-Football: {}", e.getMessage(), e);
+            throw new RuntimeException("Error de conexión con API-Football: " + e.getMessage(), e);
+        } catch (Exception e) {
+            log.error("Error inesperado al consultar API-Football: {}", e.getMessage(), e);
+            throw new RuntimeException("Error al consultar API-Football: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Obtiene todas las ligas disponibles
      */
     public LeagueResponse getLeagues() {
         String url = baseUrl + "/leagues";
-        log.info("Fetching leagues from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<LeagueResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, LeagueResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, LeagueResponse.class);
     }
 
     /**
@@ -60,15 +94,7 @@ public class ApiFootballService {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/leagues")
             .queryParam("country", country)
             .toUriString();
-        
-        log.info("Fetching leagues by country from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<LeagueResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, LeagueResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, LeagueResponse.class);
     }
 
     /**
@@ -78,15 +104,7 @@ public class ApiFootballService {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/leagues")
             .queryParam("id", leagueId)
             .toUriString();
-        
-        log.info("Fetching league by ID from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<LeagueResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, LeagueResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, LeagueResponse.class);
     }
 
     /**
@@ -97,15 +115,7 @@ public class ApiFootballService {
             .queryParam("league", leagueId)
             .queryParam("season", season)
             .toUriString();
-        
-        log.info("Fetching teams from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<TeamResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, TeamResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, TeamResponse.class);
     }
 
     /**
@@ -115,15 +125,7 @@ public class ApiFootballService {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/teams")
             .queryParam("id", teamId)
             .toUriString();
-        
-        log.info("Fetching team by ID from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<TeamResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, TeamResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, TeamResponse.class);
     }
 
     /**
@@ -133,15 +135,7 @@ public class ApiFootballService {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/teams")
             .queryParam("search", name)
             .toUriString();
-        
-        log.info("Searching teams from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<TeamResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, TeamResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, TeamResponse.class);
     }
 
     /**
@@ -152,15 +146,7 @@ public class ApiFootballService {
             .queryParam("team", teamId)
             .queryParam("season", season)
             .toUriString();
-        
-        log.info("Fetching players from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<PlayerResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, PlayerResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, PlayerResponse.class);
     }
 
     /**
@@ -171,15 +157,7 @@ public class ApiFootballService {
             .queryParam("id", playerId)
             .queryParam("season", season)
             .toUriString();
-        
-        log.info("Fetching player by ID from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<PlayerResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, PlayerResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, PlayerResponse.class);
     }
 
     /**
@@ -191,15 +169,7 @@ public class ApiFootballService {
             .queryParam("league", leagueId)
             .queryParam("season", season)
             .toUriString();
-        
-        log.info("Searching players from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<PlayerResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, PlayerResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, PlayerResponse.class);
     }
 
     /**
@@ -210,15 +180,7 @@ public class ApiFootballService {
             .queryParam("league", leagueId)
             .queryParam("season", season)
             .toUriString();
-        
-        log.info("Fetching fixtures from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<FixtureResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, FixtureResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, FixtureResponse.class);
     }
 
     /**
@@ -228,15 +190,7 @@ public class ApiFootballService {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
             .queryParam("live", "all")
             .toUriString();
-        
-        log.info("Fetching live fixtures from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<FixtureResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, FixtureResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, FixtureResponse.class);
     }
 
     /**
@@ -246,15 +200,7 @@ public class ApiFootballService {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
             .queryParam("date", date)
             .toUriString();
-        
-        log.info("Fetching fixtures by date from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<FixtureResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, FixtureResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, FixtureResponse.class);
     }
 
     /**
@@ -265,15 +211,7 @@ public class ApiFootballService {
             .queryParam("team", teamId)
             .queryParam("season", season)
             .toUriString();
-        
-        log.info("Fetching fixtures by team from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<FixtureResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, FixtureResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, FixtureResponse.class);
     }
 
     /**
@@ -284,15 +222,7 @@ public class ApiFootballService {
             .queryParam("league", leagueId)
             .queryParam("season", season)
             .toUriString();
-        
-        log.info("Fetching standings from API-Football: {}", url);
-        
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<StandingsResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, StandingsResponse.class
-        );
-        
-        return response.getBody();
+        return executeRequest(url, StandingsResponse.class);
     }
 
     /**
@@ -303,15 +233,116 @@ public class ApiFootballService {
             .queryParam("league", leagueId)
             .queryParam("season", season)
             .toUriString();
+        return executeRequest(url, PlayerResponse.class);
+    }
+
+    /**
+     * Obtiene la última jornada completada de una liga
+     * Busca los partidos más recientes que estén finalizados
+     */
+    public FixtureResponse getLatestRound(int leagueId, int season) {
+        log.info("Obteniendo última jornada de la liga {} temporada {}", leagueId, season);
         
-        log.info("Fetching top scorers from API-Football: {}", url);
+        try {
+            // Obtener todos los partidos de la liga
+            FixtureResponse allFixtures = getFixturesByLeague(leagueId, season);
+            
+            if (allFixtures == null || allFixtures.getResponse() == null || allFixtures.getResponse().isEmpty()) {
+                log.warn("No se encontraron partidos para la liga {} temporada {}", leagueId, season);
+                return allFixtures;
+            }
+            
+            // Filtrar solo partidos finalizados y ordenar por fecha descendente
+            List<FixtureResponse.FixtureData> finishedFixtures = allFixtures.getResponse().stream()
+                .filter(f -> f.getFixture() != null && f.getFixture().getStatus() != null)
+                .filter(f -> "Match Finished".equals(f.getFixture().getStatus().getLongStatus()) || 
+                            "FT".equals(f.getFixture().getStatus().getShortStatus()))
+                .sorted(Comparator.comparing(
+                    f -> f.getFixture().getTimestamp(), 
+                    Comparator.reverseOrder()
+                ))
+                .collect(Collectors.toList());
+            
+            if (finishedFixtures.isEmpty()) {
+                log.warn("No se encontraron partidos finalizados para la liga {} temporada {}", leagueId, season);
+                return allFixtures;
+            }
+            
+            // Obtener la jornada más reciente
+            String latestRound = finishedFixtures.get(0).getLeague().getRound();
+            log.info("Última jornada encontrada: {}", latestRound);
+            
+            // Filtrar todos los partidos de esa jornada
+            List<FixtureResponse.FixtureData> latestRoundFixtures = finishedFixtures.stream()
+                .filter(f -> latestRound.equals(f.getLeague().getRound()))
+                .collect(Collectors.toList());
+            
+            // Crear respuesta con solo los partidos de la última jornada
+            FixtureResponse response = new FixtureResponse();
+            response.setResponse(latestRoundFixtures);
+            response.setResults(latestRoundFixtures.size());
+            
+            log.info("Se encontraron {} partidos en la última jornada: {}", latestRoundFixtures.size(), latestRound);
+            return response;
+            
+        } catch (Exception e) {
+            log.error("Error al obtener la última jornada de la liga {}: {}", leagueId, e.getMessage(), e);
+            throw new RuntimeException("Error al obtener la última jornada: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Obtiene partidos de una jornada específica
+     */
+    public FixtureResponse getFixturesByRound(int leagueId, int season, String round) {
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
+            .queryParam("league", leagueId)
+            .queryParam("season", season)
+            .queryParam("round", round)
+            .toUriString();
+        return executeRequest(url, FixtureResponse.class);
+    }
+    
+    /**
+     * Obtiene la fecha más reciente con datos disponibles
+     * Útil para obtener partidos recientes cuando no hay datos en vivo
+     */
+    public String getLatestAvailableDate(int leagueId, int season) {
+        log.info("Buscando última fecha con datos disponibles para liga {} temporada {}", leagueId, season);
         
-        HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-        ResponseEntity<PlayerResponse> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, PlayerResponse.class
-        );
-        
-        return response.getBody();
+        try {
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            
+            // Intentar obtener partidos de los últimos 30 días
+            for (int i = 0; i < 30; i++) {
+                LocalDate checkDate = today.minusDays(i);
+                String dateStr = checkDate.format(formatter);
+                
+                String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
+                    .queryParam("league", leagueId)
+                    .queryParam("date", dateStr)
+                    .toUriString();
+                
+                try {
+                    FixtureResponse response = executeRequest(url, FixtureResponse.class);
+                    
+                    if (response != null && response.getResponse() != null && !response.getResponse().isEmpty()) {
+                        log.info("Última fecha con datos: {}", dateStr);
+                        return dateStr;
+                    }
+                } catch (Exception e) {
+                    log.debug("No hay datos para la fecha {}: {}", dateStr, e.getMessage());
+                }
+            }
+            
+            log.warn("No se encontraron datos en los últimos 30 días para la liga {}", leagueId);
+            return today.format(formatter);
+            
+        } catch (Exception e) {
+            log.error("Error al buscar última fecha disponible: {}", e.getMessage(), e);
+            throw new RuntimeException("Error al buscar última fecha disponible: " + e.getMessage(), e);
+        }
     }
 
     /**
