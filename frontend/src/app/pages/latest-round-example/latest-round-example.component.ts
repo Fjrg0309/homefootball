@@ -28,9 +28,10 @@ import { FootballApiService, FixtureData } from '../../services/football-api.ser
 
         <label for="season">Temporada:</label>
         <select id="season" [(ngModel)]="selectedSeason" (change)="onLeagueChange()">
-          <option value="2024">2024</option>
           <option value="2023">2023</option>
           <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
         </select>
 
         <button (click)="loadLatestRound()" [disabled]="loading()">
@@ -84,7 +85,7 @@ import { FootballApiService, FixtureData } from '../../services/football-api.ser
                 
                 <div class="fixture-footer">
                   <span class="date">📅 {{ formatDate(fixture.fixture.date) }}</span>
-                  @if (fixture.fixture.venue?.name) {
+                  @if (fixture.fixture.venue && fixture.fixture.venue.name) {
                     <span class="venue">🏟️ {{ fixture.fixture.venue.name }}</span>
                   }
                 </div>
@@ -358,7 +359,7 @@ export class LatestRoundExampleComponent implements OnInit {
 
   // Estado de selección
   selectedLeagueId = '140'; // La Liga por defecto
-  selectedSeason = '2024';
+  selectedSeason = '2023';
 
   ngOnInit() {
     // Cargar automáticamente al iniciar
@@ -390,17 +391,26 @@ export class LatestRoundExampleComponent implements OnInit {
         if (response.response && response.response.length > 0) {
           console.log(`✅ Se cargaron ${response.response.length} partidos`);
         } else {
-          this.error.set('No se encontraron partidos para esta liga y temporada');
+          this.error.set(`No se encontraron partidos para esta liga en la temporada ${season}. Prueba con otra temporada (2022, 2021, 2020).`);
         }
       },
       error: (err) => {
         console.error('Error al cargar la última jornada:', err);
         this.loading.set(false);
-        this.error.set(
-          err.error?.message || 
-          err.message || 
-          'Error de conexión con el servidor. Verifica que el backend esté ejecutándose.'
-        );
+        
+        let errorMsg = 'Error al cargar los datos.';
+        
+        if (err.message) {
+          errorMsg = err.message;
+        } else if (err.error?.message) {
+          errorMsg = err.error.message;
+        } else if (err.status === 0) {
+          errorMsg = '❌ No se puede conectar con el backend. Asegúrate de que el servidor esté ejecutándose en http://localhost:8080';
+        } else if (err.status === 500) {
+          errorMsg = `No hay datos disponibles para la liga ${leagueId} en la temporada ${season}. Intenta con temporadas anteriores (2022, 2021, 2020).`;
+        }
+        
+        this.error.set(errorMsg);
       }
     });
   }

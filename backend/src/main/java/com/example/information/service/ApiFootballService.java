@@ -1,6 +1,5 @@
 package com.example.information.service;
 
-import com.example.information.config.ApiFootballConfig;
 import com.example.information.model.apifootball.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -249,7 +248,11 @@ public class ApiFootballService {
             
             if (allFixtures == null || allFixtures.getResponse() == null || allFixtures.getResponse().isEmpty()) {
                 log.warn("No se encontraron partidos para la liga {} temporada {}", leagueId, season);
-                return allFixtures;
+                // Crear respuesta vacía pero válida
+                FixtureResponse emptyResponse = new FixtureResponse();
+                emptyResponse.setResponse(List.of());
+                emptyResponse.setResults(0);
+                return emptyResponse;
             }
             
             // Filtrar solo partidos finalizados y ordenar por fecha descendente
@@ -265,7 +268,11 @@ public class ApiFootballService {
             
             if (finishedFixtures.isEmpty()) {
                 log.warn("No se encontraron partidos finalizados para la liga {} temporada {}", leagueId, season);
-                return allFixtures;
+                // Crear respuesta vacía pero válida
+                FixtureResponse emptyResponse = new FixtureResponse();
+                emptyResponse.setResponse(List.of());
+                emptyResponse.setResults(0);
+                return emptyResponse;
             }
             
             // Obtener la jornada más reciente
