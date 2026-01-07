@@ -38,7 +38,7 @@ FixtureResponse lastRound = apiFootballService.getLatestRound(140, 2024);
 
 ```java
 String latestDate = apiFootballService.getLatestAvailableDate(140, 2024);
-// Devuelve algo como "2024-01-05"
+// Devuelve algo como "2025-05-25"
 ```
 
 #### Método 3: Partidos de una Jornada Específica

@@ -28,10 +28,10 @@ import { FootballApiService, FixtureData } from '../../services/football-api.ser
 
         <label for="season">Temporada:</label>
         <select id="season" [(ngModel)]="selectedSeason" (change)="onLeagueChange()">
+          <option value="2024">2024</option>
           <option value="2023">2023</option>
           <option value="2022">2022</option>
           <option value="2021">2021</option>
-          <option value="2020">2020</option>
         </select>
 
         <button (click)="loadLatestRound()" [disabled]="loading()">
@@ -359,7 +359,7 @@ export class LatestRoundExampleComponent implements OnInit {
 
   // Estado de selección
   selectedLeagueId = '140'; // La Liga por defecto
-  selectedSeason = '2023';
+  selectedSeason = '2024';
 
   ngOnInit() {
     // Cargar automáticamente al iniciar
@@ -391,7 +391,7 @@ export class LatestRoundExampleComponent implements OnInit {
         if (response.response && response.response.length > 0) {
           console.log(`✅ Se cargaron ${response.response.length} partidos`);
         } else {
-          this.error.set(`No se encontraron partidos para esta liga en la temporada ${season}. Prueba con otra temporada (2022, 2021, 2020).`);
+          this.error.set(`No se encontraron partidos para esta liga en la temporada ${season}. Prueba con otra temporada (2023, 2022, 2021).`);
         }
       },
       error: (err) => {
@@ -407,7 +407,7 @@ export class LatestRoundExampleComponent implements OnInit {
         } else if (err.status === 0) {
           errorMsg = '❌ No se puede conectar con el backend. Asegúrate de que el servidor esté ejecutándose en http://localhost:8080';
         } else if (err.status === 500) {
-          errorMsg = `No hay datos disponibles para la liga ${leagueId} en la temporada ${season}. Intenta con temporadas anteriores (2022, 2021, 2020).`;
+          errorMsg = `No hay datos disponibles para la liga ${leagueId} en la temporada ${season}. Intenta con temporadas anteriores (2023, 2022, 2021).`;
         }
         
         this.error.set(errorMsg);

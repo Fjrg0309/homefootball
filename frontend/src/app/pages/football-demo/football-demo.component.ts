@@ -293,13 +293,20 @@ export class FootballDemoComponent implements OnInit {
 
   checkApiStatus() {
     this.footballApi.getStatus().subscribe({
-      next: (status) => this.apiStatus.set(status),
-      error: (err) => this.error.set('Error al verificar el estado de la API')
+      next: (status) => {
+        console.log('Estado de la API:', status);
+        this.apiStatus.set(status);
+      },
+      error: (err) => {
+        console.error('Error al verificar estado de la API:', err);
+        this.error.set('❌ No se puede conectar al backend. Asegúrate de que esté corriendo en http://localhost:8080');
+      }
     });
   }
 
   loadSpanishLeagues() {
     this.loading.set(true);
+    this.error.set(null); // Limpiar errores previos
     this.footballApi.getLeaguesByCountry('Spain').subscribe({
       next: (response) => {
         this.leagues.set(response.response);
@@ -312,7 +319,8 @@ export class FootballDemoComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.error.set('Error al cargar las ligas. ¿Está configurada la API key?');
+        console.error('Error al cargar ligas:', err);
+        this.error.set('❌ Error de conexión: Asegúrate de que el backend esté corriendo en http://localhost:8080');
         this.loading.set(false);
       }
     });
@@ -328,11 +336,15 @@ export class FootballDemoComponent implements OnInit {
     this.loadingTeams.set(true);
     this.footballApi.getTeamsByLeague(leagueId, 2024).subscribe({
       next: (response) => {
+        if (response.response.length === 0) {
+          this.error.set('No hay equipos disponibles para esta liga en 2024');
+        }
         this.teams.set(response.response);
         this.loadingTeams.set(false);
       },
       error: (err) => {
-        this.error.set('Error al cargar los equipos');
+        console.error('Error al cargar equipos:', err);
+        this.error.set('Error al cargar los equipos. Verifica que el backend esté corriendo.');
         this.loadingTeams.set(false);
       }
     });
@@ -344,11 +356,14 @@ export class FootballDemoComponent implements OnInit {
       next: (response) => {
         if (response.response.length > 0 && response.response[0].league.standings.length > 0) {
           this.standings.set(response.response[0].league.standings[0]);
+        } else {
+          this.error.set('No hay clasificación disponible para esta liga en 2024');
         }
         this.loadingStandings.set(false);
       },
       error: (err) => {
-        this.error.set('Error al cargar la clasificación');
+        console.error('Error al cargar clasificación:', err);
+        this.error.set('Error al cargar la clasificación. Verifica que el backend esté corriendo.');
         this.loadingStandings.set(false);
       }
     });
