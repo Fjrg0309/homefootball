@@ -90,7 +90,7 @@ public class ApiFootballController {
     @GetMapping("/teams")
     public ResponseEntity<TeamResponse> getTeamsByLeague(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/teams?league={}&season={}", league, season);
         return ResponseEntity.ok(apiFootballService.getTeamsByLeague(league, season));
     }
@@ -121,7 +121,7 @@ public class ApiFootballController {
     @GetMapping("/players")
     public ResponseEntity<PlayerResponse> getPlayersByTeam(
             @RequestParam int team,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/players?team={}&season={}", team, season);
         return ResponseEntity.ok(apiFootballService.getPlayersByTeam(team, season));
     }
@@ -132,7 +132,7 @@ public class ApiFootballController {
     @GetMapping("/players/{id}")
     public ResponseEntity<PlayerResponse> getPlayerById(
             @PathVariable int id,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/players/{}?season={}", id, season);
         return ResponseEntity.ok(apiFootballService.getPlayerById(id, season));
     }
@@ -144,7 +144,7 @@ public class ApiFootballController {
     public ResponseEntity<PlayerResponse> searchPlayers(
             @RequestParam String name,
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/players/search?name={}&league={}&season={}", name, league, season);
         return ResponseEntity.ok(apiFootballService.searchPlayers(name, league, season));
     }
@@ -155,7 +155,7 @@ public class ApiFootballController {
     @GetMapping("/players/topscorers")
     public ResponseEntity<PlayerResponse> getTopScorers(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/players/topscorers?league={}&season={}", league, season);
         return ResponseEntity.ok(apiFootballService.getTopScorers(league, season));
     }
@@ -168,7 +168,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures")
     public ResponseEntity<FixtureResponse> getFixturesByLeague(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/fixtures?league={}&season={}", league, season);
         return ResponseEntity.ok(apiFootballService.getFixturesByLeague(league, season));
     }
@@ -197,7 +197,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/team/{teamId}")
     public ResponseEntity<FixtureResponse> getFixturesByTeam(
             @PathVariable int teamId,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/fixtures/team/{}?season={}", teamId, season);
         return ResponseEntity.ok(apiFootballService.getFixturesByTeam(teamId, season));
     }
@@ -209,7 +209,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/latest-round")
     public ResponseEntity<FixtureResponse> getLatestRound(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/fixtures/latest-round?league={}&season={}", league, season);
         return ResponseEntity.ok(apiFootballService.getLatestRound(league, season));
     }
@@ -220,7 +220,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/round")
     public ResponseEntity<FixtureResponse> getFixturesByRound(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season,
+            @RequestParam(defaultValue = "2023") int season,
             @RequestParam String round) {
         log.info("GET /api/football/fixtures/round?league={}&season={}&round={}", league, season, round);
         return ResponseEntity.ok(apiFootballService.getFixturesByRound(league, season, round));
@@ -232,7 +232,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/latest-date")
     public ResponseEntity<Map<String, String>> getLatestAvailableDate(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/fixtures/latest-date?league={}&season={}", league, season);
         String latestDate = apiFootballService.getLatestAvailableDate(league, season);
         return ResponseEntity.ok(Map.of("date", latestDate));
@@ -246,8 +246,9 @@ public class ApiFootballController {
     @GetMapping("/standings")
     public ResponseEntity<StandingsResponse> getStandings(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2024") int season) {
+            @RequestParam(defaultValue = "2023") int season) {
         log.info("GET /api/football/standings?league={}&season={}", league, season);
         return ResponseEntity.ok(apiFootballService.getStandings(league, season));
     }
 }
+

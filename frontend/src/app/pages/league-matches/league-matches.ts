@@ -5,6 +5,44 @@ import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
 import { FootballApiService, FixtureData } from '../../services/football-api.service';
 
+// Configuración de temporadas por liga
+const LEAGUE_SEASONS: Record<number, number> = {
+  140: 2023,  // LaLiga
+  39: 2023,   // Premier League
+  135: 2023,  // Serie A
+  78: 2023,   // Bundesliga
+  61: 2023,   // Ligue 1
+  62: 2023,   // Ligue 2
+  94: 2023,   // Primeira Liga
+  88: 2023,   // Eredivisie
+  203: 2023,  // Süper Lig
+  253: 2023,  // MLS
+  262: 2023,  // Liga MX
+  40: 2023,   // Championship
+  2: 2023,    // Champions League
+  3: 2023,    // Europa League
+  848: 2023   // Conference League
+};
+
+// Última jornada disponible por liga
+const LEAGUE_LAST_ROUND: Record<number, number> = {
+  140: 38,  // LaLiga - 38 jornadas
+  39: 38,   // Premier League - 38 jornadas
+  135: 38,  // Serie A - 38 jornadas
+  78: 34,   // Bundesliga - 34 jornadas
+  61: 34,   // Ligue 1 - 34 jornadas
+  62: 38,   // Ligue 2 - 38 jornadas
+  94: 34,   // Primeira Liga - 34 jornadas
+  88: 34,   // Eredivisie - 34 jornadas
+  203: 38,  // Süper Lig - 38 jornadas
+  253: 34,  // MLS - 34 jornadas
+  262: 34,  // Liga MX - 34 jornadas
+  40: 46,   // Championship - 46 jornadas
+  2: 8,     // Champions League - fase de grupos
+  3: 8,     // Europa League - fase de grupos
+  848: 8    // Conference League - fase de grupos
+};
+
 // Mapeo de IDs de slug a IDs numéricos de la API
 const LEAGUE_ID_MAP: Record<string, number> = {
   'laliga': 140,
@@ -71,51 +109,58 @@ export class LeagueMatches implements OnInit {
   leagueApiId = signal<number>(0);
   leagueName = signal<string>('');
   
-  // Fecha actual seleccionada
-  currentDate = signal<Date>(new Date());
+  // Jornada actual seleccionada
+  currentRound = signal<number>(38);
+  maxRound = signal<number>(38);
+  season = signal<number>(2024);
   
-  // Partidos del día
+  // Fecha de los partidos de la jornada (se obtiene del primer partido)
+  roundDate = signal<string>('');
+  
+  // Partidos de la jornada
   matches = signal<Match[]>([]);
   
   // Estados de carga
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
   
-  // Texto formateado de la fecha actual
-  formattedDate = computed(() => {
-    const date = this.currentDate();
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    };
-    return date.toLocaleDateString('es-ES', options);
+  // Texto formateado de la jornada
+  formattedRound = computed(() => {
+    return `Jornada ${this.currentRound()}`;
   });
 
-  // Verificar si es hoy
-  isToday = computed(() => {
-    const today = new Date();
-    const current = this.currentDate();
-    return today.toDateString() === current.toDateString();
+  // Verificar si es la última jornada
+  isLastRound = computed(() => {
+    return this.currentRound() === this.maxRound();
+  });
+  
+  // Verificar si es la primera jornada
+  isFirstRound = computed(() => {
+    return this.currentRound() === 1;
   });
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id') || '';
       this.leagueId.set(id);
-      this.leagueApiId.set(LEAGUE_ID_MAP[id] || 0);
+      const apiId = LEAGUE_ID_MAP[id] || 0;
+      this.leagueApiId.set(apiId);
       this.leagueName.set(LEAGUE_NAMES[id] || id);
       
-      // Cargar partidos del día actual
-      this.loadMatchesForDate(this.currentDate());
+      // Configurar temporada y jornada máxima para esta liga
+      this.season.set(LEAGUE_SEASONS[apiId] || 2024);
+      this.maxRound.set(LEAGUE_LAST_ROUND[apiId] || 38);
+      this.currentRound.set(this.maxRound());
+      
+      // Cargar partidos de la última jornada
+      this.loadMatchesForRound(this.currentRound());
     });
   }
 
   /**
-   * Cargar partidos para una fecha específica
+   * Cargar partidos para una jornada específica
    */
-  loadMatchesForDate(date: Date): void {
+  loadMatchesForRound(round: number): void {
     const apiId = this.leagueApiId();
     if (!apiId) {
       this.error.set('Liga no encontrada');
@@ -125,16 +170,27 @@ export class LeagueMatches implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     
-    const dateStr = this.formatDateForApi(date);
+    const roundStr = `Regular Season - ${round}`;
     
-    this.footballApi.getFixturesByDate(dateStr).subscribe({
+    this.footballApi.getFixturesByRound(apiId, this.season(), roundStr).subscribe({
       next: (response) => {
-        // Filtrar partidos de esta liga
-        const leagueMatches = response.response.filter(
-          fixture => fixture.league.id === apiId
-        );
-        
-        this.matches.set(this.mapFixturesToMatches(leagueMatches));
+        if (response.response && response.response.length > 0) {
+          // Obtener la fecha del primer partido de la jornada
+          const firstMatch = response.response[0];
+          if (firstMatch.fixture && firstMatch.fixture.date) {
+            const matchDate = new Date(firstMatch.fixture.date);
+            const options: Intl.DateTimeFormatOptions = { 
+              day: 'numeric',
+              month: 'long', 
+              year: 'numeric' 
+            };
+            this.roundDate.set(matchDate.toLocaleDateString('es-ES', options));
+          }
+          this.matches.set(this.mapFixturesToMatches(response.response));
+        } else {
+          this.matches.set([]);
+          this.roundDate.set('');
+        }
         this.loading.set(false);
       },
       error: (err) => {
@@ -191,104 +247,42 @@ export class LeagueMatches implements OnInit {
   }
 
   /**
-   * Formatear fecha para la API (YYYY-MM-DD)
+   * Ir a la jornada anterior
    */
-  private formatDateForApi(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  goToPreviousRound(): void {
+    if (this.currentRound() > 1) {
+      const newRound = this.currentRound() - 1;
+      this.currentRound.set(newRound);
+      this.loadMatchesForRound(newRound);
+    }
   }
 
   /**
-   * Ir al día anterior
+   * Ir a la jornada siguiente
    */
-  goToPreviousDay(): void {
-    const newDate = new Date(this.currentDate());
-    newDate.setDate(newDate.getDate() - 1);
-    this.currentDate.set(newDate);
-    this.loadMatchesForDate(newDate);
+  goToNextRound(): void {
+    if (this.currentRound() < this.maxRound()) {
+      const newRound = this.currentRound() + 1;
+      this.currentRound.set(newRound);
+      this.loadMatchesForRound(newRound);
+    }
   }
 
   /**
-   * Ir al día siguiente
+   * Ir a la última jornada
    */
-  goToNextDay(): void {
-    const newDate = new Date(this.currentDate());
-    newDate.setDate(newDate.getDate() + 1);
-    this.currentDate.set(newDate);
-    this.loadMatchesForDate(newDate);
+  goToLastRound(): void {
+    const lastRound = this.maxRound();
+    this.currentRound.set(lastRound);
+    this.loadMatchesForRound(lastRound);
   }
 
   /**
-   * Volver a hoy
+   * Ir a la primera jornada
    */
-  goToToday(): void {
-    const today = new Date();
-    this.currentDate.set(today);
-    this.loadMatchesForDate(today);
-  }
-
-  /**
-   * Buscar el día anterior con partidos
-   */
-  findPreviousDayWithMatches(): void {
-    this.loading.set(true);
-    this.searchForMatchesInDirection(-1, 30);
-  }
-
-  /**
-   * Buscar el día siguiente con partidos
-   */
-  findNextDayWithMatches(): void {
-    this.loading.set(true);
-    this.searchForMatchesInDirection(1, 30);
-  }
-
-  /**
-   * Buscar partidos en una dirección (pasado o futuro)
-   */
-  private searchForMatchesInDirection(direction: number, maxDays: number): void {
-    const apiId = this.leagueApiId();
-    let daysSearched = 0;
-    
-    const searchNextDay = (date: Date) => {
-      if (daysSearched >= maxDays) {
-        this.loading.set(false);
-        this.error.set(`No se encontraron partidos en los próximos ${maxDays} días`);
-        return;
-      }
-      
-      const newDate = new Date(date);
-      newDate.setDate(newDate.getDate() + direction);
-      daysSearched++;
-      
-      const dateStr = this.formatDateForApi(newDate);
-      
-      this.footballApi.getFixturesByDate(dateStr).subscribe({
-        next: (response) => {
-          const leagueMatches = response.response.filter(
-            fixture => fixture.league.id === apiId
-          );
-          
-          if (leagueMatches.length > 0) {
-            this.currentDate.set(newDate);
-            this.matches.set(this.mapFixturesToMatches(leagueMatches));
-            this.loading.set(false);
-          } else {
-            // Seguir buscando
-            searchNextDay(newDate);
-          }
-        },
-        error: (err) => {
-          console.error('Error buscando partidos:', err);
-          this.loading.set(false);
-          this.error.set('Error al buscar partidos');
-        }
-      });
-    };
-    
-    searchNextDay(this.currentDate());
+  goToFirstRound(): void {
+    this.currentRound.set(1);
+    this.loadMatchesForRound(1);
   }
 
   /**

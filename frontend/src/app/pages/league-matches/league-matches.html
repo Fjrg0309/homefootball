@@ -8,22 +8,25 @@
       <h1 class="league-matches__title">Partidos - {{ leagueName() }}</h1>
     </header>
 
-    <!-- Navegación de fechas -->
+    <!-- Navegación de jornadas -->
     <nav class="date-navigation">
-      <button class="date-navigation__btn date-navigation__btn--prev" (click)="goToPreviousDay()" [disabled]="loading()">
+      <button class="date-navigation__btn date-navigation__btn--prev" (click)="goToPreviousRound()" [disabled]="loading() || isFirstRound()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </button>
       
       <div class="date-navigation__center">
-        <span class="date-navigation__date">{{ formattedDate() }}</span>
-        @if (!isToday()) {
-          <button class="date-navigation__today" (click)="goToToday()">Ir a hoy</button>
+        <span class="date-navigation__date">{{ formattedRound() }}</span>
+        @if (roundDate()) {
+          <span class="date-navigation__subtext">{{ roundDate() }}</span>
+        }
+        @if (!isLastRound()) {
+          <button class="date-navigation__today" (click)="goToLastRound()">Ir a última jornada</button>
         }
       </div>
       
-      <button class="date-navigation__btn date-navigation__btn--next" (click)="goToNextDay()" [disabled]="loading()">
+      <button class="date-navigation__btn date-navigation__btn--next" (click)="goToNextRound()" [disabled]="loading() || isLastRound()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 18l6-6-6-6"/>
         </svg>
@@ -42,7 +45,7 @@
     @if (error()) {
       <section class="league-matches__error">
         <p>{{ error() }}</p>
-        <button class="league-matches__retry" (click)="loadMatchesForDate(currentDate())">
+        <button class="league-matches__retry" (click)="loadMatchesForRound(currentRound())">
           Reintentar
         </button>
       </section>
@@ -53,14 +56,18 @@
       <section class="league-matches__content">
         @if (matches().length === 0) {
           <div class="no-matches">
-            <p class="no-matches__text">No hay partidos programados para este día</p>
+            <p class="no-matches__text">No hay partidos disponibles para esta jornada</p>
             <div class="no-matches__actions">
-              <button class="no-matches__btn" (click)="findPreviousDayWithMatches()">
-                ← Buscar día anterior con partidos
-              </button>
-              <button class="no-matches__btn" (click)="findNextDayWithMatches()">
-                Buscar día siguiente con partidos →
-              </button>
+              @if (!isFirstRound()) {
+                <button class="no-matches__btn" (click)="goToPreviousRound()">
+                  ← Jornada anterior
+                </button>
+              }
+              @if (!isLastRound()) {
+                <button class="no-matches__btn" (click)="goToNextRound()">
+                  Jornada siguiente →
+                </button>
+              }
             </div>
           </div>
         } @else {

@@ -221,6 +221,16 @@
     }
   }
 
+  &__subtext {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    
+    @include tablet {
+      font-size: 0.8125rem;
+    }
+  }
+
   &__today {
     font-size: 0.75rem;
     color: var(--color-accent);
