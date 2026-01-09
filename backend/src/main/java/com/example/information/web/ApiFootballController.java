@@ -27,10 +27,14 @@ public class ApiFootballController {
      */
     @GetMapping("/ping")
     public ResponseEntity<Map<String, Object>> ping() {
-        return ResponseEntity.ok(Map.of(
+        log.info("=== PING RECIBIDO ===");
+        Map<String, Object> response = Map.of(
             "status", "ok",
-            "timestamp", System.currentTimeMillis()
-        ));
+            "timestamp", System.currentTimeMillis(),
+            "message", "Backend funcionando correctamente"
+        );
+        log.info("Respuesta ping: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -38,13 +42,19 @@ public class ApiFootballController {
      */
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getStatus() {
+        log.info("=== STATUS RECIBIDO ===");
         try {
             boolean configured = apiFootballService.isConfigured();
-            return ResponseEntity.ok(Map.of(
+            Map<String, Object> response = Map.of(
                 "configured", configured,
-                "message", configured ? "API-Football está configurado correctamente" : "Falta configurar la API key"
-            ));
+                "message", configured ? "API-Football está configurado correctamente" : "Falta configurar la API key",
+                "backendRunning", true,
+                "timestamp", System.currentTimeMillis()
+            );
+            log.info("Estado configuración: {}", response);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
+            log.error("Error verificando estado:", e);
             return ResponseEntity.ok(Map.of(
                 "configured", false,
                 "message", "Error: " + e.getMessage(),

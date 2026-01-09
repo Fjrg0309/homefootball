@@ -1,0 +1,68 @@
+====================================
+SOLUCION AL PROBLEMA DE COMPILACION
+====================================
+
+PROBLEMA IDENTIFICADO:
+----------------------
+Estás usando Java 24.0.2, que es muy nuevo (lanzado en 2025) y tiene problemas
+de compatibilidad con Lombok y Maven.
+
+SOLUCION RECOMENDADA:
+--------------------
+Instalar Java 17 LTS (Long Term Support) que es la versión recomendada para
+Spring Boot 3.x y tiene soporte completo de Lombok.
+
+PASOS PARA SOLUCIONAR:
+---------------------
+
+1. Descargar Java 17 LTS desde:
+   https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+   
+   O mejor aún, usar Amazon Corretto 17 (gratis sin registro):
+   https://corretto.aws/downloads/latest/amazon-corretto-17-x64-windows-jdk.msi
+
+2. Instalar Java 17
+
+3. Configurar JAVA_HOME:
+   - Abrir "Variables de entorno del sistema"
+   - Crear/Editar JAVA_HOME apuntando a la instalación de Java 17
+   - Ejemplo: C:\Program Files\Java\jdk-17
+   
+4. Actualizar PATH:
+   - Asegurarse de que %JAVA_HOME%\bin esté en el PATH
+   - Debe estar ANTES de cualquier otra ruta de Java
+
+5. Verificar la instalación:
+   Abrir un NUEVO terminal y ejecutar:
+   java -version
+   
+   Debería mostrar:
+   java version "17.x.x"
+
+6. Volver a compilar:
+   cd backend
+   mvn clean compile
+
+ALTERNATIVA TEMPORAL:
+--------------------
+Si necesitas mantener Java 24 para otros proyectos, puedes:
+
+1. Instalar Java 17 en una ubicación diferente
+2. Crear un script que establezca JAVA_HOME temporalmente:
+
+   @echo off
+   set JAVA_HOME=C:\Program Files\Java\jdk-17
+   set PATH=%JAVA_HOME%\bin;%PATH%
+   cd backend
+   mvn clean compile
+   pause
+
+====================================
+ARCHIVOS CONFIGURADOS:
+====================================
+
+✓ application-prod.properties  - Configurado para PostgreSQL DigitalOcean
+✓ pom.xml                      - Configurado con dependencias correctas
+✓ Driver PostgreSQL            - Añadido al proyecto
+
+Una vez que instales Java 17, todo debería compilar correctamente.

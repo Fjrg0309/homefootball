@@ -41,7 +41,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           break;
           
         case 0:
-          toastService.error('Sin conexión. Verifica tu red.');
+          console.error('Error de conexión - detalles:', error);
+          console.error('URL intentada:', error.url);
+          toastService.error('Sin conexión con el servidor. Verifica que el backend esté corriendo en http://localhost:8080');
           break;
           
         default:

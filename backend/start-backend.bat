@@ -4,8 +4,8 @@ echo       INICIANDO BACKEND SPRING BOOT
 echo ==========================================
 echo.
 
-REM Configurar Java 21
-set JAVA_HOME=C:\Users\usuario\.jdk\jdk-21.0.8
+REM Configurar Java 17
+set JAVA_HOME=C:\Program Files\Java\jdk-17
 set PATH=%JAVA_HOME%\bin;%PATH%
 
 cd /d "%~dp0"
@@ -39,6 +39,6 @@ echo Presiona Ctrl+C para detener el servidor.
 echo ==========================================
 echo.
 
-call mvn spring-boot:run
+call mvn spring-boot:run -Dspring-boot.run.profiles=local
 
 pause

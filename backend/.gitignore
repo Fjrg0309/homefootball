@@ -5,3 +5,12 @@ target/
 *.class
 *.log
 .DS_Store
+
+# Archivos con credenciales locales (NO SUBIR A GIT)
+application-local.properties
+application-prod.properties
+**/application-local.properties
+**/application-prod.properties
+.env
+*.env
+.env.local

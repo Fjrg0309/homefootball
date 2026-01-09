@@ -7,21 +7,21 @@ import { FootballApiService, FixtureData } from '../../services/football-api.ser
 
 // Configuración de temporadas por liga
 const LEAGUE_SEASONS: Record<number, number> = {
-  140: 2023,  // LaLiga
-  39: 2023,   // Premier League
-  135: 2023,  // Serie A
-  78: 2023,   // Bundesliga
-  61: 2023,   // Ligue 1
-  62: 2023,   // Ligue 2
-  94: 2023,   // Primeira Liga
-  88: 2023,   // Eredivisie
-  203: 2023,  // Süper Lig
-  253: 2023,  // MLS
-  262: 2023,  // Liga MX
-  40: 2023,   // Championship
-  2: 2023,    // Champions League
-  3: 2023,    // Europa League
-  848: 2023   // Conference League
+  140: 2024,  // LaLiga (temporada 2023-2024)
+  39: 2024,   // Premier League
+  135: 2024,  // Serie A
+  78: 2024,   // Bundesliga
+  61: 2024,   // Ligue 1
+  62: 2024,   // Ligue 2
+  94: 2024,   // Primeira Liga
+  88: 2024,   // Eredivisie
+  203: 2024,  // Süper Lig
+  253: 2024,  // MLS
+  262: 2024,  // Liga MX
+  40: 2024,   // Championship
+  2: 2024,    // Champions League
+  3: 2024,    // Europa League
+  848: 2024   // Conference League
 };
 
 // Última jornada disponible por liga
@@ -170,35 +170,82 @@ export class LeagueMatches implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     
-    const roundStr = `Regular Season - ${round}`;
+    console.log(`🔍 Cargando partidos - Liga: ${apiId}, Temporada: ${this.season()}, Jornada: ${round}`);
+    
+    // Si es la última jornada, usar el endpoint optimizado
+    if (round === this.maxRound()) {
+      console.log('📍 Usando endpoint latest-round para última jornada');
+      this.footballApi.getLatestRound(apiId, this.season()).subscribe({
+        next: (response) => {
+          this.handleFixturesResponse(response);
+        },
+        error: (err) => {
+          console.error('❌ Error cargando última jornada:', err);
+          this.tryAlternativeRoundFormat(apiId, round);
+        }
+      });
+    } else {
+      // Para otras jornadas, usar el formato estándar
+      const roundStr = `Regular Season - ${round}`;
+      this.tryLoadRound(apiId, roundStr);
+    }
+  }
+
+  /**
+   * Intentar cargar una jornada con el formato dado
+   */
+  private tryLoadRound(apiId: number, roundStr: string): void {
+    console.log(`📤 Solicitando jornada: "${roundStr}"`);
     
     this.footballApi.getFixturesByRound(apiId, this.season(), roundStr).subscribe({
       next: (response) => {
-        if (response.response && response.response.length > 0) {
-          // Obtener la fecha del primer partido de la jornada
-          const firstMatch = response.response[0];
-          if (firstMatch.fixture && firstMatch.fixture.date) {
-            const matchDate = new Date(firstMatch.fixture.date);
-            const options: Intl.DateTimeFormatOptions = { 
-              day: 'numeric',
-              month: 'long', 
-              year: 'numeric' 
-            };
-            this.roundDate.set(matchDate.toLocaleDateString('es-ES', options));
-          }
-          this.matches.set(this.mapFixturesToMatches(response.response));
-        } else {
-          this.matches.set([]);
-          this.roundDate.set('');
-        }
-        this.loading.set(false);
+        this.handleFixturesResponse(response);
       },
       error: (err) => {
-        console.error('Error cargando partidos:', err);
+        console.error('❌ Error cargando partidos:', err);
         this.error.set('Error al cargar los partidos. Intenta de nuevo.');
         this.loading.set(false);
       }
     });
+  }
+
+  /**
+   * Intentar formato alternativo si el primero falla
+   */
+  private tryAlternativeRoundFormat(apiId: number, round: number): void {
+    console.log('🔄 Intentando formato alternativo...');
+    const roundStr = `Regular Season - ${round}`;
+    this.tryLoadRound(apiId, roundStr);
+  }
+
+  /**
+   * Procesar la respuesta de fixtures
+   */
+  private handleFixturesResponse(response: any): void {
+    console.log(`📦 Respuesta recibida - Resultados: ${response.results}`);
+    
+    if (response.response && response.response.length > 0) {
+      // Obtener la fecha del primer partido de la jornada
+      const firstMatch = response.response[0];
+      if (firstMatch.fixture && firstMatch.fixture.date) {
+        const matchDate = new Date(firstMatch.fixture.date);
+        const options: Intl.DateTimeFormatOptions = { 
+          day: 'numeric',
+          month: 'long', 
+          year: 'numeric' 
+        };
+        this.roundDate.set(matchDate.toLocaleDateString('es-ES', options));
+      }
+      
+      const mappedMatches = this.mapFixturesToMatches(response.response);
+      console.log(`✅ ${mappedMatches.length} partidos mapeados`);
+      this.matches.set(mappedMatches);
+    } else {
+      console.log('⚠️ No se encontraron partidos');
+      this.matches.set([]);
+      this.roundDate.set('');
+    }
+    this.loading.set(false);
   }
 
   /**

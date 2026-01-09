@@ -49,17 +49,24 @@ public class ApiFootballService {
      */
     private <T> T executeRequest(String url, Class<T> responseType) {
         try {
-            log.info("Ejecutando petición a API-Football: {}", url);
+            log.info("=== EJECUTANDO PETICIÓN A API-FOOTBALL ===");
+            log.info("URL: {}", url);
             
             if (apiKey == null || apiKey.isEmpty()) {
                 log.error("API Key no configurada");
                 throw new RuntimeException("API Key de API-Football no está configurada");
             }
             
+            log.info("API Key configurada: {}...", apiKey.substring(0, Math.min(10, apiKey.length())));
+            
             HttpEntity<String> entity = new HttpEntity<>(createHeaders());
+            
+            log.info("Realizando petición HTTP GET...");
             ResponseEntity<T> response = restTemplate.exchange(
                 url, HttpMethod.GET, entity, responseType
             );
+            
+            log.info("Respuesta recibida - Status: {}", response.getStatusCode());
             
             if (response.getStatusCode() == HttpStatus.OK) {
                 log.info("Petición exitosa a: {}", url);
@@ -70,10 +77,14 @@ public class ApiFootballService {
             }
             
         } catch (RestClientException e) {
-            log.error("Error de conexión con API-Football: {}", e.getMessage(), e);
+            log.error("Error de conexión con API-Football: {}", e.getMessage());
+            log.error("Causa: {}", e.getCause() != null ? e.getCause().getMessage() : "Sin causa");
+            log.error("Stack trace:", e);
             throw new RuntimeException("Error de conexión con API-Football: " + e.getMessage(), e);
         } catch (Exception e) {
-            log.error("Error inesperado al consultar API-Football: {}", e.getMessage(), e);
+            log.error("Error inesperado al consultar API-Football: {}", e.getMessage());
+            log.error("Tipo de error: {}", e.getClass().getName());
+            log.error("Stack trace:", e);
             throw new RuntimeException("Error al consultar API-Football: " + e.getMessage(), e);
         }
     }
