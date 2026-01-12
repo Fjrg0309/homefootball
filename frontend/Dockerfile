@@ -28,11 +28,18 @@ FROM nginx:alpine
 # Copiar archivos build al servidor Nginx
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
-# Copiar configuracion de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Crear directorio para templates de nginx
+RUN mkdir -p /etc/nginx/templates
+
+# Copiar configuracion de Nginx como template
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+
+# Copiar script de entrypoint
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Exponer puerto 80
 EXPOSE 80
 
-# Arrancar nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Usar el entrypoint personalizado
+ENTRYPOINT ["/docker-entrypoint.sh"]
