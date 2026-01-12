@@ -48,16 +48,29 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Permitir cualquier origen para desarrollo (localhost con cualquier puerto)
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-            "http://localhost:*",
-            "http://127.0.0.1:*",
-            "https://*.ondigitalocean.app"
-        ));
+        
+        // Permitir todos los orígenes (desarrollo y producción)
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        
+        // Métodos HTTP permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
+        
+        // Headers permitidos (todos)
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setExposedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(false);  // false permite wildcards
+        
+        // Headers expuestos en la respuesta
+        configuration.setExposedHeaders(Arrays.asList(
+            "Authorization", 
+            "Content-Type", 
+            "X-Requested-With",
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials"
+        ));
+        
+        // Permitir credenciales (cookies, headers de autenticación)
+        configuration.setAllowCredentials(false);  // false para permitir wildcard en origins
+        
+        // Tiempo de cacheo de la configuración CORS (1 hora)
         configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
