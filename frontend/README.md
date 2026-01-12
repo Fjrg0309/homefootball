@@ -1445,6 +1445,98 @@ Component (.subscribe)
 
 ---
 
+## Compatibilidad de Navegadores
+
+Esta aplicación utiliza eventos DOM estándar de Angular, que son compatibles con todos los navegadores modernos. A continuación se detalla la compatibilidad de los principales eventos utilizados:
+
+### Eventos de Mouse
+
+| Evento | Chrome | Firefox | Safari | Edge | Notas |
+|--------|--------|---------|--------|------|-------|
+| `click` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Evento más básico, soportado universalmente |
+| `dblclick` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Doble clic universal |
+| `mouseenter` | ✅ 30+ | ✅ 10+ | ✅ 6.1+ | ✅ 12+ | No propaga (mejor que mouseover) |
+| `mouseleave` | ✅ 30+ | ✅ 10+ | ✅ 6.1+ | ✅ 12+ | No propaga (mejor que mouseout) |
+| `contextmenu` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Click derecho del ratón |
+
+### Eventos de Teclado
+
+| Evento | Chrome | Firefox | Safari | Edge | Notas |
+|--------|--------|---------|--------|------|-------|
+| `keydown` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Se dispara antes de `keypress` |
+| `keyup` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Se dispara al soltar tecla |
+| `keypress` | ⚠️ Deprecated | ⚠️ Deprecated | ⚠️ Deprecated | ⚠️ Deprecated | Usar `keydown` en su lugar |
+| Modificadores (`keydown.enter`, `keydown.escape`, `keydown.arrowleft`, etc.) | ✅ 45+ | ✅ 40+ | ✅ 10+ | ✅ 12+ | Sintaxis de Angular |
+
+### Eventos de Formulario
+
+| Evento | Chrome | Firefox | Safari | Edge | Notas |
+|--------|--------|---------|--------|------|-------|
+| `submit` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Solo en elementos `<form>` |
+| `input` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Se dispara en cada cambio (mejor que `change`) |
+| `change` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Se dispara al perder foco |
+| `focus` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | No propaga (usar `focusin` si necesitas propagación) |
+| `blur` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | No propaga (usar `focusout` si necesitas propagación) |
+| `focusin` | ✅ Todos | ✅ 52+ | ✅ 5+ | ✅ 12+ | Propaga (útil para delegación de eventos) |
+| `focusout` | ✅ Todos | ✅ 52+ | ✅ 5+ | ✅ 12+ | Propaga (útil para delegación de eventos) |
+
+### Eventos de Ventana
+
+| Evento | Chrome | Firefox | Safari | Edge | Notas |
+|--------|--------|---------|--------|------|-------|
+| `resize` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Se dispara al cambiar tamaño de ventana |
+| `scroll` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Se dispara al hacer scroll |
+| `beforeunload` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Permite prevenir cierre de pestaña |
+
+### Métodos de Control de Eventos
+
+| Método | Chrome | Firefox | Safari | Edge | Notas |
+|--------|--------|---------|--------|------|-------|
+| `event.preventDefault()` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Previene comportamiento por defecto |
+| `event.stopPropagation()` | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Detiene propagación del evento |
+| `event.stopImmediatePropagation()` | ✅ 6+ | ✅ 10+ | ✅ 5+ | ✅ 12+ | Detiene todos los listeners del mismo evento |
+
+### Decoradores Angular Utilizados
+
+| Decorador | Chrome | Firefox | Safari | Edge | Notas |
+|-----------|--------|---------|--------|------|-------|
+| `@HostListener('window:resize')` | ✅ 45+ | ✅ 40+ | ✅ 10+ | ✅ 12+ | Escucha eventos globales |
+| `@HostListener('document:click')` | ✅ 45+ | ✅ 40+ | ✅ 10+ | ✅ 12+ | Click en cualquier parte del documento |
+| `@HostListener('document:keydown.escape')` | ✅ 45+ | ✅ 40+ | ✅ 10+ | ✅ 12+ | Tecla ESC global |
+| `@ViewChild` | ✅ 45+ | ✅ 40+ | ✅ 10+ | ✅ 12+ | Acceso a elementos DOM (ElementRef) |
+
+### Animaciones Angular
+
+| Característica | Chrome | Firefox | Safari | Edge | Notas |
+|----------------|--------|---------|--------|------|-------|
+| `trigger()`, `state()`, `transition()`, `animate()` | ✅ 50+ | ✅ 45+ | ✅ 10+ | ✅ 12+ | Basadas en Web Animations API |
+| CSS Transitions (fallback) | ✅ Todos | ✅ Todos | ✅ Todos | ✅ Todos | Usado como fallback si no hay soporte |
+
+### Notas Generales
+
+- **✅ Todos**: Compatible con todas las versiones desde el lanzamiento del navegador.
+- **✅ X+**: Compatible desde la versión X en adelante.
+- **⚠️ Deprecated**: Funciona pero no se recomienda su uso.
+
+### Recomendaciones
+
+1. **Eventos de Teclado**: Usar siempre `keydown` en lugar de `keypress` (deprecated).
+2. **Focus Events**: Para delegación de eventos, usar `focusin`/`focusout` que sí propagan.
+3. **Modificadores Angular**: Funcionan en todos los navegadores modernos (Chrome 45+, Firefox 40+, Safari 10+, Edge 12+).
+4. **preventDefault/stopPropagation**: Soportados universalmente, seguros de usar.
+5. **@HostListener**: Requiere Angular 2+ y navegadores modernos (últimas 2 versiones).
+
+### Navegadores Objetivo
+
+Esta aplicación está optimizada para:
+- **Chrome/Edge**: Últimas 2 versiones (recomendado)
+- **Firefox**: Últimas 2 versiones
+- **Safari**: Versión 12+ (macOS/iOS)
+
+No se garantiza compatibilidad con Internet Explorer 11 o versiones anteriores.
+
+---
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

@@ -87,8 +87,8 @@ onDocumentClick(event: MouseEvent) &#123;
 
     <!-- Modal -->
     @if (isModalOpen) {
-      <div class="modal-backdrop" (click)="onModalBackdropClick($event)">
-        <div class="modal-content">
+      <div class="modal-backdrop" (click)="onModalBackdropClick($event)" @fadeIn>
+        <div class="modal-content" (click)="onModalContentClick($event)">
           <div class="modal-header">
             <h3>{{ modalTitle }}</h3>
             <button class="modal-close" (click)="closeModal()">✕</button>
@@ -99,6 +99,7 @@ onDocumentClick(event: MouseEvent) &#123;
               <div class="feature">✅ Click en el fondo oscuro para cerrar</div>
               <div class="feature">✅ Click en el botón ✕ para cerrar</div>
               <div class="feature">✅ Presiona ESC para cerrar</div>
+              <div class="feature">✅ Click dentro del modal NO lo cierra (stopPropagation)</div>
             </div>
           </div>
           <div class="modal-footer">
@@ -143,18 +144,24 @@ onEscapeKey() &#123;
   <section class="seccion">
     <h2>3. Tabs (Pestañas)</h2>
     <p class="descripcion">
-      Sistema de pestañas que muestra diferentes paneles de contenido. La pestaña activa se controla con una variable <code>activeTab</code>.
+      Sistema de pestañas con navegación por teclado completa. Usa <strong>Arrow Left/Right</strong>, <strong>Home</strong>, y <strong>End</strong> para navegar.
     </p>
 
     <div class="ejemplo-box">
-      <div class="tabs-container">
+      <div class="tabs-container" #tabsContainer>
         <!-- Botones de pestañas -->
-        <div class="tabs-header">
-          @for (tab of tabs; track tab.id) {
+        <div class="tabs-header" role="tablist" aria-label="Secciones de información">
+          @for (tab of tabs; track tab.id; let i = $index) {
             <button 
+              role="tab"
               class="tab-button"
               [class.active]="activeTab === tab.id"
-              (click)="selectTab(tab.id)">
+              [attr.aria-selected]="activeTab === tab.id"
+              [attr.aria-controls]="'panel-' + tab.id"
+              [attr.tabindex]="activeTab === tab.id ? 0 : -1"
+              [id]="'tab-' + tab.id"
+              (click)="selectTab(tab.id)"
+              (keydown)="onTabKeydown($event, i)">
               <span class="tab-icon">{{ tab.icon }}</span>
               <span class="tab-label">{{ tab.label }}</span>
             </button>
@@ -165,7 +172,13 @@ onEscapeKey() &#123;
         <div class="tabs-content">
           @for (tab of tabs; track tab.id) {
             @if (activeTab === tab.id) {
-              <div class="tab-panel" [@fadeIn]>
+              <div 
+                role="tabpanel"
+                class="tab-panel" 
+                [@fadeIn]
+                [id]="'panel-' + tab.id"
+                [attr.aria-labelledby]="'tab-' + tab.id"
+                tabindex="0">
                 <h3>{{ tab.icon }} {{ tab.label }}</h3>
                 <p>{{ tab.content }}</p>
                 <div class="tab-meta">
@@ -177,7 +190,8 @@ onEscapeKey() &#123;
         </div>
 
         <div class="tabs-info">
-          <strong>Pestaña actual:</strong> {{ activeTab }}
+          <strong>Pestaña actual:</strong> {{ activeTab }}<br>
+          <small>💡 Usa <kbd>←</kbd> <kbd>→</kbd> para navegar | <kbd>Home</kbd> <kbd>End</kbd> para ir al inicio/fin</small>
         </div>
       </div>
     </div>
@@ -188,16 +202,36 @@ onEscapeKey() &#123;
 
 selectTab(tabId: string) &#123;
   this.activeTab = tabId;
-&#125;</code></pre>
-      <h4>Template HTML:</h4>
-      <pre><code>&lt;button 
-  [class.active]="activeTab === 'detalles'"
-  (click)="selectTab('detalles')"&gt;
-  Detalles
-&lt;/button&gt;
+&#125;
 
-&#64;if (activeTab === 'detalles') &#123;
-  &lt;div&gt;Contenido de Detalles&lt;/div&gt;
+// Navegación por teclado
+onTabKeydown(event: KeyboardEvent, index: number) &#123;
+  let newIndex = index;
+  switch(event.key) &#123;
+    case 'ArrowLeft': newIndex = index - 1; break;
+    case 'ArrowRight': newIndex = index + 1; break;
+    case 'Home': newIndex = 0; break;
+    case 'End': newIndex = tabs.length - 1; break;
+  &#125;
+&#125;</code></pre>
+      <h4>Template HTML (con accesibilidad):</h4>
+      <pre><code>&lt;div role="tablist"&gt;
+  &lt;button 
+    role="tab"
+    [attr.aria-selected]="activeTab === 'detalles'"
+    [attr.aria-controls]="'panel-detalles'"
+    (click)="selectTab('detalles')"
+    (keydown)="onTabKeydown($event, 0)"&gt;
+    Detalles
+  &lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div 
+  role="tabpanel"
+  id="panel-detalles"
+  aria-labelledby="tab-detalles"&gt;
+  Contenido de Detalles
+&lt;/div&gt;
 &#125;</code></pre>
     </div>
   </section>
@@ -206,7 +240,7 @@ selectTab(tabId: string) &#123;
   <section class="seccion">
     <h2>4. Tooltips</h2>
     <p class="descripcion">
-      Tooltips que aparecen al pasar el mouse sobre elementos. Se pueden controlar con eventos <code>(mouseenter)</code> y <code>(mouseleave)</code> o con CSS puro.
+      Tooltips que aparecen con <strong>hover</strong> y <strong>focus</strong>. Incluyen delay configurable ({{ tooltipDelay }}ms), posicionamiento y accesibilidad completa con <code>aria-describedby</code>.
     </p>
 
     <div class="ejemplo-box">
@@ -217,12 +251,15 @@ selectTab(tabId: string) &#123;
           <div class="tooltip-wrapper">
             <button 
               class="btn btn-info"
+              aria-describedby="tooltip-1"
               (mouseenter)="showTooltip(1)"
-              (mouseleave)="hideTooltip(1)">
+              (mouseleave)="hideTooltip(1)"
+              (focusin)="showTooltip(1)"
+              (focusout)="hideTooltip(1)">
               🔝 Tooltip Arriba
             </button>
             @if (showTooltip1) {
-              <div class="tooltip tooltip-top">
+              <div id="tooltip-1" class="tooltip tooltip-top" role="tooltip" [@fadeIn]>
                 Este es un tooltip que aparece arriba del elemento
               </div>
             }
@@ -232,12 +269,15 @@ selectTab(tabId: string) &#123;
           <div class="tooltip-wrapper">
             <button 
               class="btn btn-success"
+              aria-describedby="tooltip-2"
               (mouseenter)="showTooltip(2)"
-              (mouseleave)="hideTooltip(2)">
+              (mouseleave)="hideTooltip(2)"
+              (focusin)="showTooltip(2)"
+              (focusout)="hideTooltip(2)">
               ➡️ Tooltip Derecha
             </button>
             @if (showTooltip2) {
-              <div class="tooltip tooltip-right">
+              <div id="tooltip-2" class="tooltip tooltip-right" role="tooltip" [@fadeIn]>
                 Tooltip a la derecha
               </div>
             }
@@ -247,12 +287,15 @@ selectTab(tabId: string) &#123;
           <div class="tooltip-wrapper">
             <button 
               class="btn btn-warning"
+              aria-describedby="tooltip-3"
               (mouseenter)="showTooltip(3)"
-              (mouseleave)="hideTooltip(3)">
+              (mouseleave)="hideTooltip(3)"
+              (focusin)="showTooltip(3)"
+              (focusout)="hideTooltip(3)">
               🔽 Tooltip Abajo
             </button>
             @if (showTooltip3) {
-              <div class="tooltip tooltip-bottom">
+              <div id="tooltip-3" class="tooltip tooltip-bottom" role="tooltip" [@fadeIn]>
                 Tooltip que aparece debajo
               </div>
             }
@@ -262,12 +305,15 @@ selectTab(tabId: string) &#123;
           <div class="tooltip-wrapper">
             <button 
               class="btn btn-danger"
+              aria-describedby="tooltip-4"
               (mouseenter)="showTooltip(4)"
-              (mouseleave)="hideTooltip(4)">
+              (mouseleave)="hideTooltip(4)"
+              (focusin)="showTooltip(4)"
+              (focusout)="hideTooltip(4)">
               ⬅️ Tooltip Izquierda
             </button>
             @if (showTooltip4) {
-              <div class="tooltip tooltip-left">
+              <div id="tooltip-4" class="tooltip tooltip-left" role="tooltip" [@fadeIn]>
                 Tooltip a la izquierda
               </div>
             }
@@ -295,23 +341,32 @@ selectTab(tabId: string) &#123;
     <div class="code-info">
       <h4>Código TypeScript (Tooltips con Angular):</h4>
       <pre><code>showTooltip = false;
+tooltipDelay = 300; // ms
 
-showTooltip() &#123;
-  this.showTooltip = true;
+showTooltip(num: number) &#123;
+  const delayId = setTimeout(() =&gt; &#123;
+    this.showTooltip = true;
+  &#125;, this.tooltipDelay);
 &#125;
 
-hideTooltip() &#123;
+hideTooltip(num: number) &#123;
+  clearTimeout(delayId);
   this.showTooltip = false;
 &#125;</code></pre>
-      <h4>Template HTML:</h4>
+      <h4>Template HTML (con accesibilidad):</h4>
       <pre><code>&lt;div class="tooltip-wrapper"&gt;
   &lt;button 
-    (mouseenter)="showTooltip()"
-    (mouseleave)="hideTooltip()"&gt;
+    aria-describedby="tooltip-1"
+    (mouseenter)="showTooltip(1)"
+    (mouseleave)="hideTooltip(1)"
+    (focusin)="showTooltip(1)"
+    (focusout)="hideTooltip(1)"&gt;
     Hover aquí
   &lt;/button&gt;
   &#64;if (showTooltip) &#123;
-    &lt;div class="tooltip"&gt;Texto del tooltip&lt;/div&gt;
+    &lt;div id="tooltip-1" class="tooltip" role="tooltip"&gt;
+      Texto del tooltip
+    &lt;/div&gt;
   &#125;
 &lt;/div&gt;</code></pre>
       <h4>CSS para tooltips puros:</h4>
@@ -320,6 +375,118 @@ hideTooltip() &#123;
   position: absolute;
   /* Estilos... */
 &#125;</code></pre>
+    </div>
+  </section>
+
+  <!-- Sección 5: Accordion -->
+  <section class="seccion">
+    <h2>5. Accordion (Acordeón)</h2>
+    <p class="descripcion">
+      Componente accordion completamente accesible con navegación por teclado. Usa <strong>Arrow Up/Down</strong>, <strong>Home</strong>, <strong>End</strong>, <strong>Enter</strong> y <strong>Espacio</strong> para navegar y expandir/colapsar.
+    </p>
+
+    <div class="ejemplo-box">
+      <div class="accordion-demo">
+        <div class="accordion-controls">
+          <button class="btn btn-sm btn-secondary" (click)="expandAll()">Expandir Todos</button>
+          <button class="btn btn-sm btn-secondary" (click)="collapseAll()">Colapsar Todos</button>
+        </div>
+
+        <div class="accordion-container" #accordionContainer>
+          @for (item of accordionItems; track item.id; let i = $index) {
+            <div class="accordion-item" [class.expanded]="item.expanded">
+              <button 
+                class="accordion-header"
+                [attr.aria-expanded]="item.expanded"
+                [attr.aria-controls]="'accordion-panel-' + item.id"
+                [id]="'accordion-button-' + item.id"
+                (click)="toggleAccordion(i)"
+                (keydown)="onAccordionKeydown($event, i)">
+                <span class="accordion-icon">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="16" 
+                    height="16" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2"
+                    [style.transform]="item.expanded ? 'rotate(180deg)' : 'rotate(0deg)'">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </span>
+                <span class="accordion-title">{{ item.title }}</span>
+              </button>
+              
+              <div 
+                class="accordion-panel"
+                [@expandCollapse]="item.expanded ? 'expanded' : 'collapsed'"
+                [id]="'accordion-panel-' + item.id"
+                [attr.aria-labelledby]="'accordion-button-' + item.id"
+                role="region">
+                <div class="accordion-content">
+                  {{ item.content }}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="accordion-info">
+          <small>💡 Usa <kbd>↑</kbd> <kbd>↓</kbd> para navegar | <kbd>Enter</kbd> o <kbd>Espacio</kbd> para expandir/colapsar | <kbd>Home</kbd> <kbd>End</kbd> para ir al inicio/fin</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-info">
+      <h4>Código TypeScript:</h4>
+      <pre><code>accordionItems = [
+  &#123; id: 'item1', title: 'Título 1', content: 'Contenido...', expanded: false &#125;,
+  &#123; id: 'item2', title: 'Título 2', content: 'Contenido...', expanded: false &#125;
+];
+
+toggleAccordion(index: number) &#123;
+  this.accordionItems[index].expanded = !this.accordionItems[index].expanded;
+&#125;
+
+// Navegación por teclado
+onAccordionKeydown(event: KeyboardEvent, index: number) &#123;
+  switch(event.key) &#123;
+    case 'ArrowUp': /* navegar arriba */ break;
+    case 'ArrowDown': /* navegar abajo */ break;
+    case 'Home': /* ir al inicio */ break;
+    case 'End': /* ir al final */ break;
+    case 'Enter':
+    case ' ': 
+      this.toggleAccordion(index); 
+      break;
+  &#125;
+&#125;</code></pre>
+      <h4>Template HTML (con accesibilidad):</h4>
+      <pre><code>&lt;div class="accordion-item"&gt;
+  &lt;button 
+    class="accordion-header"
+    [attr.aria-expanded]="accordionItems[0].expanded"
+    [attr.aria-controls]="'panel-' + accordionItems[0].id"
+    (click)="toggleAccordion(0)"
+    (keydown)="onAccordionKeydown($event, 0)"&gt;
+    &#123;&#123; accordionItems[0].title &#125;&#125;
+  &lt;/button&gt;
+  
+  &lt;div 
+    class="accordion-panel"
+    [@expandCollapse]="accordionItems[0].expanded ? 'expanded' : 'collapsed'"
+    [id]="'panel-' + accordionItems[0].id"
+    role="region"&gt;
+    &#123;&#123; accordionItems[0].content &#125;&#125;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <h4>Animación CSS:</h4>
+      <pre><code>trigger('expandCollapse', [
+  state('collapsed', style(&#123; height: '0', opacity: '0' &#125;)),
+  state('expanded', style(&#123; height: '*', opacity: '1' &#125;)),
+  transition('collapsed &lt;=&gt; expanded', animate('300ms ease-in-out'))
+])</code></pre>
     </div>
   </section>
 
@@ -354,9 +521,9 @@ hideTooltip() &#123;
         <ul>
           <li>Variable <code>activeTab</code></li>
           <li>Método <code>selectTab(id)</code></li>
-          <li>Clases condicionales: <code>[class.active]</code></li>
-          <li>Contenido con <code>&#64;if</code> o <code>*ngIf</code></li>
-          <li>Transiciones suaves</li>
+          <li>Navegación por teclado (Arrow L/R, Home, End)</li>
+          <li>Accesibilidad: <code>role="tablist"</code>, <code>aria-selected</code></li>
+          <li>Transiciones suaves con animaciones</li>
         </ul>
       </div>
 
@@ -364,10 +531,22 @@ hideTooltip() &#123;
         <h4>💬 Tooltips</h4>
         <ul>
           <li>Eventos: <code>(mouseenter)</code>, <code>(mouseleave)</code></li>
-          <li>CSS puro con <code>:hover</code></li>
-          <li>Posicionamiento: <code>position: absolute</code></li>
-          <li>Múltiples posiciones (top, right, bottom, left)</li>
-          <li>Animaciones de aparición</li>
+          <li>Soporte de focus: <code>(focusin)</code>, <code>(focusout)</code></li>
+          <li>Delay configurable (300ms)</li>
+          <li>Posicionamiento dinámico (top, right, bottom, left)</li>
+          <li>Accesibilidad: <code>aria-describedby</code>, <code>role="tooltip"</code></li>
+        </ul>
+      </div>
+
+      <div class="resumen-card">
+        <h4>📂 Accordion</h4>
+        <ul>
+          <li>Expandir/colapsar con <code>expanded</code> boolean</li>
+          <li>Navegación por teclado (Arrow U/D, Home, End, Enter, Space)</li>
+          <li>Animación smooth con Angular animations</li>
+          <li>Iconos indicadores rotados</li>
+          <li>Accesibilidad: <code>aria-expanded</code>, <code>aria-controls</code></li>
+          <li>Controles: expandir/colapsar todos</li>
         </ul>
       </div>
     </div>

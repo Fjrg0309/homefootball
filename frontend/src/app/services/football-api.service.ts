@@ -272,7 +272,7 @@ export class FootballApiService {
   /**
    * Obtiene equipos de una liga y temporada
    */
-  getTeamsByLeague(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<TeamData>> {
+  getTeamsByLeague(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<TeamData>> {
     return this.http.get<ApiFootballResponse<TeamData>>(`${this.baseUrl}/teams`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });
@@ -299,7 +299,7 @@ export class FootballApiService {
   /**
    * Obtiene jugadores de un equipo
    */
-  getPlayersByTeam(teamId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
+  getPlayersByTeam(teamId: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players`, {
       params: { team: teamId.toString(), season: season.toString() }
     });
@@ -308,7 +308,7 @@ export class FootballApiService {
   /**
    * Obtiene un jugador por su ID
    */
-  getPlayerById(id: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
+  getPlayerById(id: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/${id}`, {
       params: { season: season.toString() }
     });
@@ -317,7 +317,7 @@ export class FootballApiService {
   /**
    * Busca jugadores por nombre
    */
-  searchPlayers(name: string, leagueId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
+  searchPlayers(name: string, leagueId: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/search`, {
       params: { name, league: leagueId.toString(), season: season.toString() }
     });
@@ -326,7 +326,7 @@ export class FootballApiService {
   /**
    * Obtiene los máximos goleadores de una liga
    */
-  getTopScorers(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
+  getTopScorers(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/topscorers`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });
@@ -337,7 +337,7 @@ export class FootballApiService {
   /**
    * Obtiene partidos de una liga
    */
-  getFixturesByLeague(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<FixtureData>> {
+  getFixturesByLeague(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<FixtureData>> {
     return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });
@@ -360,7 +360,7 @@ export class FootballApiService {
   /**
    * Obtiene partidos de un equipo
    */
-  getFixturesByTeam(teamId: number, season: number = 2024): Observable<ApiFootballResponse<FixtureData>> {
+  getFixturesByTeam(teamId: number, season: number = 2022): Observable<ApiFootballResponse<FixtureData>> {
     return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures/team/${teamId}`, {
       params: { season: season.toString() }
     });
@@ -370,7 +370,7 @@ export class FootballApiService {
    * Obtiene la última jornada completada de una liga
    * Devuelve los partidos más recientes finalizados
    */
-  getLatestRound(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<FixtureData>> {
+  getLatestRound(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<FixtureData>> {
     return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures/latest-round`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });
@@ -390,7 +390,7 @@ export class FootballApiService {
   /**
    * Obtiene la última fecha con datos disponibles para una liga
    */
-  getLatestAvailableDate(leagueId: number, season: number = 2024): Observable<{ date: string }> {
+  getLatestAvailableDate(leagueId: number, season: number = 2022): Observable<{ date: string }> {
     return this.http.get<{ date: string }>(`${this.baseUrl}/fixtures/latest-date`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });
@@ -401,7 +401,7 @@ export class FootballApiService {
   /**
    * Obtiene la clasificación de una liga
    */
-  getStandings(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<StandingsData>> {
+  getStandings(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<StandingsData>> {
     return this.http.get<ApiFootballResponse<StandingsData>>(`${this.baseUrl}/standings`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });

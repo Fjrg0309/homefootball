@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { 
@@ -20,10 +20,14 @@ import { nif, telefono, codigoPostal } from '../../validators/spanish-formats.va
   templateUrl: './user-form.html',
   styleUrl: './user-form.scss'
 })
-export class UserForm {
+export class UserForm implements AfterViewInit {
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
   private asyncValidators = inject(AsyncValidatorsService);
+
+  // ViewChild para enfocar el primer campo con error
+  @ViewChild('nameInput') nameInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('submitButton') submitButton!: ElementRef<HTMLButtonElement>;
 
   userForm: FormGroup;
   isSubmitted = signal(false);
@@ -52,24 +56,33 @@ export class UserForm {
     });
   }
 
-  onSubmit() {
-    this.isSubmitted.set(true);
-
-    if (this.userForm.invalid) {
-      this.toastService.error('Por favor, corrija los errores del formulario');
-      this.markAllAsTouched();
-      return;
+  ngAfterViewInit() {
+    // Enfocar el primer campo al cargar el formulario
+    if (this.nameInput) {
+      setTimeout(() => this.nameInput.nativeElement.focus(), 100);
     }
-
-    this.toastService.success('Usuario registrado correctamente');
-    this.userForm.reset();
-    this.isSubmitted.set(false);
   }
 
   onReset() {
     this.userForm.reset();
     this.isSubmitted.set(false);
     this.toastService.info('Formulario reiniciado');
+    // Enfocar el primer campo
+    setTimeout(() => this.nameInput?.nativeElement.focus(), 100);
+  }
+
+  /**
+   * Enfocar el primer campo con error
+   * Mejora la UX al enviar el formulario con errores
+   */
+  private focusFirstInvalidField() {
+    const firstInvalidControl = Object.keys(this.userForm.controls).find(
+      key => this.userForm.get(key)?.invalid
+    );
+
+    if (firstInvalidControl === 'name' && this.nameInput) {
+      this.nameInput.nativeElement.focus();
+    }
   }
 
   private markAllAsTouched() {
@@ -134,6 +147,42 @@ export class UserForm {
   isFieldInvalid(fieldName: string): boolean {
     const field = this.userForm.get(fieldName);
     return !!(field && field.invalid && (field.touched || this.isSubmitted()) && !field.pending);
+  }
+
+  // preventDefault: Prevenir navegación del enlace "Volver"
+  onBackLinkClick(event: MouseEvent) {
+    if (this.userForm.dirty) {
+      event.preventDefault();
+      const confirmLeave = confirm('Tienes cambios sin guardar. ¿Seguro que quieres salir?');
+      if (confirmLeave) {
+        // Navegar manualmente o limpiar formulario
+        this.userForm.reset();
+        this.isSubmitted.set(false);
+        console.log('Formulario reseteado - usuario confirma salida');
+      }
+    }
+  }
+
+  // preventDefault: Prevenir envío de formulario si es inválido
+  onSubmit(event?: Event) {
+    this.isSubmitted.set(true);
+
+    if (this.userForm.invalid) {
+      if (event) {
+        event.preventDefault();
+        console.log('Envío de formulario prevenido - formulario inválido');
+      }
+      this.toastService.error('Por favor, corrija los errores del formulario');
+      this.markAllAsTouched();
+      this.focusFirstInvalidField();
+      return;
+    }
+
+    this.toastService.success('Usuario registrado correctamente');
+    this.userForm.reset();
+    this.isSubmitted.set(false);
+    // Volver a enfocar el primer campo después de resetear
+    setTimeout(() => this.nameInput?.nativeElement.focus(), 100);
   }
 
   // Getters para acceso en template

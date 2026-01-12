@@ -1,16 +1,17 @@
 <div class="form-container">
   <header class="form-header">
-    <a routerLink="/" class="back-button">← Volver</a>
+    <a routerLink="/" class="back-button" (click)="onBackLinkClick($event)">← Volver</a>
     <h1>📝 Formulario de Usuario</h1>
     <p class="subtitle">Formularios Reactivos con Validaciones Personalizadas</p>
   </header>
 
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit($event)" class="user-form">
     
     <!-- Nombre -->
     <div class="form-field">
       <label for="name">Nombre *</label>
       <input 
+        #nameInput
         id="name"
         formControlName="name" 
         placeholder="Juan Pérez"
@@ -178,6 +179,7 @@
     <!-- Botones -->
     <div class="form-actions">
       <button 
+        #submitButton
         type="submit" 
         class="btn-primary"
         [disabled]="userForm.invalid || userForm.pending">

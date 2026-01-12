@@ -6,6 +6,16 @@ services:
     container_name: homefootball-backend
     ports:
       - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # Base de datos PostgreSQL en DigitalOcean
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      # API Football
+      - API_FOOTBALL_KEY=${API_FOOTBALL_KEY}
+      - API_FOOTBALL_BASE_URL=${API_FOOTBALL_BASE_URL}
     networks:
       - homefootball-network
 

@@ -41,9 +41,18 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           break;
           
         case 0:
+          // Error de conexión - puede ser CORS, timeout, o servidor caído
           console.error('Error de conexión - detalles:', error);
           console.error('URL intentada:', error.url);
-          toastService.error('Sin conexión con el servidor. Verifica que el backend esté corriendo en http://localhost:8080');
+          
+          // Solo mostrar el mensaje de "sin conexión" si realmente no hay conexión
+          // No mostrarlo para errores de timeout de la API externa
+          if (!error.url || !error.url.includes('localhost:8080')) {
+            toastService.error('Sin conexión con el servidor. Verifica que el backend esté corriendo en http://localhost:8080');
+          } else {
+            console.warn('Timeout o error en petición a:', error.url);
+            // No mostrar toast, dejar que el componente maneje el error
+          }
           break;
           
         default:

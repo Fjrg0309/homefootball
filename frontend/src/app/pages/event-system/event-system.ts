@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,7 +15,11 @@ interface EventLog {
   templateUrl: './event-system.html',
   styleUrl: './event-system.scss'
 })
-export class EventSystem {
+export class EventSystem implements AfterViewInit {
+  // ViewChild para manipular el área de logs
+  @ViewChild('eventConsole') eventConsole!: ElementRef<HTMLDivElement>;
+  @ViewChild('keyInput') keyInput!: ElementRef<HTMLInputElement>;
+
   // Logs de eventos
   eventLogs: EventLog[] = [];
   maxLogs = 10;
@@ -186,10 +190,6 @@ export class EventSystem {
     }
   }
 
-  clearLogs() {
-    this.eventLogs = [];
-  }
-
   formatTime(date: Date): string {
     return date.toLocaleTimeString('es-ES', { 
       hour: '2-digit', 
@@ -197,6 +197,33 @@ export class EventSystem {
       second: '2-digit',
       fractionalSecondDigits: 3
     });
+  }
+
+  ngAfterViewInit() {
+    // Los elementos ViewChild están disponibles aquí
+    console.log('Event console:', this.eventConsole);
+    console.log('Key input:', this.keyInput);
+  }
+
+  /**
+   * Limpiar todos los logs y hacer scroll al tope
+   */
+  clearLogs() {
+    this.eventLogs = [];
+    if (this.eventConsole) {
+      this.eventConsole.nativeElement.scrollTop = 0;
+    }
+  }
+
+  /**
+   * Auto-scroll al final del console cuando se añade un log
+   */
+  private scrollToBottom() {
+    if (this.eventConsole) {
+      setTimeout(() => {
+        this.eventConsole.nativeElement.scrollTop = this.eventConsole.nativeElement.scrollHeight;
+      }, 0);
+    }
   }
 
   getEventTypeClass(type: string): string {

@@ -311,14 +311,65 @@ public class ApiFootballService {
     
     /**
      * Obtiene partidos de una jornada específica
+     * Si la petición directa falla, intenta obtener todos y filtrar
      */
     public FixtureResponse getFixturesByRound(int leagueId, int season, String round) {
-        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
-            .queryParam("league", leagueId)
-            .queryParam("season", season)
-            .queryParam("round", round)
-            .toUriString();
-        return executeRequest(url, FixtureResponse.class);
+        log.info("=== getFixturesByRound ===");
+        log.info("Liga: {}, Temporada: {}, Jornada: '{}'", leagueId, season, round);
+        
+        // Método 1: Petición directa por round
+        try {
+            String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
+                .queryParam("league", leagueId)
+                .queryParam("season", season)
+                .queryParam("round", round)
+                .toUriString();
+            
+            log.info("Método 1 - URL construida: {}", url);
+            
+            FixtureResponse response = executeRequest(url, FixtureResponse.class);
+            
+            if (response != null && response.getResults() > 0) {
+                log.info("Método 1 exitoso - Resultados: {}", response.getResults());
+                return response;
+            }
+            
+            log.warn("Método 1 sin resultados, intentando Método 2...");
+        } catch (Exception e) {
+            log.warn("Método 1 falló: {}, intentando Método 2...", e.getMessage());
+        }
+        
+        // Método 2: Obtener todos los partidos y filtrar por jornada
+        try {
+            log.info("Método 2 - Obteniendo todos los partidos de la liga {} temporada {}", leagueId, season);
+            
+            FixtureResponse allFixtures = getFixturesByLeague(leagueId, season);
+            
+            if (allFixtures == null || allFixtures.getResponse() == null) {
+                log.error("No se pudo obtener partidos de la liga");
+                FixtureResponse emptyResponse = new FixtureResponse();
+                emptyResponse.setResponse(List.of());
+                emptyResponse.setResults(0);
+                return emptyResponse;
+            }
+            
+            // Filtrar partidos por jornada
+            List<FixtureResponse.FixtureData> roundFixtures = allFixtures.getResponse().stream()
+                .filter(f -> f.getLeague() != null && round.equals(f.getLeague().getRound()))
+                .collect(Collectors.toList());
+            
+            log.info("Método 2 - Partidos encontrados para jornada '{}': {}", round, roundFixtures.size());
+            
+            FixtureResponse response = new FixtureResponse();
+            response.setResponse(roundFixtures);
+            response.setResults(roundFixtures.size());
+            
+            return response;
+            
+        } catch (Exception e) {
+            log.error("Método 2 falló: {}", e.getMessage(), e);
+            throw new RuntimeException("Error al obtener partidos de la jornada: " + e.getMessage(), e);
+        }
     }
     
     /**

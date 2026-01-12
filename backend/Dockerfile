@@ -1,14 +1,6 @@
-# Etapa 1: Build con Maven
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+# Usar el JAR pre-compilado para evitar problemas de red en Docker
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-COPY src ./src
-RUN mvn clean package -DskipTests -B
-
-# Etapa 2: Runtime con JRE
-FROM eclipse-temurin:21-jre-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY target/homefootball-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

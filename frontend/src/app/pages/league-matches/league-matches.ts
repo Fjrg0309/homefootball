@@ -5,23 +5,23 @@ import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
 import { FootballApiService, FixtureData } from '../../services/football-api.service';
 
-// Configuración de temporadas por liga
+// Configuración de temporadas por liga (2022 = temporada 2022-2023)
 const LEAGUE_SEASONS: Record<number, number> = {
-  140: 2024,  // LaLiga (temporada 2023-2024)
-  39: 2024,   // Premier League
-  135: 2024,  // Serie A
-  78: 2024,   // Bundesliga
-  61: 2024,   // Ligue 1
-  62: 2024,   // Ligue 2
-  94: 2024,   // Primeira Liga
-  88: 2024,   // Eredivisie
-  203: 2024,  // Süper Lig
-  253: 2024,  // MLS
-  262: 2024,  // Liga MX
-  40: 2024,   // Championship
-  2: 2024,    // Champions League
-  3: 2024,    // Europa League
-  848: 2024   // Conference League
+  140: 2022,  // LaLiga (temporada 2022-2023)
+  39: 2022,   // Premier League
+  135: 2022,  // Serie A
+  78: 2022,   // Bundesliga
+  61: 2022,   // Ligue 1
+  62: 2022,   // Ligue 2
+  94: 2022,   // Primeira Liga
+  88: 2022,   // Eredivisie
+  203: 2022,  // Süper Lig
+  253: 2022,  // MLS
+  262: 2022,  // Liga MX
+  40: 2022,   // Championship
+  2: 2022,    // Champions League
+  3: 2022,    // Europa League
+  848: 2022   // Conference League
 };
 
 // Última jornada disponible por liga
@@ -172,23 +172,9 @@ export class LeagueMatches implements OnInit {
     
     console.log(`🔍 Cargando partidos - Liga: ${apiId}, Temporada: ${this.season()}, Jornada: ${round}`);
     
-    // Si es la última jornada, usar el endpoint optimizado
-    if (round === this.maxRound()) {
-      console.log('📍 Usando endpoint latest-round para última jornada');
-      this.footballApi.getLatestRound(apiId, this.season()).subscribe({
-        next: (response) => {
-          this.handleFixturesResponse(response);
-        },
-        error: (err) => {
-          console.error('❌ Error cargando última jornada:', err);
-          this.tryAlternativeRoundFormat(apiId, round);
-        }
-      });
-    } else {
-      // Para otras jornadas, usar el formato estándar
-      const roundStr = `Regular Season - ${round}`;
-      this.tryLoadRound(apiId, roundStr);
-    }
+    // Usar siempre el formato directo de jornada (más eficiente)
+    const roundStr = `Regular Season - ${round}`;
+    this.tryLoadRound(apiId, roundStr);
   }
 
   /**
@@ -199,11 +185,30 @@ export class LeagueMatches implements OnInit {
     
     this.footballApi.getFixturesByRound(apiId, this.season(), roundStr).subscribe({
       next: (response) => {
+        console.log('✅ Respuesta recibida de getFixturesByRound');
         this.handleFixturesResponse(response);
       },
       error: (err) => {
         console.error('❌ Error cargando partidos:', err);
-        this.error.set('Error al cargar los partidos. Intenta de nuevo.');
+        console.error('Detalles del error:', {
+          status: err.status,
+          statusText: err.statusText,
+          message: err.message,
+          url: err.url
+        });
+        
+        // Mensajes más específicos según el error
+        if (err.status === 0) {
+          this.error.set('La API de fútbol está tardando mucho en responder. La jornada 38 de LaLiga 2022-2023 puede tener muchos datos. Intenta con una jornada anterior.');
+        } else if (err.status === 404) {
+          this.error.set('No se encontraron datos para esta jornada. Intenta con otra jornada.');
+        } else if (err.status === 500) {
+          this.error.set('Error del servidor al procesar la petición. La API externa puede estar sobrecargada.');
+        } else {
+          this.error.set('Error al cargar los partidos. Intenta de nuevo o selecciona otra jornada.');
+        }
+        
+        this.matches.set([]);
         this.loading.set(false);
       }
     });
@@ -221,7 +226,7 @@ export class LeagueMatches implements OnInit {
   /**
    * Procesar la respuesta de fixtures
    */
-  private handleFixturesResponse(response: any): void {
+  private handleFixturesResponse(response: any, updateCurrentRound: boolean = false, retryWithPreviousSeason: boolean = true): void {
     console.log(`📦 Respuesta recibida - Resultados: ${response.results}`);
     
     if (response.response && response.response.length > 0) {
@@ -237,15 +242,38 @@ export class LeagueMatches implements OnInit {
         this.roundDate.set(matchDate.toLocaleDateString('es-ES', options));
       }
       
+      // Actualizar la jornada actual si se solicita (para getLatestRound)
+      if (updateCurrentRound && firstMatch.league && firstMatch.league.round) {
+        const roundStr = firstMatch.league.round;
+        // Extraer el número de la jornada del string "Regular Season - X"
+        const roundMatch = roundStr.match(/(\d+)$/);
+        if (roundMatch) {
+          const roundNumber = parseInt(roundMatch[1], 10);
+          console.log(`📌 Actualizando jornada actual a: ${roundNumber}`);
+          this.currentRound.set(roundNumber);
+        }
+      }
+      
       const mappedMatches = this.mapFixturesToMatches(response.response);
       console.log(`✅ ${mappedMatches.length} partidos mapeados`);
       this.matches.set(mappedMatches);
+      this.loading.set(false);
     } else {
       console.log('⚠️ No se encontraron partidos');
+      
+      // Si no hay datos y podemos intentar con la temporada anterior
+      if (retryWithPreviousSeason && updateCurrentRound && this.season() > 2020) {
+        const previousSeason = this.season() - 1;
+        console.log(`🔄 Intentando con temporada anterior: ${previousSeason}`);
+        this.season.set(previousSeason);
+        this.loadMatchesForRound(this.maxRound());
+        return; // No establecer loading=false, la nueva petición lo hará
+      }
+      
       this.matches.set([]);
       this.roundDate.set('');
+      this.loading.set(false);
     }
-    this.loading.set(false);
   }
 
   /**
