@@ -1,0 +1,35 @@
+# Archivos de compilación
+target/
+*.class
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Archivos de documentación
+*.md
+!README.md
+
+# Scripts locales
+*.bat
+*.ps1
+*.sh
+
+# Variables de entorno locales (las de producción se pasan por environment)
+.env
+*.env
