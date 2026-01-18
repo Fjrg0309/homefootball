@@ -170,6 +170,13 @@ export const routes: Routes = [
     data: { breadcrumb: 'Clasificación' }
   },
   
+  // Detalle de equipo
+  {
+    path: 'equipo/:id',
+    loadComponent: () => import('./pages/team-detail/team-detail').then(m => m.TeamDetail),
+    data: { breadcrumb: 'Equipo' }
+  },
+  
   // Detalle de partido
   {
     path: 'partido/:id',

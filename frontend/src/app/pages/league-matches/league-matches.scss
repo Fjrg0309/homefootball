@@ -361,6 +361,13 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.15s ease;
+    
+    &:hover {
+      opacity: 0.75;
+    }
     
     @include tablet {
       gap: 0.75rem;
@@ -407,7 +414,7 @@
   }
 
   // =============================================
-  // CENTRO (MARCADOR + ESTADO)
+  // CENTRO (MARCADOR + ESTADO) - ENLACE AL PARTIDO
   // =============================================
   &__center {
     display: flex;
@@ -415,6 +422,13 @@
     align-items: center;
     gap: 0.25rem;
     min-width: 60px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
     
     @include tablet {
       min-width: 80px;

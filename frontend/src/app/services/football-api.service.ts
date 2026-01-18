@@ -102,6 +102,7 @@ export interface PlayerStatistics {
     appearances: number;
     lineups: number;
     minutes: number;
+    number: number | null;
     position: string;
     rating: string;
     captain: boolean;

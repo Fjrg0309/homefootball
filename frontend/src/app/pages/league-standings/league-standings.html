@@ -57,7 +57,7 @@
                       {{ team.rank }}
                     </td>
                     <td class="standings-table__team">
-                      <div class="team-cell">
+                      <a [routerLink]="['/equipo', team.team.id]" class="team-cell">
                         <img 
                           [src]="team.team.logo" 
                           [alt]="team.team.name"
@@ -67,7 +67,7 @@
                           onerror="this.src='assets/images/default-team.png'"
                         >
                         <span class="team-cell__name">{{ team.team.name }}</span>
-                      </div>
+                      </a>
                     </td>
                     <td class="standings-table__stat standings-table__stat--points">{{ team.points }}</td>
                     <td class="standings-table__stat standings-table__stat--hide-mobile">{{ team.played }}</td>

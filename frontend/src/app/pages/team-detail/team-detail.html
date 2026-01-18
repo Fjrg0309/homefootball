@@ -1,0 +1,101 @@
+<app-header />
+
+<main class="team-detail">
+  <div class="team-detail__container">
+    
+    <!-- Estado de carga principal -->
+    @if (loading()) {
+      <div class="team-detail__loading">
+        <div class="spinner"></div>
+        <p>Cargando equipo...</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="team-detail__error">
+        <p>{{ error() }}</p>
+        <button class="team-detail__retry" (click)="loadTeamData()">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    <!-- Contenido del equipo -->
+    @if (!loading() && !error() && team()) {
+      <!-- Cabecera del equipo -->
+      <header class="team-detail__header">
+        <div class="team-detail__info">
+          <h1 class="team-detail__name">{{ teamName() }}</h1>
+          <button 
+            class="team-detail__favorite" 
+            [class.team-detail__favorite--active]="isFavorite()"
+            (click)="toggleFavorite()"
+            [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+            type="button">
+            {{ isFavorite() ? '★' : '☆' }}
+          </button>
+        </div>
+        <div class="team-detail__logo-wrapper">
+          <img 
+            [src]="teamLogo()" 
+            [alt]="teamName()"
+            class="team-detail__logo"
+            loading="lazy"
+            decoding="async"
+            onerror="this.src='assets/images/default-team.png'"
+          >
+        </div>
+        <div class="team-detail__league">
+          @if (leagueName()) {
+            <span>{{ leagueName() }}</span>
+          } @else {
+            <span>Liga en la que juega</span>
+          }
+        </div>
+      </header>
+
+      <!-- Grid de jugadores -->
+      <section class="team-detail__players">
+        @if (loadingPlayers()) {
+          <div class="team-detail__loading-players">
+            <div class="spinner spinner--small"></div>
+            <p>Cargando plantilla...</p>
+          </div>
+        } @else if (players().length === 0) {
+          <div class="team-detail__no-players">
+            <p>No hay jugadores disponibles para esta temporada</p>
+          </div>
+        } @else {
+          <div class="players-grid">
+            @for (player of players(); track player.id) {
+              <div class="player-card">
+                <div class="player-card__photo-wrapper">
+                  <img 
+                    [src]="player.photo" 
+                    [alt]="player.name"
+                    class="player-card__photo"
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.src='assets/images/default-player.png'"
+                  >
+                </div>
+                <span class="player-card__name">{{ getPlayerDisplayName(player) }}</span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Botón volver -->
+    <nav class="team-detail__nav">
+      <button class="team-detail__back" onclick="history.back()">
+        ← Volver
+      </button>
+    </nav>
+
+  </div>
+</main>
+
+<app-footer />

@@ -84,6 +84,8 @@ interface Match {
   id: number;
   homeTeam: string;
   awayTeam: string;
+  homeTeamId: number;
+  awayTeamId: number;
   homeLogo: string;
   awayLogo: string;
   homeScore: number | null;
@@ -288,6 +290,8 @@ export class LeagueMatches implements OnInit {
         id: fixture.fixture.id,
         homeTeam: fixture.teams.home.name,
         awayTeam: fixture.teams.away.name,
+        homeTeamId: fixture.teams.home.id,
+        awayTeamId: fixture.teams.away.id,
         homeLogo: fixture.teams.home.logo,
         awayLogo: fixture.teams.away.logo,
         homeScore: fixture.goals.home,

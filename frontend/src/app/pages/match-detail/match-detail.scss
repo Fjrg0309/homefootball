@@ -228,6 +228,13 @@
     align-items: center;
     gap: var(--spacing-1);
     text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.15s ease;
+    
+    &:hover {
+      opacity: 0.8;
+    }
     
     &--home {
       align-items: center;
