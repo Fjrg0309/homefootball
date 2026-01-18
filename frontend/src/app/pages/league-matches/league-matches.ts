@@ -5,23 +5,23 @@ import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
 import { FootballApiService, FixtureData } from '../../services/football-api.service';
 
-// Configuración de temporadas por liga (2022 = temporada 2022-2023)
+// Configuración de temporadas por liga (2023 = temporada 2023-2024)
 const LEAGUE_SEASONS: Record<number, number> = {
-  140: 2022,  // LaLiga (temporada 2022-2023)
-  39: 2022,   // Premier League
-  135: 2022,  // Serie A
-  78: 2022,   // Bundesliga
-  61: 2022,   // Ligue 1
-  62: 2022,   // Ligue 2
-  94: 2022,   // Primeira Liga
-  88: 2022,   // Eredivisie
-  203: 2022,  // Süper Lig
-  253: 2022,  // MLS
-  262: 2022,  // Liga MX
-  40: 2022,   // Championship
-  2: 2022,    // Champions League
-  3: 2022,    // Europa League
-  848: 2022   // Conference League
+  140: 2023,  // LaLiga (temporada 2023-2024)
+  39: 2023,   // Premier League
+  135: 2023,  // Serie A
+  78: 2023,   // Bundesliga
+  61: 2023,   // Ligue 1
+  62: 2023,   // Ligue 2
+  94: 2023,   // Primeira Liga
+  88: 2023,   // Eredivisie
+  203: 2023,  // Süper Lig
+  253: 2023,  // MLS
+  262: 2023,  // Liga MX
+  40: 2023,   // Championship
+  2: 2023,    // Champions League
+  3: 2023,    // Europa League
+  848: 2023   // Conference League
 };
 
 // Última jornada disponible por liga
@@ -112,7 +112,7 @@ export class LeagueMatches implements OnInit {
   // Jornada actual seleccionada
   currentRound = signal<number>(38);
   maxRound = signal<number>(38);
-  season = signal<number>(2024);
+  season = signal<number>(2023);
   
   // Fecha de los partidos de la jornada (se obtiene del primer partido)
   roundDate = signal<string>('');
@@ -148,7 +148,7 @@ export class LeagueMatches implements OnInit {
       this.leagueName.set(LEAGUE_NAMES[id] || id);
       
       // Configurar temporada y jornada máxima para esta liga
-      this.season.set(LEAGUE_SEASONS[apiId] || 2024);
+      this.season.set(LEAGUE_SEASONS[apiId] || 2023);
       this.maxRound.set(LEAGUE_LAST_ROUND[apiId] || 38);
       this.currentRound.set(this.maxRound());
       

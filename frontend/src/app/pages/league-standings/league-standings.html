@@ -1,0 +1,161 @@
+<app-header />
+
+<main class="league-standings">
+  <div class="league-standings__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="league-standings__header">
+      <h1 class="league-standings__title">{{ viewTitle() }}</h1>
+    </header>
+
+    <!-- Layout principal -->
+    <div class="league-standings__layout">
+      
+      <!-- Tabla de clasificación -->
+      <section class="league-standings__content">
+        
+        <!-- Estado de carga -->
+        @if (loading()) {
+          <div class="league-standings__loading">
+            <div class="spinner"></div>
+            <p>Cargando clasificación...</p>
+          </div>
+        }
+
+        <!-- Error -->
+        @if (error()) {
+          <div class="league-standings__error">
+            <p>{{ error() }}</p>
+            <button class="league-standings__retry" (click)="loadStandings()">
+              Reintentar
+            </button>
+          </div>
+        }
+
+        <!-- Tabla -->
+        @if (!loading() && !error() && displayStandings().length > 0) {
+          <div class="standings-table-wrapper">
+            <table class="standings-table">
+              <thead>
+                <tr>
+                  <th class="standings-table__pos">Pos</th>
+                  <th class="standings-table__team">Equipos</th>
+                  <th class="standings-table__stat">PT</th>
+                  <th class="standings-table__stat standings-table__stat--hide-mobile">PJ</th>
+                  <th class="standings-table__stat standings-table__stat--hide-mobile">PG</th>
+                  <th class="standings-table__stat standings-table__stat--hide-mobile">PE</th>
+                  <th class="standings-table__stat standings-table__stat--hide-mobile">PP</th>
+                  <th class="standings-table__stat">GF</th>
+                  <th class="standings-table__stat">GC</th>
+                  <th class="standings-table__stat">DG</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (team of displayStandings(); track team.team.id) {
+                  <tr class="standings-table__row" [class]="team.positionClass">
+                    <td class="standings-table__pos" [class]="'pos-' + team.positionClass">
+                      {{ team.rank }}
+                    </td>
+                    <td class="standings-table__team">
+                      <div class="team-cell">
+                        <img 
+                          [src]="team.team.logo" 
+                          [alt]="team.team.name"
+                          class="team-cell__logo"
+                          loading="lazy"
+                          decoding="async"
+                          onerror="this.src='assets/images/default-team.png'"
+                        >
+                        <span class="team-cell__name">{{ team.team.name }}</span>
+                      </div>
+                    </td>
+                    <td class="standings-table__stat standings-table__stat--points">{{ team.points }}</td>
+                    <td class="standings-table__stat standings-table__stat--hide-mobile">{{ team.played }}</td>
+                    <td class="standings-table__stat standings-table__stat--hide-mobile">{{ team.won }}</td>
+                    <td class="standings-table__stat standings-table__stat--hide-mobile">{{ team.drawn }}</td>
+                    <td class="standings-table__stat standings-table__stat--hide-mobile">{{ team.lost }}</td>
+                    <td class="standings-table__stat">{{ team.goalsFor }}</td>
+                    <td class="standings-table__stat">{{ team.goalsAgainst }}</td>
+                    <td class="standings-table__stat" [class.positive]="team.goalsDiff > 0" [class.negative]="team.goalsDiff < 0">
+                      {{ team.goalsDiff > 0 ? '+' : '' }}{{ team.goalsDiff }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Leyenda -->
+          @if (currentView() === 'general') {
+            <div class="standings-legend">
+              <div class="standings-legend__item">
+                <span class="standings-legend__color standings-legend__color--champion"></span>
+                <span class="standings-legend__text">Campeón</span>
+              </div>
+              <div class="standings-legend__item">
+                <span class="standings-legend__color standings-legend__color--champions"></span>
+                <span class="standings-legend__text">Champions League</span>
+              </div>
+              <div class="standings-legend__item">
+                <span class="standings-legend__color standings-legend__color--europa"></span>
+                <span class="standings-legend__text">Europa League</span>
+              </div>
+              <div class="standings-legend__item">
+                <span class="standings-legend__color standings-legend__color--conference"></span>
+                <span class="standings-legend__text">Conference League</span>
+              </div>
+              <div class="standings-legend__item">
+                <span class="standings-legend__color standings-legend__color--relegation"></span>
+                <span class="standings-legend__text">Descenso</span>
+              </div>
+            </div>
+          }
+        }
+
+        @if (!loading() && !error() && displayStandings().length === 0) {
+          <div class="no-data">
+            <p>No hay datos de clasificación disponibles</p>
+          </div>
+        }
+      </section>
+
+      <!-- Sidebar derecho - Botones de navegación -->
+      <aside class="league-standings__sidebar">
+        <nav class="league-standings__nav">
+          <a [routerLink]="['/liga', leagueId(), 'partidos']" class="league-standings__btn">
+            Partidos
+          </a>
+          <button 
+            class="league-standings__btn" 
+            [class.league-standings__btn--active]="currentView() === 'general'"
+            (click)="setView('general')">
+            Clasificación
+          </button>
+          <button 
+            class="league-standings__btn" 
+            [class.league-standings__btn--active]="currentView() === 'home'"
+            (click)="setView('home')">
+            Local
+          </button>
+          <button 
+            class="league-standings__btn" 
+            [class.league-standings__btn--active]="currentView() === 'away'"
+            (click)="setView('away')">
+            Visitante
+          </button>
+        </nav>
+      </aside>
+
+    </div>
+
+    <!-- Botón volver -->
+    <nav class="league-standings__back-nav">
+      <a [routerLink]="['/liga', leagueId()]" class="league-standings__back">
+        ← Volver a {{ leagueName() }}
+      </a>
+    </nav>
+
+  </div>
+</main>
+
+<app-footer />

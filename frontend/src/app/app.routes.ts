@@ -163,6 +163,13 @@ export const routes: Routes = [
     data: { breadcrumb: 'Partidos' }
   },
   
+  // Liga clasificación - Página de clasificación de una liga
+  {
+    path: 'liga/:id/clasificacion',
+    loadComponent: () => import('./pages/league-standings/league-standings').then(m => m.LeagueStandings),
+    data: { breadcrumb: 'Clasificación' }
+  },
+  
   // Detalle de partido
   {
     path: 'partido/:id',
