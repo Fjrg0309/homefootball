@@ -149,25 +149,25 @@ export const routes: Routes = [
     data: { breadcrumb: 'Editar (con Feedback)' }
   },
   
-  // Liga detalle - Página de liga seleccionada
-  {
-    path: 'liga/:id',
-    loadComponent: () => import('./pages/league-detail/league-detail').then(m => m.LeagueDetail),
-    data: { breadcrumb: 'Liga' }
-  },
-  
-  // Liga partidos - Página de partidos de una liga
+  // Liga partidos - Página de partidos de una liga (DEBE IR ANTES de liga/:id)
   {
     path: 'liga/:id/partidos',
     loadComponent: () => import('./pages/league-matches/league-matches').then(m => m.LeagueMatches),
     data: { breadcrumb: 'Partidos' }
   },
   
-  // Liga clasificación - Página de clasificación de una liga
+  // Liga clasificación - Página de clasificación de una liga (DEBE IR ANTES de liga/:id)
   {
     path: 'liga/:id/clasificacion',
     loadComponent: () => import('./pages/league-standings/league-standings').then(m => m.LeagueStandings),
     data: { breadcrumb: 'Clasificación' }
+  },
+  
+  // Liga detalle - Página de liga seleccionada (DESPUÉS de las rutas específicas)
+  {
+    path: 'liga/:id',
+    loadComponent: () => import('./pages/league-detail/league-detail').then(m => m.LeagueDetail),
+    data: { breadcrumb: 'Liga' }
   },
   
   // Detalle de equipo
