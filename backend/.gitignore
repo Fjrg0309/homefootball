@@ -9,8 +9,10 @@ target/
 # Archivos con credenciales locales (NO SUBIR A GIT)
 application-local.properties
 application-prod.properties
+application-dev.properties
 **/application-local.properties
 **/application-prod.properties
+**/application-dev.properties
 .env
 *.env
 .env.local

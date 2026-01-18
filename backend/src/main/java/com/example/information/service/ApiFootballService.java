@@ -4,6 +4,7 @@ import com.example.information.model.apifootball.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -110,6 +111,7 @@ public class ApiFootballService {
     /**
      * Obtiene una liga por su ID
      */
+    @Cacheable(value = "leagues", key = "#leagueId")
     public LeagueResponse getLeagueById(int leagueId) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/leagues")
             .queryParam("id", leagueId)
@@ -120,6 +122,7 @@ public class ApiFootballService {
     /**
      * Obtiene equipos de una liga y temporada específica
      */
+    @Cacheable(value = "teams", key = "'league_' + #leagueId + '_season_' + #season")
     public TeamResponse getTeamsByLeague(int leagueId, int season) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/teams")
             .queryParam("league", leagueId)
@@ -131,6 +134,7 @@ public class ApiFootballService {
     /**
      * Obtiene información de un equipo por su ID
      */
+    @Cacheable(value = "teams", key = "#teamId")
     public TeamResponse getTeamById(int teamId) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/teams")
             .queryParam("id", teamId)
@@ -151,6 +155,7 @@ public class ApiFootballService {
     /**
      * Obtiene jugadores de un equipo
      */
+    @Cacheable(value = "players", key = "'team_' + #teamId + '_season_' + #season")
     public PlayerResponse getPlayersByTeam(int teamId, int season) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/players")
             .queryParam("team", teamId)
@@ -185,6 +190,7 @@ public class ApiFootballService {
     /**
      * Obtiene partidos de una liga y temporada
      */
+    @Cacheable(value = "fixtures", key = "'league_' + #leagueId + '_season_' + #season")
     public FixtureResponse getFixturesByLeague(int leagueId, int season) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
             .queryParam("league", leagueId)
@@ -227,6 +233,7 @@ public class ApiFootballService {
     /**
      * Obtiene la clasificación de una liga
      */
+    @Cacheable(value = "standings", key = "'league_' + #leagueId + '_season_' + #season")
     public StandingsResponse getStandings(int leagueId, int season) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/standings")
             .queryParam("league", leagueId)
@@ -412,6 +419,42 @@ public class ApiFootballService {
             log.error("Error al buscar última fecha disponible: {}", e.getMessage(), e);
             throw new RuntimeException("Error al buscar última fecha disponible: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Obtiene los eventos de un partido (goles, tarjetas, sustituciones, etc.)
+     */
+    @Cacheable(value = "fixtureEvents", key = "#fixtureId")
+    public FixtureEventsResponse getFixtureEvents(int fixtureId) {
+        log.info("Obteniendo eventos del partido {}", fixtureId);
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures/events")
+            .queryParam("fixture", fixtureId)
+            .toUriString();
+        return executeRequest(url, FixtureEventsResponse.class);
+    }
+
+    /**
+     * Obtiene las estadísticas de un partido
+     */
+    @Cacheable(value = "fixtureStatistics", key = "#fixtureId")
+    public FixtureStatisticsResponse getFixtureStatistics(int fixtureId) {
+        log.info("Obteniendo estadísticas del partido {}", fixtureId);
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures/statistics")
+            .queryParam("fixture", fixtureId)
+            .toUriString();
+        return executeRequest(url, FixtureStatisticsResponse.class);
+    }
+
+    /**
+     * Obtiene un partido por su ID
+     */
+    @Cacheable(value = "fixture", key = "#fixtureId")
+    public FixtureResponse getFixtureById(int fixtureId) {
+        log.info("Obteniendo partido por ID: {}", fixtureId);
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures")
+            .queryParam("id", fixtureId)
+            .toUriString();
+        return executeRequest(url, FixtureResponse.class);
     }
 
     /**

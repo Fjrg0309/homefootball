@@ -260,5 +260,34 @@ public class ApiFootballController {
         log.info("GET /api/football/standings?league={}&season={}", league, season);
         return ResponseEntity.ok(apiFootballService.getStandings(league, season));
     }
+
+    // ==================== DETALLE DE PARTIDO ====================
+
+    /**
+     * Obtener un partido por su ID
+     */
+    @GetMapping("/fixture/{id}")
+    public ResponseEntity<FixtureResponse> getFixtureById(@PathVariable int id) {
+        log.info("GET /api/football/fixture/{}", id);
+        return ResponseEntity.ok(apiFootballService.getFixtureById(id));
+    }
+
+    /**
+     * Obtener eventos de un partido (goles, tarjetas, sustituciones, etc.)
+     */
+    @GetMapping("/fixture/{id}/events")
+    public ResponseEntity<FixtureEventsResponse> getFixtureEvents(@PathVariable int id) {
+        log.info("GET /api/football/fixture/{}/events", id);
+        return ResponseEntity.ok(apiFootballService.getFixtureEvents(id));
+    }
+
+    /**
+     * Obtener estadísticas de un partido
+     */
+    @GetMapping("/fixture/{id}/statistics")
+    public ResponseEntity<FixtureStatisticsResponse> getFixtureStatistics(@PathVariable int id) {
+        log.info("GET /api/football/fixture/{}/statistics", id);
+        return ResponseEntity.ok(apiFootballService.getFixtureStatistics(id));
+    }
 }
 

@@ -73,33 +73,35 @@
         } @else {
           <div class="matches-list">
             @for (match of matches(); track match.id) {
-              <article class="match-row" [class.match-row--live]="match.status === 'live'">
-                <!-- Equipo local -->
-                <div class="match-row__team match-row__team--home" [class.match-row__team--winner]="getWinnerClass(match, 'home') === 'winner'">
-                  <img [src]="match.homeLogo" [alt]="match.homeTeam" class="match-row__logo">
-                  <span class="match-row__name">{{ match.homeTeam }}</span>
-                </div>
-                
-                <!-- Marcador o Hora -->
-                <div class="match-row__center">
-                  <span class="match-row__score" 
-                        [class.match-row__score--live]="match.status === 'live'"
-                        [class.match-row__score--upcoming]="match.status === 'upcoming'">
-                    {{ getScoreDisplay(match) }}
-                  </span>
-                  @if (match.status !== 'upcoming') {
-                    <span class="match-row__status" [class.match-row__status--live]="match.status === 'live'">
-                      {{ getStatusText(match) }}
+              <a [routerLink]="['/partido', match.id]" class="match-row-link">
+                <article class="match-row" [class.match-row--live]="match.status === 'live'">
+                  <!-- Equipo local -->
+                  <div class="match-row__team match-row__team--home" [class.match-row__team--winner]="getWinnerClass(match, 'home') === 'winner'">
+                    <img [src]="match.homeLogo" [alt]="match.homeTeam" class="match-row__logo">
+                    <span class="match-row__name">{{ match.homeTeam }}</span>
+                  </div>
+                  
+                  <!-- Marcador o Hora -->
+                  <div class="match-row__center">
+                    <span class="match-row__score" 
+                          [class.match-row__score--live]="match.status === 'live'"
+                          [class.match-row__score--upcoming]="match.status === 'upcoming'">
+                      {{ getScoreDisplay(match) }}
                     </span>
-                  }
-                </div>
-                
-                <!-- Equipo visitante -->
-                <div class="match-row__team match-row__team--away" [class.match-row__team--winner]="getWinnerClass(match, 'away') === 'winner'">
-                  <span class="match-row__name">{{ match.awayTeam }}</span>
-                  <img [src]="match.awayLogo" [alt]="match.awayTeam" class="match-row__logo">
-                </div>
-              </article>
+                    @if (match.status !== 'upcoming') {
+                      <span class="match-row__status" [class.match-row__status--live]="match.status === 'live'">
+                        {{ getStatusText(match) }}
+                      </span>
+                    }
+                  </div>
+                  
+                  <!-- Equipo visitante -->
+                  <div class="match-row__team match-row__team--away" [class.match-row__team--winner]="getWinnerClass(match, 'away') === 'winner'">
+                    <span class="match-row__name">{{ match.awayTeam }}</span>
+                    <img [src]="match.awayLogo" [alt]="match.awayTeam" class="match-row__logo">
+                  </div>
+                </article>
+              </a>
             }
           </div>
         }

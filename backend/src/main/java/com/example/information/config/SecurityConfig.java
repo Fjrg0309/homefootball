@@ -30,6 +30,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Permitir acceso público a la raíz y health check
                 .requestMatchers("/", "/health", "/actuator/**", "/debug/**").permitAll()
+                // Permitir acceso público a Swagger/OpenAPI
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api-docs/**").permitAll()
                 // Permitir acceso público a la consola H2 (solo desarrollo)
                 .requestMatchers("/h2-console/**").permitAll()
                 // Permitir acceso público a endpoints de autenticación

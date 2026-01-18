@@ -163,6 +163,13 @@ export const routes: Routes = [
     data: { breadcrumb: 'Partidos' }
   },
   
+  // Detalle de partido
+  {
+    path: 'partido/:id',
+    loadComponent: () => import('./pages/match-detail/match-detail').then(m => m.MatchDetail),
+    data: { breadcrumb: 'Partido' }
+  },
+  
   // Demo de API-Football
   {
     path: 'football-demo',

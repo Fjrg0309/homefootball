@@ -1,0 +1,210 @@
+<app-header />
+
+<main class="match-detail">
+  <div class="match-detail__container">
+
+    <!-- Estado de carga -->
+    @if (loading()) {
+      <section class="match-detail__loading">
+        <div class="spinner"></div>
+        <p>Cargando datos del partido...</p>
+      </section>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <section class="match-detail__error">
+        <p>{{ error() }}</p>
+        <button class="match-detail__retry" (click)="loadMatchData()">
+          Reintentar
+        </button>
+      </section>
+    }
+
+    <!-- Contenido del partido -->
+    @if (!loading() && !error() && fixture()) {
+      <!-- Marcador principal -->
+      <section class="match-score">
+        <div class="match-score__team match-score__team--home">
+          <img 
+            [src]="fixture()!.teams.home.logo" 
+            [alt]="fixture()!.teams.home.name"
+            class="match-score__logo"
+            loading="lazy"
+          />
+          <span class="match-score__name">{{ fixture()!.teams.home.name }}</span>
+        </div>
+        
+        <div class="match-score__center">
+          <span class="match-score__result">
+            {{ fixture()!.goals.home ?? 0 }}
+            <span class="match-score__separator">—</span>
+            {{ fixture()!.goals.away ?? 0 }}
+          </span>
+        </div>
+        
+        <div class="match-score__team match-score__team--away">
+          <img 
+            [src]="fixture()!.teams.away.logo" 
+            [alt]="fixture()!.teams.away.name"
+            class="match-score__logo"
+            loading="lazy"
+          />
+          <span class="match-score__name">{{ fixture()!.teams.away.name }}</span>
+        </div>
+      </section>
+
+      <!-- Contenido principal: Estadísticas y Comentarios -->
+      <div class="match-detail__content">
+        
+        <!-- Panel izquierdo: Estadísticas/Goleadores -->
+        <section class="match-detail__stats-panel">
+          <header class="match-detail__panel-header">
+            <h2 class="match-detail__panel-title">Estadísticas</h2>
+          </header>
+          
+          <div class="match-detail__panel-content">
+            <!-- Goleadores -->
+            <div class="goals-list">
+              @for (goal of allGoals(); track goal.minute + goal.playerName) {
+                <div class="goal-item" 
+                     [class.goal-item--home]="goal.teamId === fixture()!.teams.home.id"
+                     [class.goal-item--away]="goal.teamId === fixture()!.teams.away.id">
+                  <span class="goal-item__icon">⚽</span>
+                  <span class="goal-item__player">
+                    {{ goal.playerName }}
+                    @if (getGoalIcon(goal.type)) {
+                      <span class="goal-item__type">{{ getGoalIcon(goal.type) }}</span>
+                    }
+                  </span>
+                  <span class="goal-item__minute">{{ formatMinute(goal.minute, goal.extra) }}</span>
+                  @if (goal.assistName) {
+                    <span class="goal-item__assist">(Asist: {{ goal.assistName }})</span>
+                  }
+                </div>
+              }
+              @if (allGoals().length === 0) {
+                <p class="goals-list__empty">No hay goles en este partido</p>
+              }
+            </div>
+
+            <!-- Botón para ver estadísticas detalladas -->
+            <button 
+              class="match-detail__stats-toggle" 
+              (click)="toggleStatistics()"
+              type="button">
+              {{ showStatistics() ? 'Ocultar estadísticas' : 'Ver estadísticas detalladas' }}
+              <svg 
+                class="match-detail__stats-toggle-icon" 
+                [class.match-detail__stats-toggle-icon--open]="showStatistics()"
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+
+            <!-- Estadísticas detalladas (colapsable) -->
+            @if (showStatistics()) {
+              <div class="statistics-table">
+                @for (stat of processedStats(); track stat.type) {
+                  <div class="statistics-row">
+                    <span class="statistics-row__home">{{ stat.homeValue }}</span>
+                    <span class="statistics-row__label">{{ stat.type }}</span>
+                    <span class="statistics-row__away">{{ stat.awayValue }}</span>
+                  </div>
+                }
+                @if (processedStats().length === 0) {
+                  <p class="statistics-table__empty">No hay estadísticas disponibles</p>
+                }
+              </div>
+            }
+
+            <!-- Tarjetas -->
+            @if (yellowCards().length > 0 || redCards().length > 0) {
+              <div class="cards-section">
+                <h3 class="cards-section__title">Tarjetas</h3>
+                
+                @for (card of yellowCards(); track card.time.elapsed + (card.player.name || '')) {
+                  <div class="card-item card-item--yellow">
+                    <span class="card-item__icon">🟨</span>
+                    <span class="card-item__player">{{ card.player.name }}</span>
+                    <span class="card-item__minute">{{ formatMinute(card.time.elapsed, card.time.extra) }}</span>
+                    <span class="card-item__team">({{ card.team.name }})</span>
+                  </div>
+                }
+                
+                @for (card of redCards(); track card.time.elapsed + (card.player.name || '')) {
+                  <div class="card-item card-item--red">
+                    <span class="card-item__icon">🟥</span>
+                    <span class="card-item__player">{{ card.player.name }}</span>
+                    <span class="card-item__minute">{{ formatMinute(card.time.elapsed, card.time.extra) }}</span>
+                    <span class="card-item__team">({{ card.team.name }})</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- Panel derecho: Comentarios -->
+        <section class="match-detail__comments-panel">
+          <header class="match-detail__panel-header">
+            <h2 class="match-detail__panel-title">Comentarios</h2>
+          </header>
+          
+          <div class="match-detail__panel-content">
+            <!-- Lista de comentarios -->
+            <div class="comments-list">
+              @for (comment of comments(); track comment.id) {
+                <div class="comment-item" [class.comment-item--owner]="comment.isOwner">
+                  <span class="comment-item__user">{{ comment.user }}</span>
+                  <p class="comment-item__text">{{ comment.text }}</p>
+                  @if (comment.isOwner) {
+                    <span class="comment-item__badge"></span>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Input de nuevo comentario -->
+            <div class="comment-input">
+              <input 
+                type="text" 
+                class="comment-input__field"
+                placeholder="Comentar..."
+                [value]="newComment()"
+                (input)="updateNewComment($event)"
+                (keydown)="handleCommentKeydown($event)"
+              />
+              <button 
+                class="comment-input__submit"
+                (click)="submitComment()"
+                [disabled]="!newComment().trim()"
+                type="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 2L11 13"/>
+                  <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Navegación: Volver -->
+      <nav class="match-detail__nav">
+        <a routerLink="/" class="match-detail__back">
+          ← Volver al inicio
+        </a>
+      </nav>
+    }
+
+  </div>
+</main>
+
+<app-footer />

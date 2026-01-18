@@ -303,6 +303,19 @@
 }
 
 // =============================================
+// LINK DE PARTIDO
+// =============================================
+.match-row-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+// =============================================
 // FILA DE PARTIDO
 // =============================================
 .match-row {

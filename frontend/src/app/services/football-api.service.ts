@@ -124,6 +124,43 @@ export interface PlayerStatistics {
   };
 }
 
+// Evento de partido (Goal, Card, Subst, VAR)
+export interface FixtureEvent {
+  time: {
+    elapsed: number;
+    extra: number | null;
+  };
+  team: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  player: {
+    id: number | null;
+    name: string | null;
+  };
+  assist: {
+    id: number | null;
+    name: string | null;
+  };
+  type: string;     // "Goal", "Card", "subst", "Var"
+  detail: string;   // "Normal Goal", "Penalty", "Yellow Card", "Red Card", "Substitution 1", etc.
+  comments: string | null;
+}
+
+// Estadísticas de equipo en un partido
+export interface FixtureStatistics {
+  team: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  statistics: {
+    type: string;
+    value: number | string | null;
+  }[];
+}
+
 // Partido (Fixture)
 export interface FixtureData {
   fixture: {
@@ -405,5 +442,28 @@ export class FootballApiService {
     return this.http.get<ApiFootballResponse<StandingsData>>(`${this.baseUrl}/standings`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });
+  }
+
+  // ==================== DETALLE DE PARTIDO ====================
+
+  /**
+   * Obtiene un partido por su ID
+   */
+  getFixtureById(fixtureId: number): Observable<ApiFootballResponse<FixtureData>> {
+    return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixture/${fixtureId}`);
+  }
+
+  /**
+   * Obtiene los eventos de un partido (goles, tarjetas, sustituciones, etc.)
+   */
+  getFixtureEvents(fixtureId: number): Observable<ApiFootballResponse<FixtureEvent>> {
+    return this.http.get<ApiFootballResponse<FixtureEvent>>(`${this.baseUrl}/fixture/${fixtureId}/events`);
+  }
+
+  /**
+   * Obtiene las estadísticas de un partido
+   */
+  getFixtureStatistics(fixtureId: number): Observable<ApiFootballResponse<FixtureStatistics>> {
+    return this.http.get<ApiFootballResponse<FixtureStatistics>>(`${this.baseUrl}/fixture/${fixtureId}/statistics`);
   }
 }
