@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 @Configuration
 public class DatabaseConfig {
 
-    @Value("${DATABASE_URL:}")
+    @Value("${DB_URL:}")
     private String databaseUrl;
 
     @Bean
@@ -27,7 +27,7 @@ public class DatabaseConfig {
         HikariDataSource dataSource = new HikariDataSource();
         
         System.out.println("=== Configurando DataSource ===");
-        System.out.println("DATABASE_URL recibida: " + maskUrl(databaseUrl));
+        System.out.println("DB_URL recibida: " + maskUrl(databaseUrl));
         
         try {
             DatabaseCredentials creds = parseDigitalOceanUrl(databaseUrl);
@@ -42,8 +42,8 @@ public class DatabaseConfig {
             dataSource.setDriverClassName("org.postgresql.Driver");
             
         } catch (Exception e) {
-            System.err.println("ERROR parseando DATABASE_URL: " + e.getMessage());
-            throw new RuntimeException("No se pudo parsear DATABASE_URL: " + e.getMessage(), e);
+            System.err.println("ERROR parseando DB_URL: " + e.getMessage());
+            throw new RuntimeException("No se pudo parsear DB_URL: " + e.getMessage(), e);
         }
         
         // Configuración del pool
@@ -63,7 +63,7 @@ public class DatabaseConfig {
      */
     private DatabaseCredentials parseDigitalOceanUrl(String url) throws URISyntaxException {
         if (url == null || url.isEmpty()) {
-            throw new IllegalArgumentException("DATABASE_URL no está configurada");
+            throw new IllegalArgumentException("DB_URL no está configurada");
         }
         
         // Si ya es formato JDBC completo, intentar extraer credenciales de la URL
