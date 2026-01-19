@@ -83,11 +83,18 @@
     grid-template-columns: 1fr;
     gap: var(--spacing-2); // 16px
     margin-top: var(--spacing-2);
+    transition: all 0.3s ease;
     
     @include tablet {
-      grid-template-columns: 1fr 1fr;
       gap: var(--spacing-3); // 24px
       margin-top: var(--spacing-3);
+    }
+    
+    // Cuando se muestran los comentarios, dividir en dos columnas
+    &--with-comments {
+      @include tablet {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   }
 
@@ -105,6 +112,10 @@
       border: 1px solid var(--color-neutral-300);
     }
   }
+  
+  &__comments-panel {
+    animation: slideIn 0.3s ease;
+  }
 
   &__panel-header {
     background-color: var(--color-accent);
@@ -120,12 +131,12 @@
 
   &__panel-content {
     padding: var(--spacing-2); // 16px
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
     
     @include tablet {
       padding: var(--spacing-3); // 24px
-      max-height: 480px;
+      max-height: 600px;
     }
   }
 
@@ -167,6 +178,51 @@
     &--open {
       transform: rotate(180deg);
     }
+  }
+
+  // =============================================
+  // BOTÓN DE COMENTARIOS
+  // =============================================
+  &__comments-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-1);
+    width: 100%;
+    max-width: 300px;
+    margin: var(--spacing-3) auto 0;
+    padding: var(--spacing-1-5) var(--spacing-3);
+    background-color: var(--color-accent);
+    border: none;
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-md);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    &--active {
+      background-color: var(--color-neutral-600);
+    }
+  }
+
+  &__comments-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
   }
 
   // =============================================
@@ -458,25 +514,34 @@
   flex-direction: column;
   gap: var(--spacing-2);
   margin-bottom: var(--spacing-2);
+  max-height: 300px;
+  overflow-y: auto;
+  
+  @include tablet {
+    max-height: 380px;
+  }
 }
 
 .comment-item {
   position: relative;
-  padding: var(--spacing-1);
+  padding: var(--spacing-1-5);
+  background-color: var(--color-neutral-50);
+  border-radius: var(--radius-md);
+  
+  [data-theme="dark"] & {
+    background-color: var(--color-neutral-800);
+  }
   
   &--owner {
+    background-color: rgba(0, 217, 95, 0.1);
+    border-left: 3px solid var(--color-accent);
+    
     .comment-item__user {
       color: var(--color-accent);
     }
     
-    .comment-item__badge {
-      position: absolute;
-      right: var(--spacing-1);
-      top: var(--spacing-1);
-      width: 16px;
-      height: 16px;
-      background-color: var(--color-deletecomment);
-      border-radius: 2px;
+    [data-theme="dark"] & {
+      background-color: rgba(0, 217, 95, 0.15);
     }
   }
 
@@ -485,7 +550,7 @@
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
 
   &__text {
@@ -493,6 +558,30 @@
     color: var(--color-text-secondary);
     margin: 0;
     line-height: var(--line-height-normal);
+    padding-right: var(--spacing-4); // Espacio para el botón de eliminar
+  }
+  
+  &__delete {
+    position: absolute;
+    right: var(--spacing-1);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background-color: var(--color-error, #dc3545);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #c82333;
+      transform: translateY(-50%) scale(1.1);
+    }
   }
 }
 
@@ -503,10 +592,12 @@
   display: flex;
   gap: var(--spacing-1);
   margin-top: auto;
+  padding-top: var(--spacing-2);
+  border-top: 1px solid var(--color-neutral-200);
 
   &__field {
     flex: 1;
-    padding: var(--spacing-1) var(--spacing-2);
+    padding: var(--spacing-1-5) var(--spacing-2);
     border: 1px solid var(--color-neutral-300);
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
@@ -520,6 +611,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(0, 217, 95, 0.15);
     }
     
     [data-theme="dark"] & {
@@ -532,17 +624,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background-color: var(--color-sendcomment);
+    width: 44px;
+    height: 44px;
+    background-color: var(--color-accent);
     border: none;
     border-radius: var(--radius-md);
     color: white;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
     
     &:hover:not(:disabled) {
-      opacity: 0.9;
+      background-color: var(--color-accent-dark, #00b359);
+      transform: scale(1.05);
     }
     
     &:disabled {
@@ -553,10 +646,21 @@
 }
 
 // =============================================
-// ANIMACIÓN SPINNER
+// ANIMACIONES
 // =============================================
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

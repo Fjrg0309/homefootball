@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
-import { FootballApiService, TeamData, PlayerData } from '../../services/football-api.service';
+import { FootballApiService, TeamData, PlayerData, LeagueData, SquadData, SquadPlayer } from '../../services/football-api.service';
 
 interface Player {
   id: number;
@@ -31,29 +31,20 @@ export class TeamDetail implements OnInit {
   teamId = signal<number>(0);
   team = signal<TeamData | null>(null);
   players = signal<Player[]>([]);
+  teamLeague = signal<string>('');
   
   // Estados de carga
   loading = signal<boolean>(false);
   loadingPlayers = signal<boolean>(false);
   error = signal<string | null>(null);
   
-  // Temporada actual
-  season = signal<number>(2023);
+  // Temporada actual (2024 para datos actualizados)
+  season = signal<number>(2024);
   
   // Datos computados
   teamName = computed(() => this.team()?.team?.name || 'Equipo');
   teamLogo = computed(() => this.team()?.team?.logo || '');
-  leagueName = computed(() => {
-    // Intentar obtener la liga del primer jugador
-    const playersList = this.players();
-    if (playersList.length > 0) {
-      const stats = (playersList[0] as any).statistics;
-      if (stats && stats.length > 0) {
-        return stats[0].league?.name || '';
-      }
-    }
-    return '';
-  });
+  leagueName = computed(() => this.teamLeague());
   
   // Verificar si es favorito
   isFavorite = signal<boolean>(false);
@@ -65,6 +56,7 @@ export class TeamDetail implements OnInit {
         this.teamId.set(parseInt(id, 10));
         this.loadTeamData();
         this.loadPlayers();
+        this.loadTeamLeague();
         this.checkFavoriteStatus();
       }
     });
@@ -101,7 +93,37 @@ export class TeamDetail implements OnInit {
   }
 
   /**
-   * Cargar jugadores del equipo
+   * Cargar la liga del equipo
+   */
+  loadTeamLeague(): void {
+    const id = this.teamId();
+    if (!id) return;
+
+    // Obtener ligas donde juega el equipo
+    this.footballApi.getLeaguesByTeam(id, this.season()).subscribe({
+      next: (response) => {
+        console.log('✅ Ligas del equipo recibidas:', response);
+        if (response.response && response.response.length > 0) {
+          // Buscar la liga principal (tipo "League", no copa)
+          const mainLeague = response.response.find(
+            (l: LeagueData) => l.league.type === 'League'
+          );
+          if (mainLeague) {
+            this.teamLeague.set(mainLeague.league.name);
+          } else {
+            // Si no hay liga, usar la primera competición
+            this.teamLeague.set(response.response[0].league.name);
+          }
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error cargando liga del equipo:', err);
+      }
+    });
+  }
+
+  /**
+   * Cargar jugadores del equipo - Usa endpoint /squads que devuelve SOLO primer equipo
    */
   loadPlayers(): void {
     const id = this.teamId();
@@ -109,23 +131,31 @@ export class TeamDetail implements OnInit {
 
     this.loadingPlayers.set(true);
     
-    console.log(`🔍 Cargando jugadores del equipo ID: ${id}, Temporada: ${this.season()}`);
+    console.log(`🔍 Cargando plantilla del primer equipo ID: ${id}`);
     
-    this.footballApi.getPlayersByTeam(id, this.season()).subscribe({
+    // Usar el endpoint de squads que solo devuelve jugadores del primer equipo
+    this.footballApi.getTeamSquad(id).subscribe({
       next: (response) => {
-        console.log('✅ Jugadores recibidos:', response);
-        if (response.response && response.response.length > 0) {
-          const playersList = response.response.map((p: PlayerData) => ({
-            id: p.player.id,
-            name: p.player.name,
-            firstname: p.player.firstname,
-            lastname: p.player.lastname,
-            photo: p.player.photo,
-            age: p.player.age,
-            nationality: p.player.nationality,
-            position: p.statistics?.[0]?.games?.position || 'N/A',
-            number: p.statistics?.[0]?.games?.number ?? null
+        console.log('✅ Plantilla recibida:', response);
+        if (response.response && response.response.length > 0 && response.response[0].players) {
+          const squad = response.response[0];
+          const playersList = squad.players.map((p: SquadPlayer) => ({
+            id: p.id,
+            name: p.name,
+            firstname: p.name.split(' ')[0] || p.name,
+            lastname: p.name.split(' ').slice(1).join(' ') || '',
+            photo: p.photo,
+            age: p.age,
+            nationality: '', // El endpoint squads no incluye nacionalidad
+            position: this.translatePosition(p.position),
+            number: p.number
           }));
+          // Ordenar por dorsal (null al final)
+          playersList.sort((a: Player, b: Player) => {
+            if (a.number === null) return 1;
+            if (b.number === null) return -1;
+            return a.number - b.number;
+          });
           this.players.set(playersList);
         } else {
           this.players.set([]);
@@ -133,10 +163,23 @@ export class TeamDetail implements OnInit {
         this.loadingPlayers.set(false);
       },
       error: (err) => {
-        console.error('❌ Error cargando jugadores:', err);
+        console.error('❌ Error cargando plantilla:', err);
         this.loadingPlayers.set(false);
       }
     });
+  }
+
+  /**
+   * Traduce la posición del inglés al español
+   */
+  private translatePosition(position: string): string {
+    const translations: Record<string, string> = {
+      'Goalkeeper': 'Portero',
+      'Defender': 'Defensa',
+      'Midfielder': 'Centrocampista',
+      'Attacker': 'Delantero'
+    };
+    return translations[position] || position;
   }
 
   /**

@@ -84,6 +84,25 @@ export interface PlayerData {
   statistics: PlayerStatistics[];
 }
 
+// Squad/Plantilla del primer equipo
+export interface SquadData {
+  team: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  players: SquadPlayer[];
+}
+
+export interface SquadPlayer {
+  id: number;
+  name: string;
+  age: number;
+  number: number | null;
+  position: string;
+  photo: string;
+}
+
 export interface PlayerStatistics {
   team: {
     id: number;
@@ -305,6 +324,15 @@ export class FootballApiService {
     return this.http.get<ApiFootballResponse<LeagueData>>(`${this.baseUrl}/leagues/${id}`);
   }
 
+  /**
+   * Obtiene las ligas en las que participa un equipo
+   */
+  getLeaguesByTeam(teamId: number, season: number = 2024): Observable<ApiFootballResponse<LeagueData>> {
+    return this.http.get<ApiFootballResponse<LeagueData>>(`${this.baseUrl}/leagues/team/${teamId}`, {
+      params: { season: season.toString() }
+    });
+  }
+
   // ==================== EQUIPOS ====================
 
   /**
@@ -335,9 +363,17 @@ export class FootballApiService {
   // ==================== JUGADORES ====================
 
   /**
+   * Obtiene la plantilla oficial del primer equipo (NO incluye filiales)
+   * Usa el endpoint /players/squads que solo devuelve jugadores con ficha del primer equipo
+   */
+  getTeamSquad(teamId: number): Observable<ApiFootballResponse<SquadData>> {
+    return this.http.get<ApiFootballResponse<SquadData>>(`${this.baseUrl}/squads/${teamId}`);
+  }
+
+  /**
    * Obtiene jugadores de un equipo
    */
-  getPlayersByTeam(teamId: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
+  getPlayersByTeam(teamId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players`, {
       params: { team: teamId.toString(), season: season.toString() }
     });
@@ -346,7 +382,7 @@ export class FootballApiService {
   /**
    * Obtiene un jugador por su ID
    */
-  getPlayerById(id: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
+  getPlayerById(id: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/${id}`, {
       params: { season: season.toString() }
     });
@@ -355,7 +391,7 @@ export class FootballApiService {
   /**
    * Busca jugadores por nombre
    */
-  searchPlayers(name: string, leagueId: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
+  searchPlayers(name: string, leagueId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/search`, {
       params: { name, league: leagueId.toString(), season: season.toString() }
     });
@@ -364,7 +400,7 @@ export class FootballApiService {
   /**
    * Obtiene los máximos goleadores de una liga
    */
-  getTopScorers(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<PlayerData>> {
+  getTopScorers(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/topscorers`, {
       params: { league: leagueId.toString(), season: season.toString() }
     });

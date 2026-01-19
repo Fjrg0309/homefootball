@@ -120,6 +120,19 @@ public class ApiFootballService {
     }
 
     /**
+     * Obtiene las ligas en las que participa un equipo
+     */
+    @Cacheable(value = "leagues", key = "'team_' + #teamId + '_season_' + #season")
+    public LeagueResponse getLeaguesByTeam(int teamId, int season) {
+        log.info("Obteniendo ligas del equipo {} para temporada {}", teamId, season);
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/leagues")
+            .queryParam("team", teamId)
+            .queryParam("season", season)
+            .toUriString();
+        return executeRequest(url, LeagueResponse.class);
+    }
+
+    /**
      * Obtiene equipos de una liga y temporada específica
      */
     @Cacheable(value = "teams", key = "'league_' + #leagueId + '_season_' + #season")
@@ -150,6 +163,19 @@ public class ApiFootballService {
             .queryParam("search", name)
             .toUriString();
         return executeRequest(url, TeamResponse.class);
+    }
+
+    /**
+     * Obtiene la plantilla oficial del primer equipo (NO incluye filiales)
+     * Este endpoint es mejor que /players porque solo devuelve jugadores
+     * con ficha del primer equipo
+     */
+    @Cacheable(value = "squads", key = "'team_' + #teamId")
+    public SquadResponse getTeamSquad(int teamId) {
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/players/squads")
+            .queryParam("team", teamId)
+            .toUriString();
+        return executeRequest(url, SquadResponse.class);
     }
 
     /**
@@ -427,10 +453,19 @@ public class ApiFootballService {
     @Cacheable(value = "fixtureEvents", key = "#fixtureId")
     public FixtureEventsResponse getFixtureEvents(int fixtureId) {
         log.info("Obteniendo eventos del partido {}", fixtureId);
-        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures/events")
-            .queryParam("fixture", fixtureId)
-            .toUriString();
-        return executeRequest(url, FixtureEventsResponse.class);
+        try {
+            String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures/events")
+                .queryParam("fixture", fixtureId)
+                .toUriString();
+            return executeRequest(url, FixtureEventsResponse.class);
+        } catch (Exception e) {
+            log.warn("No se pudieron obtener eventos del partido {}: {}", fixtureId, e.getMessage());
+            // Devolver respuesta vacía en lugar de error
+            FixtureEventsResponse emptyResponse = new FixtureEventsResponse();
+            emptyResponse.setResults(0);
+            emptyResponse.setResponse(java.util.Collections.emptyList());
+            return emptyResponse;
+        }
     }
 
     /**
@@ -439,10 +474,19 @@ public class ApiFootballService {
     @Cacheable(value = "fixtureStatistics", key = "#fixtureId")
     public FixtureStatisticsResponse getFixtureStatistics(int fixtureId) {
         log.info("Obteniendo estadísticas del partido {}", fixtureId);
-        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures/statistics")
-            .queryParam("fixture", fixtureId)
-            .toUriString();
-        return executeRequest(url, FixtureStatisticsResponse.class);
+        try {
+            String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/fixtures/statistics")
+                .queryParam("fixture", fixtureId)
+                .toUriString();
+            return executeRequest(url, FixtureStatisticsResponse.class);
+        } catch (Exception e) {
+            log.warn("No se pudieron obtener estadísticas del partido {}: {}", fixtureId, e.getMessage());
+            // Devolver respuesta vacía en lugar de error
+            FixtureStatisticsResponse emptyResponse = new FixtureStatisticsResponse();
+            emptyResponse.setResults(0);
+            emptyResponse.setResponse(java.util.Collections.emptyList());
+            return emptyResponse;
+        }
     }
 
     /**

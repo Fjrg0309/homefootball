@@ -92,6 +92,17 @@ public class ApiFootballController {
         return ResponseEntity.ok(apiFootballService.getLeagueById(id));
     }
 
+    /**
+     * Obtener ligas de un equipo
+     */
+    @GetMapping("/leagues/team/{teamId}")
+    public ResponseEntity<LeagueResponse> getLeaguesByTeam(
+            @PathVariable int teamId,
+            @RequestParam(defaultValue = "2024") int season) {
+        log.info("GET /api/football/leagues/team/{}?season={}", teamId, season);
+        return ResponseEntity.ok(apiFootballService.getLeaguesByTeam(teamId, season));
+    }
+
     // ==================== EQUIPOS ====================
 
     /**
@@ -126,12 +137,22 @@ public class ApiFootballController {
     // ==================== JUGADORES ====================
 
     /**
+     * Obtener la plantilla oficial del primer equipo (NO incluye filiales)
+     * Usa el endpoint /players/squads que solo devuelve jugadores con ficha del primer equipo
+     */
+    @GetMapping("/squads/{teamId}")
+    public ResponseEntity<SquadResponse> getTeamSquad(@PathVariable int teamId) {
+        log.info("GET /api/football/squads/{}", teamId);
+        return ResponseEntity.ok(apiFootballService.getTeamSquad(teamId));
+    }
+
+    /**
      * Obtener jugadores de un equipo
      */
     @GetMapping("/players")
     public ResponseEntity<PlayerResponse> getPlayersByTeam(
             @RequestParam int team,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/players?team={}&season={}", team, season);
         return ResponseEntity.ok(apiFootballService.getPlayersByTeam(team, season));
     }
@@ -142,7 +163,7 @@ public class ApiFootballController {
     @GetMapping("/players/{id}")
     public ResponseEntity<PlayerResponse> getPlayerById(
             @PathVariable int id,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/players/{}?season={}", id, season);
         return ResponseEntity.ok(apiFootballService.getPlayerById(id, season));
     }
@@ -154,7 +175,7 @@ public class ApiFootballController {
     public ResponseEntity<PlayerResponse> searchPlayers(
             @RequestParam String name,
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/players/search?name={}&league={}&season={}", name, league, season);
         return ResponseEntity.ok(apiFootballService.searchPlayers(name, league, season));
     }
@@ -165,7 +186,7 @@ public class ApiFootballController {
     @GetMapping("/players/topscorers")
     public ResponseEntity<PlayerResponse> getTopScorers(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/players/topscorers?league={}&season={}", league, season);
         return ResponseEntity.ok(apiFootballService.getTopScorers(league, season));
     }

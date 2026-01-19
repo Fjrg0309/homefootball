@@ -20,7 +20,8 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(
-            "leagues", "teams", "players", "fixtures", "standings", "teamStats"
+            "leagues", "teams", "players", "fixtures", "standings", "teamStats",
+            "fixture", "fixtureEvents", "fixtureStatistics", "teamLeagues", "squads"
         );
         
         cacheManager.setCaffeine(Caffeine.newBuilder()

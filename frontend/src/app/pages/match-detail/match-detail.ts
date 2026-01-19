@@ -58,15 +58,17 @@ export class MatchDetail implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
   showStatistics = signal<boolean>(false);
+  showComments = signal<boolean>(false);
   
-  // Comentarios (mock)
+  // Comentarios (mock con datos de ejemplo relacionados con partidos)
   comments = signal<Comment[]>([
-    { id: 1, user: 'User', text: 'Ejemplo de comentario...', isOwner: false },
-    { id: 2, user: 'User2', text: 'Ejemplo de comentario 2...', isOwner: false },
-    { id: 3, user: 'User3', text: 'Ejemplo de comentario 3...', isOwner: false },
+    { id: 1, user: 'FútbolManía_92', text: '¡Qué golazo el primero! Menuda jugada colectiva', isOwner: false },
+    { id: 2, user: 'PedroMadridista', text: 'El árbitro ha estado fatal hoy, no ha pitado nada...', isOwner: false },
+    { id: 3, user: 'LauraFutbolera', text: 'Partido muy intenso, a ver si aguantan los últimos minutos 💪', isOwner: false },
+    { id: 4, user: 'CarlosCulé', text: 'El portero estuvo espectacular en esa parada del minuto 70', isOwner: false },
   ]);
   newComment = signal<string>('');
-  currentUser = signal<string>('Tu User');
+  currentUser = signal<string>('Tu Usuario');
 
   // Computed: Goles del equipo local
   homeGoals = computed(() => {
@@ -273,6 +275,20 @@ export class MatchDetail implements OnInit {
    */
   toggleStatistics(): void {
     this.showStatistics.update(v => !v);
+  }
+
+  /**
+   * Toggle mostrar/ocultar comentarios
+   */
+  toggleComments(): void {
+    this.showComments.update(v => !v);
+  }
+
+  /**
+   * Eliminar un comentario propio
+   */
+  deleteComment(commentId: number): void {
+    this.comments.update(comments => comments.filter(c => c.id !== commentId));
   }
 
   /**

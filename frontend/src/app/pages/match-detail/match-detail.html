@@ -54,10 +54,10 @@
         </a>
       </section>
 
-      <!-- Contenido principal: Estadísticas y Comentarios -->
-      <div class="match-detail__content">
+      <!-- Contenido principal: Estadísticas -->
+      <div class="match-detail__content" [class.match-detail__content--with-comments]="showComments()">
         
-        <!-- Panel izquierdo: Estadísticas/Goleadores -->
+        <!-- Panel de Estadísticas (ocupa todo el ancho, se reduce cuando hay comentarios) -->
         <section class="match-detail__stats-panel">
           <header class="match-detail__panel-header">
             <h2 class="match-detail__panel-title">Estadísticas</h2>
@@ -150,51 +150,74 @@
           </div>
         </section>
 
-        <!-- Panel derecho: Comentarios -->
-        <section class="match-detail__comments-panel">
-          <header class="match-detail__panel-header">
-            <h2 class="match-detail__panel-title">Comentarios</h2>
-          </header>
-          
-          <div class="match-detail__panel-content">
-            <!-- Lista de comentarios -->
-            <div class="comments-list">
-              @for (comment of comments(); track comment.id) {
-                <div class="comment-item" [class.comment-item--owner]="comment.isOwner">
-                  <span class="comment-item__user">{{ comment.user }}</span>
-                  <p class="comment-item__text">{{ comment.text }}</p>
-                  @if (comment.isOwner) {
-                    <span class="comment-item__badge"></span>
-                  }
-                </div>
-              }
-            </div>
+        <!-- Panel de Comentarios (aparece al pulsar el botón) -->
+        @if (showComments()) {
+          <section class="match-detail__comments-panel">
+            <header class="match-detail__panel-header">
+              <h2 class="match-detail__panel-title">Comentarios</h2>
+            </header>
+            
+            <div class="match-detail__panel-content">
+              <!-- Lista de comentarios -->
+              <div class="comments-list">
+                @for (comment of comments(); track comment.id) {
+                  <div class="comment-item" [class.comment-item--owner]="comment.isOwner">
+                    <span class="comment-item__user">{{ comment.user }}</span>
+                    <p class="comment-item__text">{{ comment.text }}</p>
+                    @if (comment.isOwner) {
+                      <button class="comment-item__delete" (click)="deleteComment(comment.id)" title="Eliminar comentario">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                          <line x1="10" y1="11" x2="10" y2="17"></line>
+                          <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
 
-            <!-- Input de nuevo comentario -->
-            <div class="comment-input">
-              <input 
-                type="text" 
-                class="comment-input__field"
-                placeholder="Comentar..."
-                [value]="newComment()"
-                (input)="updateNewComment($event)"
-                (keydown)="handleCommentKeydown($event)"
-              />
-              <button 
-                class="comment-input__submit"
-                (click)="submitComment()"
-                [disabled]="!newComment().trim()"
-                type="button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 2L11 13"/>
-                  <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
-                </svg>
-              </button>
+              <!-- Input de nuevo comentario -->
+              <div class="comment-input">
+                <input 
+                  type="text" 
+                  class="comment-input__field"
+                  placeholder="Escribe un comentario..."
+                  [value]="newComment()"
+                  (input)="updateNewComment($event)"
+                  (keydown)="handleCommentKeydown($event)"
+                />
+                <button 
+                  class="comment-input__submit"
+                  (click)="submitComment()"
+                  [disabled]="!newComment().trim()"
+                  type="button"
+                  title="Enviar comentario">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        }
 
       </div>
+
+      <!-- Botón para mostrar/ocultar comentarios -->
+      <button 
+        class="match-detail__comments-toggle" 
+        [class.match-detail__comments-toggle--active]="showComments()"
+        (click)="toggleComments()"
+        type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        {{ showComments() ? 'Ocultar comentarios' : 'Ver comentarios' }}
+        <span class="match-detail__comments-badge">{{ comments().length }}</span>
+      </button>
 
       <!-- Navegación: Volver -->
       <nav class="match-detail__nav">
