@@ -405,7 +405,7 @@ export class LatestRoundExampleComponent implements OnInit {
         } else if (err.error?.message) {
           errorMsg = err.error.message;
         } else if (err.status === 0) {
-          errorMsg = '❌ No se puede conectar con el backend. Asegúrate de que el servidor esté ejecutándose en http://localhost:8080';
+          errorMsg = '❌ No se puede conectar con el servidor. Verifica tu conexión a internet.';
         } else if (err.status === 500) {
           errorMsg = `No hay datos disponibles para la liga ${leagueId} en la temporada ${season}. Intenta con temporadas anteriores (2023, 2022, 2021).`;
         }

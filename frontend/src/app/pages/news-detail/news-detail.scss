@@ -1,0 +1,217 @@
+@use '../../../styles/00-settings/variables' as vars;
+@use '../../../styles/01-tools/mixins' as mixins;
+
+.news-detail {
+  min-height: calc(100vh - 200px);
+  background-color: var(--color-primary);
+  padding: 0;
+  padding-top: 1rem;
+
+  &__container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+  }
+
+  &__header {
+    background-color: var(--color-accent);
+    padding: 1rem 1.5rem;
+    margin: 0 0 1.5rem;
+    border-radius: 12px;
+    
+    @include mixins.respond-to(md) {
+      margin: 0 0 2rem;
+    }
+    
+    // Modo oscuro - usa mixin
+    @include mixins.dark-mode-title;
+
+    &-title {
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      
+      // Modo oscuro
+      [data-theme="dark"] & {
+        color: var(--color-accent);
+      }
+    }
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 217, 95, 0.2);
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: var(--color-header);
+      font-size: 1rem;
+    }
+  }
+
+  &__error {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    p {
+      color: #dc3545;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &__btn {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: darken(#00D95F, 10%);
+    }
+    
+    // Modo oscuro
+    @include mixins.dark-mode-title;
+  }
+
+  &__nav {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  &__back {
+    background: none;
+    border: none;
+    color: var(--color-header);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+}
+
+// Estilos del artículo
+.news-article {
+  background-color: var(--color-secundary);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  @include mixins.respond-to(md) {
+    padding: 2.5rem;
+  }
+  
+  // Modo oscuro
+  [data-theme="dark"] & {
+    border: 1px solid var(--color-neutral-300);
+  }
+
+  &__title {
+    color: var(--color-text);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 1.25rem;
+
+    @include mixins.respond-to(md) {
+      font-size: 2rem;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-neutral-200);
+  }
+
+  &__category {
+    background-color: var(--color-accent);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    
+    // Modo oscuro
+    @include mixins.dark-mode-title;
+  }
+
+  &__date {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+
+    &::before {
+      content: '📅 ';
+    }
+  }
+
+  &__author {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  &__content {
+    line-height: 1.8;
+  }
+
+  &__paragraph {
+    color: var(--color-text);
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+    text-align: justify;
+
+    @include mixins.respond-to(md) {
+      font-size: 1.05rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

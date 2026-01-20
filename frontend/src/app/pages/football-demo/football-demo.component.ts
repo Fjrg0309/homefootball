@@ -299,7 +299,7 @@ export class FootballDemoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al verificar estado de la API:', err);
-        this.error.set('❌ No se puede conectar al backend. Asegúrate de que esté corriendo en http://localhost:8080');
+        this.error.set('❌ No se puede conectar al servidor. Verifica tu conexión a internet.');
       }
     });
   }
@@ -320,7 +320,7 @@ export class FootballDemoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar ligas:', err);
-        this.error.set('❌ Error de conexión: Asegúrate de que el backend esté corriendo en http://localhost:8080');
+        this.error.set('❌ Error de conexión: No se puede contactar con el servidor.');
         this.loading.set(false);
       }
     });

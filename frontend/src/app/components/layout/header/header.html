@@ -98,7 +98,7 @@
         }
       </button>
       
-      @if (isLoggedIn) {
+      @if (isLoggedIn()) {
         <!-- Dropdown de usuario -->
         <app-user-dropdown (logout)="onLogout()"></app-user-dropdown>
       } @else {
@@ -117,17 +117,17 @@
 </header>
 
 <!-- Modal de inicio de sesión -->
-<app-modal [isOpen]="showLoginModal" (closeModal)="closeLoginModal()">
+<app-modal [isOpen]="showLoginModal()" (closeModal)="closeLoginModal()">
   <app-login-form 
-    (loginSuccess)="onLoginSuccess($event)"
+    (loginSuccess)="onLoginSuccess()"
     (goToRegister)="onGoToRegister()"
   ></app-login-form>
 </app-modal>
 
 <!-- Modal de registro -->
-<app-modal [isOpen]="showRegisterModal" (closeModal)="closeRegisterModal()">
+<app-modal [isOpen]="showRegisterModal()" (closeModal)="closeRegisterModal()">
   <app-register-form 
-    (registerSuccess)="onRegisterSuccess($event)"
+    (registerSuccess)="onRegisterSuccess()"
     (goToLogin)="onGoToLogin()"
   ></app-register-form>
 </app-modal>

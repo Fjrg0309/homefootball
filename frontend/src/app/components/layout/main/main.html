@@ -5,10 +5,13 @@
       <input 
         type="search" 
         class="main__search-input" 
-        placeholder="Buscar"
+        placeholder="Buscar equipos, ligas, jugadores..."
         aria-label="Buscar contenido"
+        [value]="searchQuery()"
+        (input)="onSearchInput($event)"
+        (keypress)="onSearchKeypress($event)"
       >
-      <button class="main__search-btn" aria-label="Realizar búsqueda">
+      <button class="main__search-btn" aria-label="Realizar búsqueda" (click)="onSearch()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"/>
           <path d="m21 21-4.35-4.35"/>
@@ -23,43 +26,40 @@
         <!-- Partidos principales -->
         <section class="matches">
           <h2 class="matches__title">Partidos principales</h2>
-          <section class="matches__grid">
-            <article class="match-card">
-              <section class="match-card__teams">
-                <section class="match-card__team">
-                  <span class="match-card__name">BAR</span>
-                </section>
-                <section class="match-card__score">1 - 2</section>
-                <section class="match-card__team">
-                  <span class="match-card__name">CHE</span>
-                </section>
-              </section>
-            </article>
-            
-            <article class="match-card">
-              <section class="match-card__teams">
-                <section class="match-card__team">
-                  <span class="match-card__name">RMA</span>
-                </section>
-                <section class="match-card__score">2 - 0</section>
-                <section class="match-card__team">
-                  <span class="match-card__name">ARS</span>
-                </section>
-              </section>
-            </article>
-            
-            <article class="match-card">
-              <section class="match-card__teams">
-                <section class="match-card__team">
-                  <span class="match-card__name">LIV</span>
-                </section>
-                <section class="match-card__score">4 - 0</section>
-                <section class="match-card__team">
-                  <span class="match-card__name">BET</span>
-                </section>
-              </section>
-            </article>
-          </section>
+          
+          @if (loadingMatches()) {
+            <div class="matches__loading">
+              <div class="spinner"></div>
+              <p>Cargando partidos...</p>
+            </div>
+          } @else {
+            <section class="matches__grid">
+              @for (match of matches(); track match.id) {
+                <article class="match-card" (click)="goToMatch(match.id)">
+                  <section class="match-card__teams">
+                    <section class="match-card__team">
+                      @if (match.homeLogo) {
+                        <img [src]="match.homeLogo" [alt]="match.homeTeam" class="match-card__logo">
+                      }
+                      <span class="match-card__name">{{ match.homeTeamShort }}</span>
+                    </section>
+                    <section class="match-card__score">{{ getScoreDisplay(match) }}</section>
+                    <section class="match-card__team">
+                      @if (match.awayLogo) {
+                        <img [src]="match.awayLogo" [alt]="match.awayTeam" class="match-card__logo">
+                      }
+                      <span class="match-card__name">{{ match.awayTeamShort }}</span>
+                    </section>
+                  </section>
+                  <span class="match-card__status">{{ getMatchStatus(match) }}</span>
+                </article>
+              }
+              
+              @if (matches().length === 0) {
+                <p class="matches__empty">No hay partidos disponibles</p>
+              }
+            </section>
+          }
         </section>
 
         <!-- Competiciones a seguir -->
@@ -122,19 +122,13 @@
         <h2 class="main__sidebar-title">Noticias</h2>
         <aside class="main__sidebar">
           <ul class="main__sidebar-list">
-            <li class="main__sidebar-item">
-              <a href="#" class="main__sidebar-link">Noticia del día 1</a>
-            </li>
-            <li class="main__sidebar-item">
-              <a href="#" class="main__sidebar-link">Noticia del día 2</a>
-            </li>
-            <li class="main__sidebar-item">
-              <a href="#" class="main__sidebar-link">Noticia del día 3</a>
-            </li>
-            <li class="main__sidebar-item">
-              <a href="#" class="main__sidebar-link">Noticia del día 4</a>
-            </li>
+            @for (item of news(); track item.id) {
+              <li class="main__sidebar-item">
+                <a (click)="goToNews(item.id)" class="main__sidebar-link">{{ item.title }}</a>
+              </li>
+            }
           </ul>
+          <a routerLink="/noticias" class="main__sidebar-more">Ver todas las noticias →</a>
         </aside>
       </section>
     </section>

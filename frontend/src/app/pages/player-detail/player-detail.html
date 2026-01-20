@@ -1,0 +1,180 @@
+<app-header />
+
+<main class="player-detail">
+  <div class="player-detail__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="player-detail__header">
+      <h1 class="player-detail__title">Ficha del jugador</h1>
+    </header>
+
+    <!-- Estado de carga -->
+    @if (loading()) {
+      <div class="player-detail__loading">
+        <div class="spinner"></div>
+        <p>Cargando jugador...</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="player-detail__error">
+        <p>{{ error() }}</p>
+        <button class="player-detail__retry" (click)="loadPlayerData()">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    <!-- Contenido del jugador -->
+    @if (!loading() && !error() && player()) {
+      <section class="player-card">
+        <!-- Cabecera con foto y nombre -->
+        <div class="player-card__top">
+          <div class="player-card__photo-wrapper">
+            <img 
+              [src]="player()!.photo" 
+              [alt]="player()!.name"
+              class="player-card__photo"
+              loading="lazy"
+              onerror="this.src='assets/images/default-player.png'"
+            >
+          </div>
+          <div class="player-card__identity">
+            <h2 class="player-card__name">{{ player()!.name }}</h2>
+            <button 
+              class="player-card__favorite"
+              [class.player-card__favorite--active]="isFavorite()"
+              (click)="toggleFavorite()"
+              [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'">
+              {{ isFavorite() ? '★' : '☆' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Información del equipo -->
+        @if (stats()) {
+          <div class="player-card__team">
+            <img 
+              [src]="stats()!.teamLogo" 
+              [alt]="stats()!.team"
+              class="player-card__team-logo"
+              loading="lazy"
+            >
+            <span class="player-card__team-name">{{ stats()!.team }}</span>
+          </div>
+        }
+
+        <!-- Datos básicos -->
+        <div class="player-card__info-grid">
+          <div class="player-card__info-item">
+            <span class="player-card__info-label">Edad</span>
+            <span class="player-card__info-value">{{ player()!.age }} años</span>
+          </div>
+          <div class="player-card__info-item">
+            <span class="player-card__info-label">Altura</span>
+            <span class="player-card__info-value">{{ player()!.height }}</span>
+          </div>
+          <div class="player-card__info-item">
+            <span class="player-card__info-label">Nacionalidad</span>
+            <span class="player-card__info-value">{{ player()!.nationality }}</span>
+          </div>
+          <div class="player-card__info-item">
+            <span class="player-card__info-label">Posición</span>
+            <span class="player-card__info-value">{{ stats()?.position || 'N/A' }}</span>
+          </div>
+        </div>
+
+        <!-- Estadísticas de temporada -->
+        @if (stats()) {
+          <div class="player-card__stats">
+            <div class="player-card__stats-header">
+              <h3 class="player-card__stats-title">Estadísticas de temporada</h3>
+              @if (statsSeason()) {
+                <span class="player-card__season">{{ statsSeason() }}</span>
+              }
+            </div>
+            
+            <div class="player-card__stats-grid">
+              <!-- Partidos -->
+              <div class="stat-item">
+                <span class="stat-item__icon">📋</span>
+                <span class="stat-item__label">Partidos</span>
+                <span class="stat-item__value">{{ stats()!.appearances }}</span>
+              </div>
+              
+              <!-- Goles -->
+              <div class="stat-item stat-item--goals">
+                <span class="stat-item__icon">⚽</span>
+                <span class="stat-item__label">Goles</span>
+                <span class="stat-item__value">{{ stats()!.goals }}</span>
+              </div>
+              
+              <!-- Asistencias -->
+              <div class="stat-item stat-item--assists">
+                <span class="stat-item__icon stat-item__icon--assist">A</span>
+                <span class="stat-item__label">Asistencias</span>
+                <span class="stat-item__value">{{ stats()!.assists }}</span>
+              </div>
+              
+              <!-- Minutos -->
+              <div class="stat-item">
+                <span class="stat-item__icon">⏱️</span>
+                <span class="stat-item__label">Minutos</span>
+                <span class="stat-item__value">{{ stats()!.minutes }}</span>
+              </div>
+              
+              <!-- Tarjetas amarillas -->
+              <div class="stat-item stat-item--yellow">
+                <span class="stat-item__icon">🟨</span>
+                <span class="stat-item__label">Amarillas</span>
+                <span class="stat-item__value">{{ stats()!.yellowCards }}</span>
+              </div>
+              
+              <!-- Tarjetas rojas -->
+              <div class="stat-item stat-item--red">
+                <span class="stat-item__icon">🟥</span>
+                <span class="stat-item__label">Rojas</span>
+                <span class="stat-item__value">{{ stats()!.redCards }}</span>
+              </div>
+            </div>
+
+            <!-- Rating y precisión de pases -->
+            <div class="player-card__extra-stats">
+              @if (stats()!.rating !== 'N/A') {
+                <div class="extra-stat">
+                  <span class="extra-stat__label">Rating medio</span>
+                  <span class="extra-stat__value">{{ stats()!.rating }}</span>
+                </div>
+              }
+              @if (stats()!.passAccuracy > 0) {
+                <div class="extra-stat">
+                  <span class="extra-stat__label">Precisión de pases</span>
+                  <span class="extra-stat__value">{{ stats()!.passAccuracy }}%</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Estado de lesión -->
+        @if (player()!.injured) {
+          <div class="player-card__injury">
+            <span class="player-card__injury-icon">🏥</span>
+            <span class="player-card__injury-text">Actualmente lesionado</span>
+          </div>
+        }
+      </section>
+
+      <!-- Botón volver -->
+      <nav class="player-detail__nav">
+        <button class="player-detail__back" (click)="goBack()">
+          ← Volver
+        </button>
+      </nav>
+    }
+
+  </div>
+</main>
+
+<app-footer />

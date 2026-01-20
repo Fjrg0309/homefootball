@@ -1,0 +1,160 @@
+<app-header />
+
+<main class="transfers">
+  <div class="transfers__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="transfers__header">
+      <h1 class="transfers__title">Últimos fichajes</h1>
+    </header>
+
+    <div class="transfers__layout">
+      <!-- Botón para abrir sidebar en móvil -->
+      <button 
+        class="transfers__filter-toggle"
+        (click)="toggleSidebar()"
+        [class.transfers__filter-toggle--active]="sidebarOpen()">
+        Buscador avanzado
+      </button>
+      
+      <!-- Sidebar de filtros -->
+      <aside 
+        class="transfers__sidebar"
+        [class.transfers__sidebar--open]="sidebarOpen()">
+        <h2 class="transfers__sidebar-title">Buscador avanzado</h2>
+        
+        <div class="transfers__filters">
+          <!-- Filtro por equipo -->
+          <div class="filter-group">
+            <label class="filter-group__label" for="team-filter">Equipo</label>
+            <input 
+              type="text"
+              id="team-filter"
+              class="filter-group__input"
+              placeholder="Nombre del equipo..."
+              [value]="selectedTeam()"
+              (input)="selectedTeam.set($any($event.target).value)"
+            >
+          </div>
+          
+          <!-- Filtro por competición -->
+          <div class="filter-group">
+            <label class="filter-group__label" for="competition-filter">Competición</label>
+            <select 
+              id="competition-filter"
+              class="filter-group__select"
+              [value]="selectedCompetition()"
+              (change)="selectedCompetition.set($any($event.target).value)">
+              <option value="">Todas</option>
+              @for (comp of competitions(); track comp.id) {
+                <option [value]="comp.id">{{ comp.name }}</option>
+              }
+            </select>
+          </div>
+          
+          <!-- Mostrar solo favoritos -->
+          <div class="filter-group filter-group--checkbox">
+            <label class="filter-group__checkbox-label">
+              <input 
+                type="checkbox"
+                class="filter-group__checkbox"
+                [checked]="showOnlyFavorites()"
+                (change)="showOnlyFavorites.set($any($event.target).checked)"
+              >
+              ¿Mostrar solo favoritos?
+            </label>
+          </div>
+          
+          <!-- Botones -->
+          <div class="filter-group__actions">
+            <button 
+              class="filter-group__btn filter-group__btn--primary"
+              (click)="applyFilters()">
+              Buscar
+            </button>
+            <button 
+              class="filter-group__btn filter-group__btn--secondary"
+              (click)="clearFilters()">
+              Limpiar
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Contenido principal -->
+      <section class="transfers__content">
+        <!-- Estado de carga -->
+        @if (loading()) {
+          <div class="transfers__loading">
+            <div class="spinner"></div>
+            <p>Cargando fichajes...</p>
+          </div>
+        }
+
+        <!-- Lista de fichajes -->
+        @if (!loading()) {
+          @if (filteredTransfers().length > 0) {
+            <div class="transfers-list">
+              @for (transfer of filteredTransfers(); track transfer.id) {
+                <article class="transfer-card">
+                  <span 
+                    class="transfer-card__name transfer-card__name--clickable"
+                    (click)="goToPlayer(transfer.playerId)"
+                    tabindex="0"
+                    role="button">
+                    {{ transfer.playerName }}
+                  </span>
+                  
+                  <div class="transfer-card__teams">
+                    <div 
+                      class="transfer-card__team"
+                      (click)="goToTeam(transfer.fromTeam.id)"
+                      tabindex="0"
+                      role="button">
+                      <img 
+                        [src]="transfer.fromTeam.logo" 
+                        [alt]="transfer.fromTeam.name"
+                        class="transfer-card__team-logo"
+                        loading="lazy"
+                        onerror="this.src='assets/images/default-team.png'"
+                      >
+                    </div>
+                    
+                    <div class="transfer-card__arrow">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </div>
+                    
+                    <div 
+                      class="transfer-card__team"
+                      (click)="goToTeam(transfer.toTeam.id)"
+                      tabindex="0"
+                      role="button">
+                      <img 
+                        [src]="transfer.toTeam.logo" 
+                        [alt]="transfer.toTeam.name"
+                        class="transfer-card__team-logo"
+                        loading="lazy"
+                        onerror="this.src='assets/images/default-team.png'"
+                      >
+                    </div>
+                  </div>
+                  
+                  <span class="transfer-card__fee">{{ transfer.fee }}</span>
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="transfers__empty">
+              <p>No se encontraron fichajes con los filtros seleccionados</p>
+            </div>
+          }
+        }
+      </section>
+    </div>
+
+  </div>
+</main>
+
+<app-footer />

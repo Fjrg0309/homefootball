@@ -24,7 +24,60 @@ const LEAGUE_DESCRIPTIONS: Record<string, string> = {
   'mls': 'La Major League Soccer (MLS) es la máxima liga de fútbol en Estados Unidos y Canadá. Fundada en 1996, ha experimentado un crecimiento exponencial, atrayendo tanto a estrellas veteranas como a jóvenes promesas. Equipos como LA Galaxy, Inter Miami y Atlanta United lideran la expansión del fútbol en Norteamérica.',
   'liga-mx': 'La Liga MX es la primera división del fútbol mexicano y una de las más competitivas de América. Clubes históricos como Club América, Chivas de Guadalajara, Cruz Azul y Pumas UNAM protagonizan intensas rivalidades. Es conocida por su formato de liguilla y por ser el destino de muchos jugadores sudamericanos.',
   'championship': 'El Championship es la segunda división del fútbol inglés y es considerada una de las ligas más competitivas del mundo por nivel. Con 24 equipos luchando por el ascenso a la Premier League, cada temporada ofrece drama e intensidad. Muchos clubes históricos como Leeds United y Nottingham Forest han pasado por esta categoría.',
-  'ligue-2': 'La Ligue 2 es la segunda división del fútbol francés. Sirve como escalón hacia la Ligue 1 y es conocida por su competitividad. Muchos clubes históricos franceses han pasado por esta categoría en su camino de vuelta a la élite.'
+  'ligue-2': 'La Ligue 2 es la segunda división del fútbol francés. Sirve como escalón hacia la Ligue 1 y es conocida por su competitividad. Muchos clubes históricos franceses han pasado por esta categoría en su camino de vuelta a la élite.',
+  // Ligas europeas adicionales
+  'scottish-premiership': 'La Scottish Premiership es la máxima categoría del fútbol escocés. Dominada históricamente por Celtic y Rangers, conocidos como el "Old Firm", es una de las rivalidades más intensas del fútbol mundial. Equipos como Aberdeen y Hibernian también han dejado huella en la historia del fútbol escocés.',
+  'belgian-pro-league': 'La Belgian Pro League (Jupiler Pro League) es la primera división del fútbol belga. Club Brugge, Anderlecht y Genk son los equipos más exitosos. Bélgica se ha convertido en una potencia futbolística gracias a su generación dorada con jugadores como De Bruyne, Hazard y Lukaku.',
+  'austrian-bundesliga': 'La Bundesliga austriaca es la máxima competición de Austria. Red Bull Salzburg ha dominado en los últimos años, convirtiéndose en un trampolín para jóvenes talentos hacia las grandes ligas europeas. Jugadores como Haaland y Mané pasaron por Salzburg antes de triunfar en Europa.',
+  'swiss-super-league': 'La Swiss Super League es la primera división del fútbol suizo. Equipos como Basel, Young Boys y Zürich son los más laureados. La liga es conocida por su organización y por ser el punto de partida de muchos talentos que luego brillan en las principales ligas europeas.',
+  'russian-premier-league': 'La Premier League rusa es la máxima categoría del fútbol en Rusia. Zenit San Petersburgo, Spartak Moscú y CSKA Moscú son los clubes más importantes. A pesar de su clima extremo, la liga ha atraído a jugadores internacionales de renombre.',
+  'ukrainian-premier-league': 'La Premier League ucraniana fue una de las ligas emergentes más interesantes de Europa del Este. Shakhtar Donetsk y Dynamo Kiev han sido los equipos dominantes, produciendo talentos que han brillado en las mejores ligas del continente.',
+  'greek-super-league': 'La Super League griega es la primera división del fútbol griego. Olympiacos, Panathinaikos y AEK Atenas son los clubes más importantes, con rivalidades que datan de más de un siglo. El fútbol griego es conocido por su pasión y atmósfera en los estadios.',
+  'danish-superliga': 'La Superliga danesa es la máxima competición de Dinamarca. FC Copenhagen y FC Midtjylland son los equipos más exitosos actualmente. Dinamarca ha producido talentos de clase mundial como Michael Laudrup, Peter Schmeichel y Christian Eriksen.',
+  'swedish-allsvenskan': 'La Allsvenskan es la primera división del fútbol sueco. Malmö FF, AIK y Djurgårdens IF son clubes históricos. Suecia ha sido cuna de grandes jugadores como Zlatan Ibrahimović, Henrik Larsson y actualmente Alexander Isak.',
+  'norwegian-eliteserien': 'La Eliteserien es la máxima liga noruega. Rosenborg BK dominó durante décadas, aunque recientemente equipos como Bodø/Glimt y Molde han emergido. Noruega produce talentos jóvenes que rápidamente saltan a las grandes ligas, como Erling Haaland y Martin Ødegaard.',
+  'czech-first-league': 'La Primera Liga checa es la máxima competición de la República Checa. Sparta Praha, Slavia Praha y Viktoria Plzeň son los clubes más importantes. Praga es una ciudad con una rica tradición futbolística y rivalidades históricas.',
+  'polish-ekstraklasa': 'La Ekstraklasa es la primera división del fútbol polaco. Legia Varsovia, Lech Poznań y Wisła Kraków son los equipos más laureados. Polonia ha producido grandes talentos como Robert Lewandowski, Zbigniew Boniek y Grzegorz Lato.',
+  'croatian-prva-hnl': 'La Prva HNL es la máxima liga croata. Dinamo Zagreb domina la competición, sirviendo como cantera de talentos que luego triunfan en Europa. Croacia, a pesar de su pequeño tamaño, ha producido jugadores de clase mundial como Modrić, Rakitić y Mandžukić.',
+  'serbian-superliga': 'La SuperLiga serbia es la primera división de Serbia. Estrella Roja y Partizan de Belgrado protagonizan uno de los derbis más intensos del mundo, conocido como el "Derbi Eterno". Serbia tiene una gran tradición futbolística en los Balcanes.',
+  'romanian-liga-1': 'La Liga 1 rumana es la máxima categoría del fútbol rumano. FCSB (anteriormente Steaua Bucarest), Dinamo București y CFR Cluj son los clubes más importantes. Rumania vivió su época dorada en los años 90 con la generación de Hagi.',
+  'champions-league': 'La UEFA Champions League es la máxima competición de clubes en Europa y el torneo de clubes más prestigioso del mundo. Fundada en 1955 como Copa de Europa, reúne a los mejores equipos del continente. Real Madrid es el club más laureado con 15 títulos, seguido de AC Milan con 7.',
+  'europa-league': 'La UEFA Europa League es la segunda competición de clubes más importante de Europa. Ofrece una vía alternativa a equipos que no clasifican a la Champions League. Sevilla FC es el máximo ganador con 7 títulos, siendo conocido como el "Rey de la Europa League".',
+  'conference-league': 'La UEFA Conference League es la tercera competición de clubes de la UEFA, creada en 2021. Ofrece a equipos de ligas menores la oportunidad de competir a nivel europeo. Es una competición inclusiva que ha dado grandes momentos a clubes modestos.'
+};
+
+// Mapeo de IDs de API a IDs de URL
+const LEAGUE_API_IDS: Record<string, number> = {
+  'laliga': 140,
+  'premier-league': 39,
+  'serie-a': 135,
+  'bundesliga': 78,
+  'ligue-1': 61,
+  'ligue-2': 62,
+  'primeira-liga': 94,
+  'eredivisie': 88,
+  'super-lig': 203,
+  'mls': 253,
+  'liga-mx': 262,
+  'championship': 40,
+  'scottish-premiership': 179,
+  'belgian-pro-league': 144,
+  'austrian-bundesliga': 218,
+  'swiss-super-league': 207,
+  'russian-premier-league': 235,
+  'ukrainian-premier-league': 333,
+  'greek-super-league': 197,
+  'danish-superliga': 119,
+  'swedish-allsvenskan': 113,
+  'norwegian-eliteserien': 103,
+  'czech-first-league': 345,
+  'polish-ekstraklasa': 106,
+  'croatian-prva-hnl': 210,
+  'serbian-superliga': 286,
+  'romanian-liga-1': 283,
+  'champions-league': 2,
+  'europa-league': 3,
+  'conference-league': 848
 };
 
 @Component({
@@ -74,7 +127,27 @@ export class LeagueDetail implements OnInit {
       'super-lig': { id: 'super-lig', name: 'Süper Lig', country: 'Turquía' },
       'mls': { id: 'mls', name: 'MLS', country: 'Estados Unidos' },
       'liga-mx': { id: 'liga-mx', name: 'Liga MX', country: 'México' },
-      'championship': { id: 'championship', name: 'Championship', country: 'Inglaterra' }
+      'championship': { id: 'championship', name: 'Championship', country: 'Inglaterra' },
+      // Ligas europeas adicionales
+      'scottish-premiership': { id: 'scottish-premiership', name: 'Scottish Premiership', country: 'Escocia' },
+      'belgian-pro-league': { id: 'belgian-pro-league', name: 'Belgian Pro League', country: 'Bélgica' },
+      'austrian-bundesliga': { id: 'austrian-bundesliga', name: 'Austrian Bundesliga', country: 'Austria' },
+      'swiss-super-league': { id: 'swiss-super-league', name: 'Swiss Super League', country: 'Suiza' },
+      'russian-premier-league': { id: 'russian-premier-league', name: 'Russian Premier League', country: 'Rusia' },
+      'ukrainian-premier-league': { id: 'ukrainian-premier-league', name: 'Ukrainian Premier League', country: 'Ucrania' },
+      'greek-super-league': { id: 'greek-super-league', name: 'Super League Greece', country: 'Grecia' },
+      'danish-superliga': { id: 'danish-superliga', name: 'Danish Superliga', country: 'Dinamarca' },
+      'swedish-allsvenskan': { id: 'swedish-allsvenskan', name: 'Allsvenskan', country: 'Suecia' },
+      'norwegian-eliteserien': { id: 'norwegian-eliteserien', name: 'Eliteserien', country: 'Noruega' },
+      'czech-first-league': { id: 'czech-first-league', name: 'Czech First League', country: 'República Checa' },
+      'polish-ekstraklasa': { id: 'polish-ekstraklasa', name: 'Ekstraklasa', country: 'Polonia' },
+      'croatian-prva-hnl': { id: 'croatian-prva-hnl', name: 'Prva HNL', country: 'Croacia' },
+      'serbian-superliga': { id: 'serbian-superliga', name: 'Serbian SuperLiga', country: 'Serbia' },
+      'romanian-liga-1': { id: 'romanian-liga-1', name: 'Liga 1', country: 'Rumanía' },
+      // Competiciones europeas
+      'champions-league': { id: 'champions-league', name: 'UEFA Champions League', country: 'Europa' },
+      'europa-league': { id: 'europa-league', name: 'UEFA Europa League', country: 'Europa' },
+      'conference-league': { id: 'conference-league', name: 'UEFA Conference League', country: 'Europa' }
     };
 
     this.league.set(leagues[id] || { id, name: id, country: 'Desconocido' });

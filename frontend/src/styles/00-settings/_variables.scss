@@ -16,6 +16,10 @@
   --color-sendcomment: #00D95F;       // Verde (enviar comentario, confirmar)
   --color-deletecomment: #D32F2F;     // Rojo Material (eliminar, peligro)
   
+  /* TEXTO SOBRE FONDOS ESPECIALES */
+  --color-text-on-accent: #FFFFFF;    // Texto sobre botones verdes (siempre blanco)
+  --color-text-on-danger: #FFFFFF;    // Texto sobre botones rojos (siempre blanco)
+  
   /* COLORES POR COMPETICIÓN */
   --color-laliga: #FF1744;            // Rojo LaLiga
   --color-premierleague: #3F1F80;     // Púrpura Premier League
@@ -135,6 +139,10 @@
   --color-text: #FFFFFF;              // Texto principal blanco
   --color-text-secondary: #B0B0B0;    // Texto secundario gris claro
   --color-header-text: #FFFFFF;       // Mantiene blanco
+  
+  /* TEXTO SOBRE FONDOS ESPECIALES - SE MANTIENEN BLANCOS */
+  --color-text-on-accent: #FFFFFF;    // Siempre blanco sobre verde
+  --color-text-on-danger: #FFFFFF;    // Siempre blanco sobre rojo
   
   /* ESCALA DE GRISES - INVERTIDA */
   --color-neutral-50: #1A1A1A;

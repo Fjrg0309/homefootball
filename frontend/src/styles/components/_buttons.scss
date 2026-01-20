@@ -30,7 +30,7 @@
   // Variantes de color
   &--primary {
     background-color: var(--color-accent);
-    color: var(--color-secundary);
+    color: var(--color-text-on-accent);
 
     &:hover:not(:disabled) {
       background-color: var(--color-accent-hover);
@@ -65,7 +65,7 @@
 
   &--danger {
     background-color: var(--color-error);
-    color: var(--color-secundary);
+    color: var(--color-text-on-danger);
 
     &:hover:not(:disabled) {
       background-color: #b71c1c;

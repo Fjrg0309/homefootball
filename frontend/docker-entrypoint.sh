@@ -7,18 +7,26 @@ set -e
 # Usar variable de entorno o valor por defecto
 export BACKEND_URL="${BACKEND_URL:-http://backend:8080}"
 
-echo "=== Configurando nginx con BACKEND_URL: ${BACKEND_URL} ==="
+echo "=== HomeFootball Frontend Starting ==="
+echo "BACKEND_URL configurado: ${BACKEND_URL}"
 
 # Procesar el template de nginx (reemplazar ${BACKEND_URL})
+# Solo reemplazamos BACKEND_URL para no interferir con variables de nginx como $host, $uri, etc.
 envsubst '${BACKEND_URL}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
-echo "=== Contenido del archivo nginx generado ==="
-cat /etc/nginx/conf.d/default.conf | grep -A 5 "location /api/"
+echo "=== Configuración de nginx generada ==="
+echo "Proxy /api/ -> ${BACKEND_URL}/api/"
 
 # Verificar configuración de nginx
-nginx -t
+if nginx -t; then
+    echo "=== Configuración de nginx válida ==="
+else
+    echo "=== ERROR: Configuración de nginx inválida ==="
+    cat /etc/nginx/conf.d/default.conf
+    exit 1
+fi
 
-echo "=== Configuración de nginx completada ==="
+echo "=== Iniciando nginx ==="
 
 # Iniciar nginx
 exec nginx -g 'daemon off;'

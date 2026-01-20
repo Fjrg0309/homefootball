@@ -1,0 +1,138 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h1>📝 Crear Cuenta</h1>
+      <p>Únete a la comunidad HomeFootball</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="register-form">
+      
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input 
+          type="text" 
+          id="username" 
+          formControlName="username"
+          placeholder="Tu nombre de usuario"
+          [class.error]="registerForm.controls.username.invalid && registerForm.controls.username.touched"
+        />
+        @if (registerForm.controls.username.invalid && registerForm.controls.username.touched) {
+          <span class="error-message">
+            @if (registerForm.controls.username.errors?.['required']) {
+              El usuario es requerido
+            }
+            @if (registerForm.controls.username.errors?.['minlength']) {
+              Mínimo 3 caracteres
+            }
+            @if (registerForm.controls.username.errors?.['maxlength']) {
+              Máximo 20 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          placeholder="tu@email.com"
+          [class.error]="registerForm.controls.email.invalid && registerForm.controls.email.touched"
+        />
+        @if (registerForm.controls.email.invalid && registerForm.controls.email.touched) {
+          <span class="error-message">
+            @if (registerForm.controls.email.errors?.['required']) {
+              El email es requerido
+            }
+            @if (registerForm.controls.email.errors?.['email']) {
+              Email inválido
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="password-wrapper">
+          <input 
+            [type]="showPassword ? 'text' : 'password'"
+            id="password" 
+            formControlName="password"
+            placeholder="Mínimo 6 caracteres"
+            [class.error]="registerForm.controls.password.invalid && registerForm.controls.password.touched"
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="togglePassword()"
+          >
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        @if (registerForm.controls.password.invalid && registerForm.controls.password.touched) {
+          <span class="error-message">
+            @if (registerForm.controls.password.errors?.['required']) {
+              La contraseña es requerida
+            }
+            @if (registerForm.controls.password.errors?.['minlength']) {
+              Mínimo 6 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña</label>
+        <div class="password-wrapper">
+          <input 
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword" 
+            formControlName="confirmPassword"
+            placeholder="Repite tu contraseña"
+            [class.error]="registerForm.controls.confirmPassword.invalid && registerForm.controls.confirmPassword.touched"
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="toggleConfirmPassword()"
+          >
+            {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        @if (registerForm.controls.confirmPassword.invalid && registerForm.controls.confirmPassword.touched) {
+          <span class="error-message">
+            @if (registerForm.controls.confirmPassword.errors?.['required']) {
+              Debes confirmar la contraseña
+            }
+            @if (registerForm.controls.confirmPassword.errors?.['passwordMismatch']) {
+              Las contraseñas no coinciden
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="btn-register"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+        @if (isLoading) {
+          ⏳ Creando cuenta...
+        } @else {
+          Crear Cuenta
+        }
+      </button>
+    </form>
+
+    <!-- Link a login -->
+    <div class="register-footer">
+      <p>¿Ya tienes cuenta? <button type="button" class="register-footer__link" (click)="openLoginModal()">Inicia sesión aquí</button></p>
+    </div>
+  </div>
+</div>

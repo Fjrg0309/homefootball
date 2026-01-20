@@ -1,0 +1,93 @@
+<app-header />
+
+<main class="search-results">
+  <div class="search-results__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="search-results__header">
+      <h1 class="search-results__title">Resultados de búsqueda</h1>
+    </header>
+
+    <!-- Barra de búsqueda -->
+    <section class="search-results__search">
+      <div class="search-results__input-wrapper">
+        <input 
+          type="search" 
+          class="search-results__input" 
+          placeholder="Buscar ligas, equipos, jugadores..."
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)"
+          (keydown)="handleKeydown($event)"
+          aria-label="Buscar"
+        >
+        <button class="search-results__btn" (click)="onSearch()" aria-label="Buscar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Estado de carga -->
+    @if (loading()) {
+      <div class="search-results__loading">
+        <div class="spinner"></div>
+        <p>Buscando...</p>
+      </div>
+    }
+
+    <!-- Resultados -->
+    @if (!loading() && searched()) {
+      <section class="search-results__content">
+        @if (results().length > 0) {
+          <div class="results-list">
+            @for (result of results(); track result.type + result.id) {
+              <article 
+                class="result-item"
+                (click)="goToResult(result)"
+                tabindex="0"
+                (keydown.enter)="goToResult(result)"
+                role="button"
+                [attr.aria-label]="'Ver ' + result.name">
+                <div class="result-item__image-wrapper">
+                  <img 
+                    [src]="result.image" 
+                    [alt]="result.name"
+                    class="result-item__image"
+                    loading="lazy"
+                    onerror="this.src='assets/images/default-logo.png'"
+                  >
+                </div>
+                <div class="result-item__info">
+                  <span class="result-item__name">{{ result.name }}</span>
+                  <span class="result-item__subtitle">{{ result.subtitle }}</span>
+                </div>
+                <span class="result-item__type" [attr.data-type]="result.type">
+                  {{ getTypeIcon(result.type) }} {{ getTypeLabel(result.type) }}
+                </span>
+                <svg class="result-item__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="search-results__empty">
+            <p>No se encontraron resultados para "{{ searchQuery() }}"</p>
+            <p class="search-results__empty-hint">Prueba con otro término de búsqueda</p>
+          </div>
+        }
+      </section>
+    }
+
+    @if (!searched() && !loading()) {
+      <div class="search-results__hint">
+        <p>Escribe algo para buscar ligas, equipos o jugadores</p>
+      </div>
+    }
+
+  </div>
+</main>
+
+<app-footer />

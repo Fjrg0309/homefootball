@@ -1,0 +1,74 @@
+<app-header />
+
+<main class="league-teams">
+  <div class="league-teams__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="league-teams__header">
+      <h1 class="league-teams__title">Equipos</h1>
+    </header>
+
+    <!-- Estado de carga -->
+    @if (loading()) {
+      <div class="league-teams__loading">
+        <div class="spinner"></div>
+        <p>Cargando equipos...</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="league-teams__error">
+        <p>{{ error() }}</p>
+        <button class="league-teams__retry" (click)="loadTeams()">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    <!-- Grid de equipos -->
+    @if (!loading() && !error()) {
+      <section class="league-teams__content">
+        @if (teams().length > 0) {
+          <div class="teams-grid">
+            @for (team of teams(); track team.id) {
+              <article 
+                class="team-card" 
+                (click)="goToTeam(team.id)"
+                tabindex="0"
+                (keydown.enter)="goToTeam(team.id)"
+                role="button"
+                [attr.aria-label]="'Ver ' + team.name">
+                <div class="team-card__logo-wrapper">
+                  <img 
+                    [src]="team.logo" 
+                    [alt]="team.name"
+                    class="team-card__logo"
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.src='assets/images/default-team.png'"
+                  >
+                </div>
+                <span class="team-card__name">{{ team.name }}</span>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="league-teams__empty">
+            <p>No se encontraron equipos para esta liga</p>
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Botón volver -->
+    <nav class="league-teams__nav">
+      <button class="league-teams__back" (click)="goBack()">
+        ← Volver
+      </button>
+    </nav>
+
+  </div>
+</main>
+
+<app-footer />

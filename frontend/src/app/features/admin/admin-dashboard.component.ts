@@ -12,7 +12,7 @@ import { ToastService } from '../../services/toast.service';
     <div class="admin-dashboard">
       <div class="dashboard-header">
         <h1>👨‍💼 Panel de Administración</h1>
-        <p>Bienvenido, {{ auth.currentUser()?.name }}</p>
+        <p>Bienvenido, {{ auth.currentUser()?.username }}</p>
       </div>
 
       <div class="dashboard-stats">
@@ -67,7 +67,7 @@ import { ToastService } from '../../services/toast.service';
           <ul>
             <li>✅ Verifica autenticación</li>
             <li>✅ Verifica rol de administrador</li>
-            <li>✅ Redirección automática a /login</li>
+            <li>✅ Modal de login automático</li>
             <li>✅ Preserva URL de retorno (returnUrl)</li>
             <li>✅ Feedback con ToastService</li>
           </ul>

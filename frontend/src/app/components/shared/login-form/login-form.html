@@ -1,6 +1,17 @@
 <form class="login-form" (ngSubmit)="onSubmit()" #loginFormElement="ngForm">
-  <fieldset class="login-form__fieldset">
+  <fieldset class="login-form__fieldset" [disabled]="isLoading()">
     <legend class="login-form__legend">Iniciar sesión</legend>
+    
+    @if (errorMessage()) {
+      <div class="login-form__error-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        {{ errorMessage() }}
+      </div>
+    }
     
     <section class="login-form__field-group">
       <app-form-input
@@ -30,8 +41,14 @@
       <button 
         type="submit" 
         class="login-form__btn"
+        [class.login-form__btn--loading]="isLoading()"
       >
-        Iniciar sesión
+        @if (isLoading()) {
+          <span class="login-form__spinner"></span>
+          Iniciando sesión...
+        } @else {
+          Iniciar sesión
+        }
       </button>
     </section>
 

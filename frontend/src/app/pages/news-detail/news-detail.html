@@ -1,0 +1,61 @@
+<app-header />
+
+<main class="news-detail">
+  <div class="news-detail__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="news-detail__header">
+      <h1 class="news-detail__header-title">Noticia</h1>
+    </header>
+
+    <!-- Estado de carga -->
+    @if (loading()) {
+      <div class="news-detail__loading">
+        <div class="spinner"></div>
+        <p>Cargando noticia...</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="news-detail__error">
+        <p>{{ error() }}</p>
+        <button class="news-detail__btn" (click)="goBack()">
+          Volver a noticias
+        </button>
+      </div>
+    }
+
+    <!-- Contenido de la noticia -->
+    @if (!loading() && !error() && news()) {
+      <article class="news-article">
+        <!-- Título de la noticia -->
+        <h2 class="news-article__title">{{ news()!.title }}</h2>
+        
+        <!-- Meta información -->
+        <div class="news-article__meta">
+          <span class="news-article__category">{{ news()!.category }}</span>
+          <span class="news-article__date">{{ formatDate(news()!.date) }}</span>
+          <span class="news-article__author">Por {{ news()!.author }}</span>
+        </div>
+        
+        <!-- Contenido -->
+        <div class="news-article__content">
+          @for (paragraph of news()!.content; track $index) {
+            <p class="news-article__paragraph">{{ paragraph }}</p>
+          }
+        </div>
+      </article>
+
+      <!-- Navegación -->
+      <nav class="news-detail__nav">
+        <button class="news-detail__back" (click)="goBack()">
+          ← Volver a noticias
+        </button>
+      </nav>
+    }
+
+  </div>
+</main>
+
+<app-footer />

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { About } from './pages/about/about';
-import { Login } from './pages/login/login';
+import { Register } from './pages/register/register';
 import { Profile } from './pages/profile/profile';
 import { Home } from './pages/home/home';
 import { NotFound } from './components/shared/not-found/not-found';
@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: '', component: Home, data: { breadcrumb: 'Inicio' } },
   
   // Rutas públicas
-  { path: 'login', component: Login, data: { breadcrumb: 'Login' } },
+  { path: 'register', component: Register, data: { breadcrumb: 'Registro' } },
   { path: 'about', component: About, data: { breadcrumb: 'Acerca' } },
   
   // Rutas protegidas con authGuard
@@ -163,6 +163,13 @@ export const routes: Routes = [
     data: { breadcrumb: 'Clasificación' }
   },
   
+  // Liga equipos - Página de equipos de una liga (DEBE IR ANTES de liga/:id)
+  {
+    path: 'liga/:id/equipos',
+    loadComponent: () => import('./pages/league-teams/league-teams').then(m => m.LeagueTeams),
+    data: { breadcrumb: 'Equipos' }
+  },
+  
   // Liga detalle - Página de liga seleccionada (DESPUÉS de las rutas específicas)
   {
     path: 'liga/:id',
@@ -182,6 +189,48 @@ export const routes: Routes = [
     path: 'partido/:id',
     loadComponent: () => import('./pages/match-detail/match-detail').then(m => m.MatchDetail),
     data: { breadcrumb: 'Partido' }
+  },
+  
+  // Búsqueda global
+  {
+    path: 'buscar',
+    loadComponent: () => import('./pages/search-results/search-results').then(m => m.SearchResults),
+    data: { breadcrumb: 'Búsqueda' }
+  },
+  
+  // Fichajes (Transfers)
+  {
+    path: 'fichajes',
+    loadComponent: () => import('./pages/transfers/transfers').then(m => m.Transfers),
+    data: { breadcrumb: 'Fichajes' }
+  },
+  
+  // Favoritos
+  {
+    path: 'favoritos',
+    loadComponent: () => import('./pages/favorites/favorites').then(m => m.Favorites),
+    data: { breadcrumb: 'Favoritos' }
+  },
+  
+  // Detalle de jugador
+  {
+    path: 'jugador/:id',
+    loadComponent: () => import('./pages/player-detail/player-detail').then(m => m.PlayerDetail),
+    data: { breadcrumb: 'Jugador' }
+  },
+  
+  // Noticias
+  {
+    path: 'noticias',
+    loadComponent: () => import('./pages/news/news').then(m => m.News),
+    data: { breadcrumb: 'Noticias' }
+  },
+  
+  // Detalle de noticia
+  {
+    path: 'noticia/:id',
+    loadComponent: () => import('./pages/news-detail/news-detail').then(m => m.NewsDetail),
+    data: { breadcrumb: 'Noticia' }
   },
   
   // Demo de API-Football

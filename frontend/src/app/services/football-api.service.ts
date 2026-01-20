@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 /**
@@ -278,6 +279,7 @@ export interface MatchStats {
 /**
  * Servicio para consumir la API de Football a través del backend
  * El backend actúa como proxy para proteger la API key
+ * Incluye sistema de caché para reducir peticiones
  */
 @Injectable({
   providedIn: 'root'
@@ -286,10 +288,74 @@ export class FootballApiService {
   private http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/football`;
   
+  // ==================== CACHÉ ====================
+  // Almacena las peticiones cacheadas con su observable
+  private cache = new Map<string, Observable<any>>();
+  
+  // Tiempo de expiración de la caché (en ms) - 5 minutos
+  private readonly CACHE_DURATION = 5 * 60 * 1000;
+  
+  // Timestamps de cuando se guardó cada entrada
+  private cacheTimestamps = new Map<string, number>();
+  
   constructor() {
-    console.log('FootballApiService initialized');
+    console.log('FootballApiService initialized with caching');
     console.log('API Base URL:', this.baseUrl);
-    console.log('Environment:', environment);
+    console.log('Cache duration:', this.CACHE_DURATION / 1000, 'seconds');
+  }
+
+  /**
+   * Genera una clave única para la caché basada en la URL y parámetros
+   */
+  private getCacheKey(url: string, params?: Record<string, string>): string {
+    const paramString = params ? JSON.stringify(params) : '';
+    return `${url}:${paramString}`;
+  }
+
+  /**
+   * Verifica si una entrada de caché es válida (no expirada)
+   */
+  private isCacheValid(key: string): boolean {
+    const timestamp = this.cacheTimestamps.get(key);
+    if (!timestamp) return false;
+    return Date.now() - timestamp < this.CACHE_DURATION;
+  }
+
+  /**
+   * Obtiene un observable cacheado o hace la petición y la cachea
+   */
+  private getCached<T>(key: string, request: () => Observable<T>): Observable<T> {
+    // Si existe en caché y no ha expirado, devolverla
+    if (this.cache.has(key) && this.isCacheValid(key)) {
+      console.log('📦 Cache HIT:', key.substring(0, 50) + '...');
+      return this.cache.get(key) as Observable<T>;
+    }
+
+    // Si no, hacer la petición y cachearla
+    console.log('🌐 Cache MISS:', key.substring(0, 50) + '...');
+    const observable = request().pipe(
+      tap(() => this.cacheTimestamps.set(key, Date.now())),
+      shareReplay(1)
+    );
+    this.cache.set(key, observable);
+    return observable;
+  }
+
+  /**
+   * Limpia toda la caché
+   */
+  clearCache(): void {
+    this.cache.clear();
+    this.cacheTimestamps.clear();
+    console.log('🗑️ Cache cleared');
+  }
+
+  /**
+   * Limpia la caché de una clave específica
+   */
+  clearCacheKey(key: string): void {
+    this.cache.delete(key);
+    this.cacheTimestamps.delete(key);
   }
 
   // ==================== STATUS ====================
@@ -304,51 +370,73 @@ export class FootballApiService {
   // ==================== LIGAS ====================
 
   /**
-   * Obtiene todas las ligas disponibles
+   * Obtiene todas las ligas disponibles (con caché)
    */
   getLeagues(): Observable<ApiFootballResponse<LeagueData>> {
-    return this.http.get<ApiFootballResponse<LeagueData>>(`${this.baseUrl}/leagues`);
+    const url = `${this.baseUrl}/leagues`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<LeagueData>>(url)
+    );
   }
 
   /**
-   * Obtiene ligas por país
+   * Obtiene ligas por país (con caché)
    */
   getLeaguesByCountry(country: string): Observable<ApiFootballResponse<LeagueData>> {
-    return this.http.get<ApiFootballResponse<LeagueData>>(`${this.baseUrl}/leagues/country/${country}`);
+    const url = `${this.baseUrl}/leagues/country/${country}`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<LeagueData>>(url)
+    );
   }
 
   /**
-   * Obtiene una liga por su ID
+   * Obtiene una liga por su ID (con caché)
    */
   getLeagueById(id: number): Observable<ApiFootballResponse<LeagueData>> {
-    return this.http.get<ApiFootballResponse<LeagueData>>(`${this.baseUrl}/leagues/${id}`);
+    const url = `${this.baseUrl}/leagues/${id}`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<LeagueData>>(url)
+    );
   }
 
   /**
-   * Obtiene las ligas en las que participa un equipo
+   * Obtiene las ligas en las que participa un equipo (con caché)
    */
   getLeaguesByTeam(teamId: number, season: number = 2024): Observable<ApiFootballResponse<LeagueData>> {
-    return this.http.get<ApiFootballResponse<LeagueData>>(`${this.baseUrl}/leagues/team/${teamId}`, {
-      params: { season: season.toString() }
-    });
+    const url = `${this.baseUrl}/leagues/team/${teamId}`;
+    const params = { season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<LeagueData>>(url, { params })
+    );
   }
 
   // ==================== EQUIPOS ====================
 
   /**
-   * Obtiene equipos de una liga y temporada
+   * Obtiene equipos de una liga y temporada (con caché)
    */
   getTeamsByLeague(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<TeamData>> {
-    return this.http.get<ApiFootballResponse<TeamData>>(`${this.baseUrl}/teams`, {
-      params: { league: leagueId.toString(), season: season.toString() }
-    });
+    const url = `${this.baseUrl}/teams`;
+    const params = { league: leagueId.toString(), season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<TeamData>>(url, { params })
+    );
   }
 
   /**
-   * Obtiene un equipo por su ID
+   * Obtiene un equipo por su ID (con caché)
    */
   getTeamById(id: number): Observable<ApiFootballResponse<TeamData>> {
-    return this.http.get<ApiFootballResponse<TeamData>>(`${this.baseUrl}/teams/${id}`);
+    const url = `${this.baseUrl}/teams/${id}`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<TeamData>>(url)
+    );
   }
 
   /**
@@ -363,33 +451,43 @@ export class FootballApiService {
   // ==================== JUGADORES ====================
 
   /**
-   * Obtiene la plantilla oficial del primer equipo (NO incluye filiales)
+   * Obtiene la plantilla oficial del primer equipo (con caché)
    * Usa el endpoint /players/squads que solo devuelve jugadores con ficha del primer equipo
    */
   getTeamSquad(teamId: number): Observable<ApiFootballResponse<SquadData>> {
-    return this.http.get<ApiFootballResponse<SquadData>>(`${this.baseUrl}/squads/${teamId}`);
+    const url = `${this.baseUrl}/squads/${teamId}`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<SquadData>>(url)
+    );
   }
 
   /**
-   * Obtiene jugadores de un equipo
+   * Obtiene jugadores de un equipo (con caché)
    */
   getPlayersByTeam(teamId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
-    return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players`, {
-      params: { team: teamId.toString(), season: season.toString() }
-    });
+    const url = `${this.baseUrl}/players`;
+    const params = { team: teamId.toString(), season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<PlayerData>>(url, { params })
+    );
   }
 
   /**
-   * Obtiene un jugador por su ID
+   * Obtiene un jugador por su ID (con caché)
    */
   getPlayerById(id: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
-    return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/${id}`, {
-      params: { season: season.toString() }
-    });
+    const url = `${this.baseUrl}/players/${id}`;
+    const params = { season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<PlayerData>>(url, { params })
+    );
   }
 
   /**
-   * Busca jugadores por nombre
+   * Busca jugadores por nombre (sin caché - búsquedas dinámicas)
    */
   searchPlayers(name: string, leagueId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
     return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/search`, {
@@ -398,46 +496,59 @@ export class FootballApiService {
   }
 
   /**
-   * Obtiene los máximos goleadores de una liga
+   * Obtiene los máximos goleadores de una liga (con caché)
    */
   getTopScorers(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<PlayerData>> {
-    return this.http.get<ApiFootballResponse<PlayerData>>(`${this.baseUrl}/players/topscorers`, {
-      params: { league: leagueId.toString(), season: season.toString() }
-    });
+    const url = `${this.baseUrl}/players/topscorers`;
+    const params = { league: leagueId.toString(), season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<PlayerData>>(url, { params })
+    );
   }
 
   // ==================== PARTIDOS ====================
 
   /**
-   * Obtiene partidos de una liga
+   * Obtiene partidos de una liga (con caché)
    */
   getFixturesByLeague(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<FixtureData>> {
-    return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures`, {
-      params: { league: leagueId.toString(), season: season.toString() }
-    });
+    const url = `${this.baseUrl}/fixtures`;
+    const params = { league: leagueId.toString(), season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<FixtureData>>(url, { params })
+    );
   }
 
   /**
-   * Obtiene partidos en vivo
+   * Obtiene partidos en vivo (sin caché - datos en tiempo real)
    */
   getLiveFixtures(): Observable<ApiFootballResponse<FixtureData>> {
     return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures/live`);
   }
 
   /**
-   * Obtiene partidos por fecha (formato: YYYY-MM-DD)
+   * Obtiene partidos por fecha (con caché corta)
    */
   getFixturesByDate(date: string): Observable<ApiFootballResponse<FixtureData>> {
-    return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures/date/${date}`);
+    const url = `${this.baseUrl}/fixtures/date/${date}`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<FixtureData>>(url)
+    );
   }
 
   /**
-   * Obtiene partidos de un equipo
+   * Obtiene partidos de un equipo (con caché)
    */
   getFixturesByTeam(teamId: number, season: number = 2022): Observable<ApiFootballResponse<FixtureData>> {
-    return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixtures/team/${teamId}`, {
-      params: { season: season.toString() }
-    });
+    const url = `${this.baseUrl}/fixtures/team/${teamId}`;
+    const params = { season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<FixtureData>>(url, { params })
+    );
   }
 
   /**
@@ -451,18 +562,21 @@ export class FootballApiService {
   }
 
   /**
-   * Obtiene partidos de una jornada específica
+   * Obtiene partidos de una jornada específica (con caché)
    */
   getFixturesByRound(leagueId: number, season: number, round: string): Observable<ApiFootballResponse<FixtureData>> {
     const url = `${this.baseUrl}/fixtures/round`;
     const params = { league: leagueId.toString(), season: season.toString(), round };
+    const key = this.getCacheKey(url, params);
     console.log('getFixturesByRound - URL:', url);
     console.log('getFixturesByRound - Params:', params);
-    return this.http.get<ApiFootballResponse<FixtureData>>(url, { params });
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<FixtureData>>(url, { params })
+    );
   }
 
   /**
-   * Obtiene la última fecha con datos disponibles para una liga
+   * Obtiene la última fecha con datos disponibles para una liga (sin caché - siempre fresco)
    */
   getLatestAvailableDate(leagueId: number, season: number = 2022): Observable<{ date: string }> {
     return this.http.get<{ date: string }>(`${this.baseUrl}/fixtures/latest-date`, {
@@ -473,34 +587,49 @@ export class FootballApiService {
   // ==================== CLASIFICACIÓN ====================
 
   /**
-   * Obtiene la clasificación de una liga
+   * Obtiene la clasificación de una liga (con caché)
    */
   getStandings(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<StandingsData>> {
-    return this.http.get<ApiFootballResponse<StandingsData>>(`${this.baseUrl}/standings`, {
-      params: { league: leagueId.toString(), season: season.toString() }
-    });
+    const url = `${this.baseUrl}/standings`;
+    const params = { league: leagueId.toString(), season: season.toString() };
+    const key = this.getCacheKey(url, params);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<StandingsData>>(url, { params })
+    );
   }
 
   // ==================== DETALLE DE PARTIDO ====================
 
   /**
-   * Obtiene un partido por su ID
+   * Obtiene un partido por su ID (con caché)
    */
   getFixtureById(fixtureId: number): Observable<ApiFootballResponse<FixtureData>> {
-    return this.http.get<ApiFootballResponse<FixtureData>>(`${this.baseUrl}/fixture/${fixtureId}`);
+    const url = `${this.baseUrl}/fixture/${fixtureId}`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<FixtureData>>(url)
+    );
   }
 
   /**
-   * Obtiene los eventos de un partido (goles, tarjetas, sustituciones, etc.)
+   * Obtiene los eventos de un partido (con caché)
    */
   getFixtureEvents(fixtureId: number): Observable<ApiFootballResponse<FixtureEvent>> {
-    return this.http.get<ApiFootballResponse<FixtureEvent>>(`${this.baseUrl}/fixture/${fixtureId}/events`);
+    const url = `${this.baseUrl}/fixture/${fixtureId}/events`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<FixtureEvent>>(url)
+    );
   }
 
   /**
-   * Obtiene las estadísticas de un partido
+   * Obtiene las estadísticas de un partido (con caché)
    */
   getFixtureStatistics(fixtureId: number): Observable<ApiFootballResponse<FixtureStatistics>> {
-    return this.http.get<ApiFootballResponse<FixtureStatistics>>(`${this.baseUrl}/fixture/${fixtureId}/statistics`);
+    const url = `${this.baseUrl}/fixture/${fixtureId}/statistics`;
+    const key = this.getCacheKey(url);
+    return this.getCached(key, () => 
+      this.http.get<ApiFootballResponse<FixtureStatistics>>(url)
+    );
   }
 }

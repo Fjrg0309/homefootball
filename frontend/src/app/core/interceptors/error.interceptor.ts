@@ -1,20 +1,20 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
+import { LoginModalService } from '../../services/login-modal.service';
 
 /**
  * Interceptor funcional para manejo centralizado de errores HTTP
  * 
  * Maneja:
- * - 401: Redirige a login
+ * - 401: Abre modal de login
  * - 403: Muestra toast de acceso denegado
  * - 404: Muestra toast de recurso no encontrado
  * - 500+: Muestra toast de error del servidor
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
+  const loginModalService = inject(LoginModalService);
   const toastService = inject(ToastService);
   
   return next(req).pipe(
@@ -23,7 +23,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       switch (error.status) {
         case 401:
           toastService.error('Sesión expirada. Por favor, inicia sesión.');
-          router.navigate(['/login']);
+          loginModalService.openLogin();
           break;
           
         case 403:
@@ -47,8 +47,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           
           // Solo mostrar el mensaje de "sin conexión" si realmente no hay conexión
           // No mostrarlo para errores de timeout de la API externa
-          if (!error.url || !error.url.includes('localhost:8080')) {
-            toastService.error('Sin conexión con el servidor. Verifica que el backend esté corriendo en http://localhost:8080');
+          if (error.status === 0) {
+            toastService.error('Sin conexión con el servidor. Verifica tu conexión a internet.');
           } else {
             console.warn('Timeout o error en petición a:', error.url);
             // No mostrar toast, dejar que el componente maneje el error

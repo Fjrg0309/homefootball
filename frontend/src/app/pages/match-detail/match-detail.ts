@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+import { Component, OnInit, signal, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Header } from '../../components/layout/header/header';
@@ -9,14 +9,9 @@ import {
   FixtureEvent, 
   FixtureStatistics 
 } from '../../services/football-api.service';
-
-// Interfaz para comentarios (mock por ahora)
-interface Comment {
-  id: number;
-  user: string;
-  text: string;
-  isOwner: boolean;
-}
+import { AuthService } from '../../services/auth.service';
+import { CommentService, Comment } from '../../services/comment.service';
+import { LoginModalService } from '../../services/login-modal.service';
 
 // Interfaz para goles procesados
 interface GoalEvent {
@@ -35,6 +30,14 @@ interface ProcessedStatistic {
   awayValue: number | string | null;
 }
 
+// Interfaz local para comentarios con campos mapeados
+interface DisplayComment {
+  id: number;
+  user: string;
+  text: string;
+  isOwner: boolean;
+}
+
 @Component({
   selector: 'app-match-detail',
   standalone: true,
@@ -45,6 +48,9 @@ interface ProcessedStatistic {
 export class MatchDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private footballApi = inject(FootballApiService);
+  private authService = inject(AuthService);
+  private commentService = inject(CommentService);
+  private loginModalService = inject(LoginModalService);
   
   // ID del partido
   fixtureId = signal<number>(0);
@@ -60,15 +66,14 @@ export class MatchDetail implements OnInit {
   showStatistics = signal<boolean>(false);
   showComments = signal<boolean>(false);
   
-  // Comentarios (mock con datos de ejemplo relacionados con partidos)
-  comments = signal<Comment[]>([
-    { id: 1, user: 'FútbolManía_92', text: '¡Qué golazo el primero! Menuda jugada colectiva', isOwner: false },
-    { id: 2, user: 'PedroMadridista', text: 'El árbitro ha estado fatal hoy, no ha pitado nada...', isOwner: false },
-    { id: 3, user: 'LauraFutbolera', text: 'Partido muy intenso, a ver si aguantan los últimos minutos 💪', isOwner: false },
-    { id: 4, user: 'CarlosCulé', text: 'El portero estuvo espectacular en esa parada del minuto 70', isOwner: false },
-  ]);
+  // Comentarios (desde backend o mock si no hay usuario)
+  comments = signal<DisplayComment[]>([]);
   newComment = signal<string>('');
-  currentUser = signal<string>('Tu Usuario');
+  loadingComments = signal<boolean>(false);
+
+  // Usuario actual desde AuthService
+  currentUser = computed(() => this.authService.currentUser());
+  isLoggedIn = computed(() => this.authService.isLoggedIn());
 
   // Computed: Goles del equipo local
   homeGoals = computed(() => {
@@ -166,13 +171,66 @@ export class MatchDetail implements OnInit {
   });
 
   ngOnInit(): void {
+    // Verificar sesión del usuario PRIMERO
+    this.authService.checkSession();
+    
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.fixtureId.set(parseInt(id, 10));
         this.loadMatchData();
+        // Pequeño delay para asegurar que la sesión se restaure antes de cargar comentarios
+        setTimeout(() => this.loadComments(), 50);
       }
     });
+  }
+
+  /**
+   * Abrir modal de login
+   */
+  openLoginModal(): void {
+    this.loginModalService.openLogin(`/partido/${this.fixtureId()}`);
+  }
+
+  /**
+   * Cargar comentarios del partido
+   */
+  private loadComments(): void {
+    const matchId = this.fixtureId();
+    const userId = this.authService.getUserId();
+    
+    this.loadingComments.set(true);
+    this.commentService.getCommentsByMatch(matchId, userId || undefined).subscribe({
+      next: (comments) => {
+        // Mapear al formato de DisplayComment
+        const displayComments: DisplayComment[] = comments.map(c => ({
+          id: c.id,
+          user: (c as any).user || c.username,
+          text: (c as any).text || c.texto,
+          isOwner: c.isOwner
+        }));
+        this.comments.set(displayComments);
+        this.loadingComments.set(false);
+      },
+      error: (err) => {
+        console.error('Error cargando comentarios:', err);
+        this.loadingComments.set(false);
+        // Si falla, cargar comentarios mock
+        this.loadMockComments();
+      }
+    });
+  }
+
+  /**
+   * Cargar comentarios mock si el backend no está disponible
+   */
+  private loadMockComments(): void {
+    this.comments.set([
+      { id: 1, user: 'FútbolManía_92', text: '¡Qué golazo el primero! Menuda jugada colectiva', isOwner: false },
+      { id: 2, user: 'PedroMadridista', text: 'El árbitro ha estado fatal hoy, no ha pitado nada...', isOwner: false },
+      { id: 3, user: 'LauraFutbolera', text: 'Partido muy intenso, a ver si aguantan los últimos minutos 💪', isOwner: false },
+      { id: 4, user: 'CarlosCulé', text: 'El portero estuvo espectacular en esa parada del minuto 70', isOwner: false },
+    ]);
   }
 
   /**
@@ -288,7 +346,26 @@ export class MatchDetail implements OnInit {
    * Eliminar un comentario propio
    */
   deleteComment(commentId: number): void {
-    this.comments.update(comments => comments.filter(c => c.id !== commentId));
+    const userId = this.authService.getUserId();
+    
+    if (!userId) {
+      // Sin usuario logueado, eliminar localmente (mock)
+      this.comments.update(comments => comments.filter(c => c.id !== commentId));
+      return;
+    }
+
+    this.commentService.deleteComment(commentId, userId).subscribe({
+      next: (deleted) => {
+        if (deleted) {
+          this.comments.update(comments => comments.filter(c => c.id !== commentId));
+        }
+      },
+      error: (err) => {
+        console.error('Error eliminando comentario:', err);
+        // Eliminar localmente aunque falle
+        this.comments.update(comments => comments.filter(c => c.id !== commentId));
+      }
+    });
   }
 
   /**
@@ -312,15 +389,49 @@ export class MatchDetail implements OnInit {
     const text = this.newComment().trim();
     if (!text) return;
 
-    const newComment: Comment = {
-      id: Date.now(),
-      user: this.currentUser(),
-      text: text,
-      isOwner: true
-    };
+    const userId = this.authService.getUserId();
+    const matchId = this.fixtureId();
 
-    this.comments.update(comments => [...comments, newComment]);
-    this.newComment.set('');
+    if (!userId) {
+      // Sin usuario logueado, crear comentario mock local
+      const mockComment: DisplayComment = {
+        id: Date.now(),
+        user: 'Invitado',
+        text: text,
+        isOwner: true
+      };
+      this.comments.update(comments => [...comments, mockComment]);
+      this.newComment.set('');
+      return;
+    }
+
+    // Crear comentario en el backend
+    this.commentService.createComment(matchId, userId, text).subscribe({
+      next: (comment) => {
+        if (comment) {
+          const displayComment: DisplayComment = {
+            id: comment.id,
+            user: (comment as any).user || comment.username,
+            text: (comment as any).text || comment.texto,
+            isOwner: true
+          };
+          this.comments.update(comments => [...comments, displayComment]);
+        }
+        this.newComment.set('');
+      },
+      error: (err) => {
+        console.error('Error creando comentario:', err);
+        // Crear localmente aunque falle
+        const localComment: DisplayComment = {
+          id: Date.now(),
+          user: this.currentUser()?.username || 'Usuario',
+          text: text,
+          isOwner: true
+        };
+        this.comments.update(comments => [...comments, localComment]);
+        this.newComment.set('');
+      }
+    });
   }
 
   /**

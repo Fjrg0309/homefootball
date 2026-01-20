@@ -1,12 +1,14 @@
-import { Component, ViewEncapsulation, inject, computed } from '@angular/core';
+import { Component, ViewEncapsulation, inject, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserDropdown } from '../../shared/user-dropdown/user-dropdown';
 import { Modal } from '../../shared/modal/modal';
 import { LoginForm } from '../../shared/login-form/login-form';
 import { RegisterForm } from '../../shared/register-form/register-form';
 import { ThemeService } from '../../../services/theme.service';
 import { ToastService } from '../../../services/toast.service';
+import { AuthService } from '../../../services/auth.service';
+import { LoginModalService } from '../../../services/login-modal.service';
 
 @Component({
   selector: 'app-header',
@@ -16,17 +18,30 @@ import { ToastService } from '../../../services/toast.service';
   styleUrl: './header.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class Header {
+export class Header implements OnInit {
   private themeService = inject(ThemeService);
   private toastService = inject(ToastService);
+  private authService = inject(AuthService);
+  private loginModalService = inject(LoginModalService);
+  private router = inject(Router);
   
-  isLoggedIn = false;
-  showLoginModal = false;
-  showRegisterModal = false;
+  // Usamos computed para reactividad con signals del AuthService
+  isLoggedIn = computed(() => this.authService.isLoggedIn());
+  currentUser = computed(() => this.authService.currentUser());
+  
+  // Conectar con el servicio de modal global
+  showLoginModal = computed(() => this.loginModalService.showLoginModal());
+  showRegisterModal = computed(() => this.loginModalService.showRegisterModal());
+  
   mobileMenuOpen = false;
   
   // Computed para saber si el tema es oscuro
   isDarkTheme = computed(() => this.themeService.currentTheme() === 'dark');
+  
+  ngOnInit(): void {
+    // Verificar sesión existente al iniciar
+    this.authService.checkSession();
+  }
 
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
@@ -41,50 +56,62 @@ export class Header {
   }
 
   openLoginModal(): void {
-    this.showLoginModal = true;
-    this.showRegisterModal = false;
+    this.loginModalService.openLogin();
     this.closeMobileMenu();
   }
 
   closeLoginModal(): void {
-    this.showLoginModal = false;
+    this.loginModalService.closeLogin();
   }
 
   openRegisterModal(): void {
-    this.showRegisterModal = true;
-    this.showLoginModal = false;
+    this.loginModalService.openRegister();
   }
 
   closeRegisterModal(): void {
-    this.showRegisterModal = false;
+    this.loginModalService.closeRegister();
   }
 
   // Navegar de Login a Registro
   onGoToRegister(): void {
-    this.closeLoginModal();
-    this.openRegisterModal();
+    this.loginModalService.closeLogin();
+    this.loginModalService.openRegister();
   }
 
   // Navegar de Registro a Login
   onGoToLogin(): void {
-    this.closeRegisterModal();
-    this.openLoginModal();
+    this.loginModalService.closeRegister();
+    this.loginModalService.openLogin();
   }
 
-  onLoginSuccess(credentials: {username: string, password: string}): void {
-    this.isLoggedIn = true;
-    this.closeLoginModal();
-    this.toastService.success(`¡Bienvenido, ${credentials.username}!`);
+  onLoginSuccess(): void {
+    const returnUrl = this.loginModalService.returnUrl();
+    this.loginModalService.closeLogin();
+    const user = this.authService.currentUser();
+    if (user) {
+      this.toastService.success(`¡Bienvenido, ${user.username}!`);
+    }
+    // Si hay una URL de retorno, navegar a ella
+    if (returnUrl) {
+      this.router.navigate([returnUrl]);
+    }
   }
 
-  onRegisterSuccess(data: {name: string, email: string, password: string}): void {
-    this.closeRegisterModal();
-    this.toastService.success(`¡Cuenta creada exitosamente! Bienvenido, ${data.name}`);
-    this.isLoggedIn = true;
+  onRegisterSuccess(): void {
+    const returnUrl = this.loginModalService.returnUrl();
+    this.loginModalService.closeRegister();
+    const user = this.authService.currentUser();
+    if (user) {
+      this.toastService.success(`¡Cuenta creada exitosamente! Bienvenido, ${user.username}`);
+    }
+    // Si hay una URL de retorno, navegar a ella
+    if (returnUrl) {
+      this.router.navigate([returnUrl]);
+    }
   }
 
   onLogout(): void {
-    this.isLoggedIn = false;
+    this.authService.logout();
     this.toastService.info('Has cerrado sesión');
   }
 }

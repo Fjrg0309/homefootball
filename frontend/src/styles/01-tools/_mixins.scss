@@ -336,3 +336,26 @@ $breakpoints: (
     display: block !important;
   }
 }
+
+// =============================================
+// DARK MODE TITLE
+// =============================================
+// Estilo de título para modo oscuro con fondo verde semitransparente
+// Uso: @include dark-mode-title;
+// Genera el estilo de modo oscuro para títulos/headers con fondo verde
+// Usa :host-context para Angular encapsulation y [data-theme] para estilos globales
+@mixin dark-mode-title {
+  // Para componentes Angular con ViewEncapsulation
+  :host-context([data-theme="dark"]) & {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+  }
+  
+  // Para estilos globales (fuera de componentes)
+  [data-theme="dark"] & {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+  }
+}

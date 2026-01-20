@@ -174,8 +174,8 @@
 
   &__sidebar-title {
     font-weight: var(--font-weight-bold);
-    color: #FFFFFF;
     background-color: var(--color-accent);
+    color: white;
     border-radius: var(--radius-md);
     margin: 0;
     text-align: center;
@@ -189,12 +189,8 @@
       padding: var(--spacing-2) var(--spacing-3);
     }
     
-    // Modo oscuro
-    [data-theme="dark"] & {
-      background-color: rgba(16, 185, 129, 0.2);
-      color: var(--color-accent);
-      border: 1px solid var(--color-accent);
-    }
+    // Modo oscuro - usa mixin
+    @include dark-mode-title;
   }
 
   &__sidebar {
@@ -286,8 +282,8 @@
 
   &__title {
     font-weight: var(--font-weight-bold);
-    color: #FFFFFF;
     background-color: var(--color-accent);
+    color: white;
     border-radius: var(--radius-md);
     
     // Mobile
@@ -301,12 +297,8 @@
       margin-bottom: var(--spacing-3);
     }
     
-    // Modo oscuro
-    [data-theme="dark"] & {
-      background-color: rgba(16, 185, 129, 0.2);
-      color: var(--color-accent);
-      border: 1px solid var(--color-accent);
-    }
+    // Modo oscuro - usa mixin
+    @include dark-mode-title;
   }
 
   &__grid {
@@ -416,8 +408,8 @@
 
   &__title {
     font-weight: var(--font-weight-bold);
-    color: #FFFFFF;
     background-color: var(--color-accent);
+    color: white;
     border-radius: var(--radius-md);
     
     // Mobile
@@ -431,12 +423,8 @@
       margin-bottom: var(--spacing-3);
     }
     
-    // Modo oscuro
-    [data-theme="dark"] & {
-      background-color: rgba(16, 185, 129, 0.2);
-      color: var(--color-accent);
-      border: 1px solid var(--color-accent);
-    }
+    // Modo oscuro - usa mixin
+    @include dark-mode-title;
   }
 
   &__grid {

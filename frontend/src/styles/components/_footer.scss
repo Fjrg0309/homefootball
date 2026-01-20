@@ -12,6 +12,12 @@
   
   // Transición suave para cambios de estado
   transition: background-color var(--transition-base) var(--transition-ease);
+  
+  // Modo oscuro
+  [data-theme="dark"] & {
+    background-color: var(--color-header);
+    border-top: 1px solid var(--color-neutral-300);
+  }
 
   &__container {
     // Ancho máximo contenido

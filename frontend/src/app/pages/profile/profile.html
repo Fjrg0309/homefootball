@@ -1,148 +1,76 @@
-<div class="profile-container">
-  <div class="profile-card">
-    <div class="profile-header">
-      <h1>👤 Editar Perfil</h1>
-      <p>Protegido con CanDeactivate Guard</p>
-    </div>
+<app-header />
 
-    <div class="user-info">
-      <div class="avatar">{{ auth.currentUser()?.name?.charAt(0) }}</div>
-      <div>
-        <h3>{{ auth.currentUser()?.name }}</h3>
-        <span class="role-badge" [class.admin]="auth.isAdmin()">
-          {{ auth.isAdmin() ? '👨‍💼 Admin' : '👤 Usuario' }}
-        </span>
-      </div>
-    </div>
+<main class="profile">
+  <div class="profile__container">
 
-    <form [formGroup]="form" (ngSubmit)="onSave()" class="profile-form">
-      
-      <!-- Name -->
-      <div class="form-group">
-        <label for="name">Nombre Completo *</label>
-        <input 
-          type="text" 
-          id="name" 
-          formControlName="name"
-          placeholder="Tu nombre"
-          [class.error]="form.controls['name'].invalid && form.controls['name'].touched"
-        />
-        @if (form.controls['name'].invalid && form.controls['name'].touched) {
-          <span class="error-message">
-            @if (form.controls['name'].errors?.['required']) {
-              El nombre es requerido
-            }
-            @if (form.controls['name'].errors?.['minlength']) {
-              Mínimo 3 caracteres
-            }
-          </span>
-        }
-      </div>
+    <!-- Contenido del perfil -->
+    @if (isLoggedIn()) {
+      <section class="profile__content">
+        
+        <!-- Avatar del usuario -->
+        <div class="profile__avatar-section">
+          <div class="profile__avatar">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
 
-      <!-- Email -->
-      <div class="form-group">
-        <label for="email">Email *</label>
-        <input 
-          type="email" 
-          id="email" 
-          formControlName="email"
-          placeholder="tu@email.com"
-          [class.error]="form.controls['email'].invalid && form.controls['email'].touched"
-        />
-        @if (form.controls['email'].invalid && form.controls['email'].touched) {
-          <span class="error-message">
-            @if (form.controls['email'].errors?.['required']) {
-              El email es requerido
-            }
-            @if (form.controls['email'].errors?.['email']) {
-              Email inválido
-            }
-          </span>
-        }
-      </div>
+        <!-- Información del usuario -->
+        <div class="profile__info">
+          <div class="profile__info-row">
+            <label class="profile__label">Usuario</label>
+            <div class="profile__value">{{ user()?.username }}</div>
+          </div>
+          
+          <div class="profile__info-row">
+            <label class="profile__label">Correo electrónico</label>
+            <div class="profile__value">{{ user()?.email }}</div>
+          </div>
+          
+          <div class="profile__info-row">
+            <label class="profile__label">Rol</label>
+            <div class="profile__value profile__value--badge">
+              @if (auth.isAdmin()) {
+                <span class="profile__badge profile__badge--admin">Administrador</span>
+              } @else {
+                <span class="profile__badge profile__badge--user">Usuario</span>
+              }
+            </div>
+          </div>
+        </div>
 
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="phone">Teléfono</label>
-        <input 
-          type="tel" 
-          id="phone" 
-          formControlName="phone"
-          placeholder="123456789"
-          [class.error]="form.controls['phone'].invalid && form.controls['phone'].touched"
-        />
-        @if (form.controls['phone'].invalid && form.controls['phone'].touched) {
-          <span class="error-message">
-            Formato inválido (9 dígitos)
-          </span>
-        }
-      </div>
+        <!-- Acciones -->
+        <div class="profile__actions">
+          <a routerLink="/favoritos" class="profile__action-btn profile__action-btn--primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            Mis Favoritos
+          </a>
+          <button type="button" class="profile__action-btn profile__action-btn--danger" (click)="logout()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Cerrar Sesión
+          </button>
+        </div>
+        
+      </section>
+    } @else {
+      <!-- Mensaje si no está logueado -->
+      <section class="profile__not-logged">
+        <p>Debes iniciar sesión para ver tu perfil</p>
+        <a routerLink="/" class="profile__action-btn profile__action-btn--primary">
+          Volver al inicio
+        </a>
+      </section>
+    }
 
-      <!-- Bio -->
-      <div class="form-group">
-        <label for="bio">Biografía</label>
-        <textarea 
-          id="bio" 
-          formControlName="bio"
-          placeholder="Cuéntanos sobre ti..."
-          rows="4"
-        ></textarea>
-        <small>{{ form.controls['bio'].value?.length || 0 }} / 200</small>
-      </div>
-
-      <!-- Checkboxes -->
-      <div class="form-group checkbox-group">
-        <label class="checkbox-label">
-          <input type="checkbox" formControlName="notifications" />
-          <span>Recibir notificaciones por email</span>
-        </label>
-      </div>
-
-      <div class="form-group checkbox-group">
-        <label class="checkbox-label">
-          <input type="checkbox" formControlName="newsletter" />
-          <span>Suscribirme al newsletter</span>
-        </label>
-      </div>
-
-      <!-- Guard Info -->
-      <div class="guard-info">
-        <h3>🛡️ CanDeactivate Guard Activo</h3>
-        <p>
-          Si intentas salir de esta página con cambios sin guardar, 
-          el guard mostrará una confirmación.
-        </p>
-        <p class="status">
-          Estado del formulario: 
-          <strong [class.dirty]="form.dirty" [class.pristine]="form.pristine">
-            {{ form.dirty ? '✏️ Con cambios' : '✅ Sin cambios' }}
-          </strong>
-        </p>
-      </div>
-
-      <!-- Actions -->
-      <div class="form-actions">
-        <button 
-          type="submit" 
-          class="btn-save"
-          [disabled]="form.invalid || form.pristine"
-        >
-          💾 Guardar Cambios
-        </button>
-        <button 
-          type="button" 
-          class="btn-cancel"
-          (click)="onCancel()"
-        >
-          ❌ Cancelar
-        </button>
-      </div>
-    </form>
-
-    <div class="logout-section">
-      <button class="btn-logout" (click)="logout()">
-        🚪 Cerrar Sesión
-      </button>
-    </div>
   </div>
-</div>
+</main>
+
+<app-footer />

@@ -31,7 +31,7 @@
   
   // Textos sobre fondos oscuros
   --text-on-dark: #FFFFFF;            // Texto sobre header/footer
-  --text-on-accent: #212121;          // Texto sobre verde acento (negro)
+  --text-on-accent: #FFFFFF;          // Texto sobre verde acento (blanco para contraste)
   
   // Textos semánticos
   --text-success: #00D95F;            // Texto de éxito (verde)
@@ -99,7 +99,7 @@
   --text-disabled: #4A4A4A;           // Texto deshabilitado
   
   --text-on-dark: #FFFFFF;            // Mantiene blanco
-  --text-on-accent: #000000;          // Texto sobre verde oscuro
+  --text-on-accent: #FFFFFF;          // Texto sobre verde (blanco para contraste)
   
   // Bordes más sutiles en dark mode
   --border-primary: #2C2C2C;

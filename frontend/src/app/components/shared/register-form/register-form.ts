@@ -1,8 +1,10 @@
-import { Component, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Output, EventEmitter, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordStrength } from '../../../validators/password-strength.validator';
 import { passwordMatch } from '../../../validators/password-match.validator';
+import { AuthService } from '../../../services/auth.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-register-form',
@@ -12,10 +14,15 @@ import { passwordMatch } from '../../../validators/password-match.validator';
   styleUrl: './register-form.scss'
 })
 export class RegisterForm {
-  @Output() registerSuccess = new EventEmitter<{name: string, email: string, password: string}>();
+  @Output() registerSuccess = new EventEmitter<void>();
   @Output() goToLogin = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+  
+  isLoading = signal(false);
+  errorMessage = signal('');
 
   registerForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -69,6 +76,7 @@ export class RegisterForm {
 
   onSubmit(): void {
     this.submitted = true;
+    this.errorMessage.set('');
 
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
@@ -77,15 +85,33 @@ export class RegisterForm {
 
     const { name, email, password } = this.registerForm.value;
     
-    this.registerSuccess.emit({
-      name: name!,
+    this.isLoading.set(true);
+    
+    this.authService.register({
+      username: name!,
       email: email!,
       password: password!
+    }).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        
+        if (response.id) {
+          // Registro exitoso
+          this.registerSuccess.emit();
+          this.registerForm.reset();
+          this.submitted = false;
+        } else {
+          // Error del backend (usuario o email ya existe)
+          this.errorMessage.set(response.message || 'Error al registrar usuario');
+          this.toastService.error(response.message || 'Error al registrar usuario');
+        }
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        this.errorMessage.set('Error de conexión. Intenta de nuevo.');
+        this.toastService.error('Error de conexión');
+      }
     });
-    
-    // Resetear formulario
-    this.registerForm.reset();
-    this.submitted = false;
   }
 
   onGoToLogin(): void {

@@ -1,6 +1,17 @@
 <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <fieldset class="register-form__fieldset">
+  <fieldset class="register-form__fieldset" [disabled]="isLoading()">
     <legend class="register-form__legend">Crear cuenta</legend>
+    
+    @if (errorMessage()) {
+      <div class="register-form__error-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        {{ errorMessage() }}
+      </div>
+    }
     
     <!-- Nombre -->
     <section class="register-form__field-group">
@@ -92,9 +103,15 @@
       <button 
         type="submit" 
         class="register-form__btn"
-        [disabled]="registerForm.invalid"
+        [class.register-form__btn--loading]="isLoading()"
+        [disabled]="registerForm.invalid || isLoading()"
       >
-        Crear cuenta
+        @if (isLoading()) {
+          <span class="register-form__spinner"></span>
+          Creando cuenta...
+        } @else {
+          Crear cuenta
+        }
       </button>
     </section>
 

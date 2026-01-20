@@ -69,7 +69,10 @@
         } @else {
           <div class="players-grid">
             @for (player of players(); track player.id) {
-              <div class="player-card">
+              <a 
+                class="player-card" 
+                [routerLink]="['/jugador', player.id]"
+                [attr.aria-label]="'Ver detalles de ' + getPlayerDisplayName(player)">
                 <div class="player-card__photo-wrapper">
                   <img 
                     [src]="player.photo" 
@@ -81,7 +84,7 @@
                   >
                 </div>
                 <span class="player-card__name">{{ getPlayerDisplayName(player) }}</span>
-              </div>
+              </a>
             }
           </div>
         }

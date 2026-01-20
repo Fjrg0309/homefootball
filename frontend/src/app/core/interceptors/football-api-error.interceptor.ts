@@ -16,7 +16,7 @@ export const footballApiErrorInterceptor: HttpInterceptorFn = (req, next) => {
       } else {
         // Error del lado del servidor
         if (error.status === 0) {
-          errorMessage = 'No se puede conectar con el servidor. Verifica que el backend esté ejecutándose en http://localhost:8080';
+          errorMessage = 'No se puede conectar con el servidor. Verifica tu conexión a internet o inténtalo más tarde.';
         } else if (error.status === 404) {
           errorMessage = 'Endpoint no encontrado. Verifica la URL de la API.';
         } else if (error.status === 500) {

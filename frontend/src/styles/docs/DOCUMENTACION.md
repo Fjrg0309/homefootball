@@ -209,6 +209,10 @@ Estilo base para tarjetas: fondo blanco, bordes redondeados, padding, sombra y t
 
 Botones con forma de píldora para acciones secundarias. Usado en filtros y etiquetas.
 
+**Texto sobre botones de acento:**
+
+Para garantizar legibilidad en cualquier tema, el texto sobre botones con fondo verde (#00D95F) usa la variable `--color-text-on-accent` que siempre es blanca (#FFFFFF). Esto asegura un contraste óptimo tanto en modo claro como oscuro, cumpliendo con WCAG AA.
+
 #### responsive
 
 Facilita media queries usando breakpoints del sistema (sm, md, lg, xl).
@@ -2242,6 +2246,7 @@ Las variables CSS se definen en `:root` para el tema claro y en `[data-theme="da
   --text-tertiary: #9E9E9E;
   --text-disabled: #BDBDBD;
   --text-on-dark: #FFFFFF;
+  --text-on-accent: #FFFFFF;          // Texto sobre botones de acento (siempre blanco)
   
   // Colores de borde
   --border-primary: #E0E0E0;
@@ -2275,6 +2280,7 @@ Las variables CSS se definen en `:root` para el tema claro y en `[data-theme="da
   --text-secondary: #B0B0B0;
   --text-tertiary: #808080;
   --text-disabled: #4A4A4A;
+  --text-on-accent: #FFFFFF;          // Texto sobre botones de acento (siempre blanco)
   
   // Colores de borde
   --border-primary: #2C2C2C;

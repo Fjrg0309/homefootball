@@ -2,28 +2,28 @@
   <div class="login-card">
     <div class="login-header">
       <h1>🔐 Iniciar Sesión</h1>
-      <p>Demo de Route Guards con AuthService</p>
+      <p>Accede a tu cuenta HomeFootball</p>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
       
-      <!-- Email -->
+      <!-- Username -->
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="username">Usuario</label>
         <input 
-          type="email" 
-          id="email" 
-          formControlName="email"
-          placeholder="usuario@ejemplo.com"
-          [class.error]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+          type="text" 
+          id="username" 
+          formControlName="username"
+          placeholder="Tu nombre de usuario"
+          [class.error]="loginForm.controls.username.invalid && loginForm.controls.username.touched"
         />
-        @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
+        @if (loginForm.controls.username.invalid && loginForm.controls.username.touched) {
           <span class="error-message">
-            @if (loginForm.controls.email.errors?.['required']) {
-              El email es requerido
+            @if (loginForm.controls.username.errors?.['required']) {
+              El usuario es requerido
             }
-            @if (loginForm.controls.email.errors?.['email']) {
-              Email inválido
+            @if (loginForm.controls.username.errors?.['minlength']) {
+              Mínimo 3 caracteres
             }
           </span>
         }
@@ -64,9 +64,13 @@
       <button 
         type="submit" 
         class="btn-login"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || isLoading"
       >
-        Iniciar Sesión
+        @if (isLoading) {
+          ⏳ Cargando...
+        } @else {
+          Iniciar Sesión
+        }
       </button>
     </form>
 
@@ -91,10 +95,9 @@
       </div>
     </div>
 
-    <!-- Info -->
-    <div class="login-info">
-      <p>💡 <strong>Demo:</strong> Cualquier email/contraseña funciona</p>
-      <p>🔑 Emails con "admin" obtienen rol de administrador</p>
+    <!-- Link a registro -->
+    <div class="login-footer">
+      <p>¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
     </div>
   </div>
 </div>

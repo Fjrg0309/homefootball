@@ -1,26 +1,27 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { LoginModalService } from '../services/login-modal.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
-  const router = inject(Router);
+  const loginModalService = inject(LoginModalService);
 
   // Verificar si está autenticado
   if (auth.isLoggedIn()) {
     return true;
   }
 
-  // Redirigir a login con returnUrl
-  return router.createUrlTree(['/login'], {
-    queryParams: { returnUrl: state.url }
-  });
+  // Abrir modal de login con returnUrl
+  loginModalService.openLogin(state.url);
+  return false;
 };
 
 // Guard específico para admin
 export const adminGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
   const router = inject(Router);
+  const loginModalService = inject(LoginModalService);
 
   if (auth.isLoggedIn() && auth.isAdmin()) {
     return true;
@@ -31,8 +32,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
     return router.createUrlTree(['/home']);
   }
 
-  // Si no está logueado, redirige a login
-  return router.createUrlTree(['/login'], {
-    queryParams: { returnUrl: state.url }
-  });
+  // Si no está logueado, abrir modal de login
+  loginModalService.openLogin(state.url);
+  return false;
 };

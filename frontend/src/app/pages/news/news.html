@@ -1,0 +1,141 @@
+<app-header />
+
+<main class="news-page">
+  <div class="news-page__container">
+    
+    <!-- Título con fondo verde -->
+    <header class="news-page__header">
+      <h1 class="news-page__title">Noticias</h1>
+    </header>
+
+    <div class="news-page__layout">
+      <!-- Botón para abrir sidebar en móvil -->
+      <button 
+        class="news-page__filter-toggle"
+        (click)="toggleSidebar()"
+        [class.news-page__filter-toggle--active]="sidebarOpen()">
+        Buscador avanzado
+      </button>
+      
+      <!-- Sidebar de filtros -->
+      <aside 
+        class="news-page__sidebar"
+        [class.news-page__sidebar--open]="sidebarOpen()">
+        <h2 class="news-page__sidebar-title">Buscador avanzado</h2>
+        
+        <div class="news-page__filters">
+          <!-- Filtro por equipo -->
+          <div class="filter-group">
+            <label class="filter-group__label" for="team-filter">Equipo</label>
+            <select 
+              id="team-filter"
+              class="filter-group__select"
+              [value]="selectedTeam()"
+              (change)="selectedTeam.set($any($event.target).value)">
+              <option value="">Todos</option>
+              @for (team of teams(); track team.id) {
+                <option [value]="team.id">{{ team.name }}</option>
+              }
+            </select>
+          </div>
+          
+          <!-- Filtro por competición -->
+          <div class="filter-group">
+            <label class="filter-group__label" for="competition-filter">Competición</label>
+            <select 
+              id="competition-filter"
+              class="filter-group__select"
+              [value]="selectedCompetition()"
+              (change)="selectedCompetition.set($any($event.target).value)">
+              <option value="">Todas</option>
+              @for (comp of competitions(); track comp.id) {
+                <option [value]="comp.id">{{ comp.name }}</option>
+              }
+            </select>
+          </div>
+          
+          <!-- Filtro por jugador -->
+          <div class="filter-group">
+            <label class="filter-group__label" for="player-filter">Jugador</label>
+            <input 
+              type="text"
+              id="player-filter"
+              class="filter-group__input"
+              placeholder="Nombre del jugador..."
+              [value]="selectedPlayer()"
+              (input)="selectedPlayer.set($any($event.target).value)"
+            >
+          </div>
+          
+          <!-- Mostrar solo favoritos -->
+          <div class="filter-group filter-group--checkbox">
+            <label class="filter-group__checkbox-label">
+              <input 
+                type="checkbox"
+                class="filter-group__checkbox"
+                [checked]="showOnlyFavorites()"
+                (change)="showOnlyFavorites.set($any($event.target).checked)"
+              >
+              ¿Mostrar solo favoritos?
+            </label>
+          </div>
+          
+          <!-- Botones -->
+          <div class="filter-group__actions">
+            <button 
+              class="filter-group__btn filter-group__btn--primary"
+              (click)="applyFilters()">
+              Buscar
+            </button>
+            <button 
+              class="filter-group__btn filter-group__btn--secondary"
+              (click)="clearFilters()">
+              Limpiar
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Contenido principal -->
+      <section class="news-page__content">
+        <!-- Estado de carga -->
+        @if (loading()) {
+          <div class="news-page__loading">
+            <div class="spinner"></div>
+            <p>Cargando noticias...</p>
+          </div>
+        }
+
+        <!-- Lista de noticias -->
+        @if (!loading()) {
+          @if (filteredNews().length > 0) {
+            <div class="news-list">
+              @for (item of filteredNews(); track item.id) {
+                <article 
+                  class="news-item"
+                  (click)="goToNews(item.id)"
+                  tabindex="0"
+                  (keydown.enter)="goToNews(item.id)"
+                  role="button">
+                  <h3 class="news-item__title">{{ item.title }}</h3>
+                  <p class="news-item__summary">{{ item.summary }}</p>
+                  <div class="news-item__meta">
+                    <span class="news-item__category">{{ item.category }}</span>
+                    <span class="news-item__date">{{ formatDate(item.date) }}</span>
+                  </div>
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="news-page__empty">
+              <p>No se encontraron noticias con los filtros seleccionados</p>
+            </div>
+          }
+        }
+      </section>
+    </div>
+
+  </div>
+</main>
+
+<app-footer />

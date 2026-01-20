@@ -4,6 +4,9 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
 import { FootballApiService, TeamData, PlayerData, LeagueData, SquadData, SquadPlayer } from '../../services/football-api.service';
+import { FavoritoService } from '../../services/favorito.service';
+import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 interface Player {
   id: number;
@@ -27,6 +30,9 @@ interface Player {
 export class TeamDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private footballApi = inject(FootballApiService);
+  private favoritoService = inject(FavoritoService);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
   
   teamId = signal<number>(0);
   team = signal<TeamData | null>(null);
@@ -48,8 +54,14 @@ export class TeamDetail implements OnInit {
   
   // Verificar si es favorito
   isFavorite = signal<boolean>(false);
+  
+  // Usuario logueado
+  isLoggedIn = this.authService.isLoggedIn;
 
   ngOnInit(): void {
+    // Verificar sesión primero
+    this.authService.checkSession();
+    
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -57,7 +69,8 @@ export class TeamDetail implements OnInit {
         this.loadTeamData();
         this.loadPlayers();
         this.loadTeamLeague();
-        this.checkFavoriteStatus();
+        // Pequeño delay para asegurar que la sesión se restaure
+        setTimeout(() => this.checkFavoriteStatus(), 50);
       }
     });
   }
@@ -186,40 +199,62 @@ export class TeamDetail implements OnInit {
    * Toggle favorito
    */
   toggleFavorite(): void {
-    const teamId = this.teamId().toString();
-    const favorites = this.getFavoriteTeams();
-    
-    if (favorites.includes(teamId)) {
-      const index = favorites.indexOf(teamId);
-      favorites.splice(index, 1);
-      this.isFavorite.set(false);
-    } else {
-      favorites.push(teamId);
-      this.isFavorite.set(true);
+    if (!this.authService.isLoggedIn()) {
+      this.toastService.warning('Inicia sesión para guardar favoritos');
+      return;
     }
-    
-    localStorage.setItem('favorite-teams', JSON.stringify(favorites));
+
+    const team = this.team();
+    if (!team) return;
+
+    const request = {
+      tipo: 'EQUIPO',
+      itemId: this.teamId(),
+      nombre: team.team.name,
+      imagen: team.team.logo
+    };
+
+    this.favoritoService.toggleFavorito(request).subscribe({
+      next: (response) => {
+        console.log('Toggle response:', response);
+        const nowIsFavorite = response.isFavorito;
+        this.isFavorite.set(nowIsFavorite);
+        
+        if (nowIsFavorite) {
+          this.toastService.success('Equipo añadido a favoritos');
+        } else {
+          this.toastService.info('Equipo eliminado de favoritos');
+        }
+      },
+      error: (err) => {
+        console.error('Error toggle favorito:', err);
+        this.toastService.error('Error al actualizar favoritos');
+      }
+    });
   }
 
   /**
    * Verificar si el equipo está en favoritos
    */
   private checkFavoriteStatus(): void {
-    const teamId = this.teamId().toString();
-    const favorites = this.getFavoriteTeams();
-    this.isFavorite.set(favorites.includes(teamId));
-  }
-
-  /**
-   * Obtener equipos favoritos
-   */
-  private getFavoriteTeams(): string[] {
-    try {
-      const favoritesJson = localStorage.getItem('favorite-teams');
-      return favoritesJson ? JSON.parse(favoritesJson) : [];
-    } catch {
-      return [];
+    if (!this.authService.isLoggedIn()) {
+      this.isFavorite.set(false);
+      return;
     }
+
+    const teamId = this.teamId();
+    console.log('Checking favorite status for team:', teamId);
+    
+    this.favoritoService.isFavorito('EQUIPO', teamId).subscribe({
+      next: (isFav) => {
+        console.log('Team favorite status:', isFav);
+        this.isFavorite.set(isFav);
+      },
+      error: (err) => {
+        console.error('Error checking favorite:', err);
+        this.isFavorite.set(false);
+      }
+    });
   }
 
   /**

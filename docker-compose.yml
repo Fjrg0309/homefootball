@@ -26,6 +26,9 @@ services:
     container_name: homefootball-frontend
     ports:
       - "80:80"
+    environment:
+      # URL del backend para el proxy nginx
+      - BACKEND_URL=${BACKEND_URL:-http://backend:8080}
     depends_on:
       - backend
     networks:
