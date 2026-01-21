@@ -1,6 +1,25 @@
-# HomeFootball - Frontend Angular 19
+# HomeFootball - Frontend Angular 20
 
-Aplicación web completa desarrollada con Angular 19 (standalone components) que implementa arquitectura de eventos, servicios, formularios reactivos, routing avanzado e integración con APIs REST.
+**URL** https://homefootballapp-v3nd4.ondigitalocean.app/
+
+## Descripción
+
+HomeFootball es una aplicación web completa de información futbolística desarrollada con **Angular 20** (standalone components). Permite consultar resultados, clasificaciones, estadísticas de equipos y jugadores de las principales ligas europeas. La aplicación implementa arquitectura de eventos, servicios reactivos, formularios con validación avanzada, routing dinámico e integración con APIs REST de datos deportivos.
+
+## Tecnologías Usadas
+
+| Categoría | Tecnología |
+|-----------|------------|
+| **Framework** | Angular 20.3 (Standalone Components) |
+| **Lenguaje** | TypeScript 5.9 |
+| **Estilos** | SCSS con ITCSS + BEM |
+| **Estado** | RxJS 7.8 + Signals |
+| **SSR** | Angular SSR con Express |
+| **HTTP** | HttpClient con Interceptores |
+| **Routing** | Lazy Loading + Guards + Resolvers |
+| **Testing** | Karma + Jasmine |
+| **Build** | Angular CLI + esbuild |
+| **Deploy** | Digital Ocean / Docker + Nginx |
 
 ## Características Principales
 
@@ -10,21 +29,37 @@ Aplicación web completa desarrollada con Angular 19 (standalone components) que
 - **Routing Avanzado**: Lazy loading, Guards, Resolvers, Breadcrumbs dinámicos
 - **Integración HTTP**: CRUD completo, interceptores, manejo de errores robusto, loading states
 - **Modo Oscuro**: Theme switcher con detección automática y persistencia
+- **Responsive Design**: Mobile-first, adaptación a tablet y desktop
+- **Sistema de Diseño**: ITCSS + BEM, Design Tokens, componentes reutilizables
 - **Docker Ready**: Configuración completa para desarrollo y producción
 
-## Inicio Rápido
+## Instalación Local
 
-### Desarrollo Local
+### Requisitos Previos
+- Node.js 20+ 
+- npm 10+
+- Angular CLI 20+
+
+### Pasos de Instalación
 
 ```bash
-# Instalar dependencias
+# 1. Clonar el repositorio
+git clone https://github.com/Fjrg0309/homefootball.git
+cd homefootball/frontend
+
+# 2. Instalar dependencias
 npm install
 
-# Iniciar servidor de desarrollo
+# 3. Configurar variables de entorno (opcional)
+cp src/environments/environment.ts.example src/environments/environment.ts
+
+# 4. Iniciar servidor de desarrollo
 npm run start
 ```
 
 La aplicación estará disponible en: **http://localhost:4200**
+
+## Inicio Rápido
 
 ### Con Docker
 
@@ -38,29 +73,38 @@ docker-compose up prod
 
 Ver [DOCKER.md](DOCKER.md) para documentación completa de Docker.
 
+### Build de Producción
+
+```bash
+# Generar build de producción
+npm run build
+
+# Los archivos se generan en dist/frontend/browser
+```
+
 ## Estado del Proyecto
 
-### Fase 1: Arquitectura de Eventos - 100% Completada
+### Fase 1: Arquitectura de Eventos
 - Manipulación del DOM (ViewChild, ElementRef, Renderer2)
 - Sistema de eventos (click, keyboard, mouse, custom events)
 - Componentes interactivos (modal, tabs, accordion, tooltip)
 - Theme switcher con modo oscuro
 - Menú mobile responsive
 
-### Fase 2: Arquitectura de Servicios - 100% Completada  
+### Fase 2: Arquitectura de Servicios
 - Servicios de comunicación (Observable, Subject, BehaviorSubject)
 - Sistema de notificaciones (ToastService)
 - Loading states (global y local)
 - Separación clara lógica/presentación
 
-### Fase 3: Formularios Reactivos - 100% Completada
+### Fase 3: Formularios Reactivos
 - 3 formularios completos (UserForm, InvoiceForm, ProductForm)
 - 6 validadores síncronos personalizados
 - 2 validadores asíncronos con debounce
 - FormArray para listas dinámicas
 - Feedback visual completo
 
-### Fase 4: Routing Avanzado - 100% Completada
+### Fase 4: Routing Avanzado
 - 30+ rutas implementadas
 - Lazy loading en 15 rutas con `loadComponent()`
 - 3 Guards (auth, admin, pendingChanges)
@@ -68,7 +112,7 @@ Ver [DOCKER.md](DOCKER.md) para documentación completa de Docker.
 - Breadcrumbs dinámicos
 - Navegación programática
 
-### Fase 5: Integración con APIs - 100% Completada
+### Fase 5: Integración con APIs
 - CRUD completo (12 métodos en ProductService)
 - Consumo de API REST (JSONPlaceholder)
 - 3 interceptores HTTP (auth, error, logging)
@@ -76,10 +120,25 @@ Ver [DOCKER.md](DOCKER.md) para documentación completa de Docker.
 - 15+ interfaces TypeScript
 - Documentación completa de API
 
+### Fase 6: Sistema de Diseño
+- Arquitectura CSS con ITCSS + BEM
+- Design Tokens (colores, tipografía, espaciado)
+- Sistema de temas (claro/oscuro)
+- Responsive design (mobile, tablet, desktop)
+- Componentes visuales reutilizables
+- Documentación de diseño completa
+
+### Fase 7: Aplicación Completa y Despliegue
+- Build de producción sin errores
+- Aplicación desplegada en Digital Ocean
+- URL pública funcional
+- Documentación final actualizada
+
 ### Extras Implementados
 - **Modo Oscuro**: Theme switcher con variables CSS, detección de sistema, persistencia
 - **Docker**: Multi-stage build, Nginx optimizado, hot reload en desarrollo
-- **Documentación**: 8 archivos MD con 4000+ líneas de documentación técnica
+- **SSR**: Server-Side Rendering con Angular SSR y Express
+- **Documentación**: 10+ archivos MD con 5000+ líneas de documentación técnica
 
 ## Documentación
 
@@ -90,6 +149,9 @@ Ver [DOCKER.md](DOCKER.md) para documentación completa de Docker.
 - **[FASE3-PROCESO.md](FASE3-PROCESO.md)** - Formularios Reactivos
 - **[FASE4-PROCESO.md](FASE4-PROCESO.md)** - Routing Avanzado
 - **[FASE5-PROCESO.md](FASE5-PROCESO.md)** - Integración con APIs (3200+ líneas)
+- **[FASE5-DISENO-PROCESO.md](FASE5-DISENO-PROCESO.md)** - Sistema de Diseño CSS
+- **[FASE6-PROCESO.md](FASE6-PROCESO.md)** - Diseño Avanzado
+- **[src/styles/docs/DOCUMENTACION.md](src/styles/docs/DOCUMENTACION.md)** - Documentación completa de diseño CSS
 
 ---
 

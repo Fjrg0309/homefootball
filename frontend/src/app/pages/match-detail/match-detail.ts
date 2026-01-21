@@ -171,7 +171,7 @@ export class MatchDetail implements OnInit {
   });
 
   ngOnInit(): void {
-    // Verificar sesión del usuario PRIMERO
+    // Verificar sesión del usuario PRIMERO (síncrono desde localStorage)
     this.authService.checkSession();
     
     this.route.paramMap.subscribe(params => {
@@ -179,8 +179,8 @@ export class MatchDetail implements OnInit {
       if (id) {
         this.fixtureId.set(parseInt(id, 10));
         this.loadMatchData();
-        // Pequeño delay para asegurar que la sesión se restaure antes de cargar comentarios
-        setTimeout(() => this.loadComments(), 50);
+        // Cargar comentarios inmediatamente después de checkSession
+        this.loadComments();
       }
     });
   }
@@ -199,6 +199,9 @@ export class MatchDetail implements OnInit {
     const matchId = this.fixtureId();
     const userId = this.authService.getUserId();
     
+    // Obtener IDs de comentarios propios guardados en localStorage
+    const ownCommentIds = this.getOwnCommentIds(matchId);
+    
     this.loadingComments.set(true);
     this.commentService.getCommentsByMatch(matchId, userId || undefined).subscribe({
       next: (comments) => {
@@ -207,7 +210,8 @@ export class MatchDetail implements OnInit {
           id: c.id,
           user: (c as any).user || c.username,
           text: (c as any).text || c.texto,
-          isOwner: c.isOwner
+          // isOwner es true si el backend lo dice O si está en nuestros comentarios guardados
+          isOwner: c.isOwner || ownCommentIds.includes(c.id)
         }));
         this.comments.set(displayComments);
         this.loadingComments.set(false);
@@ -219,6 +223,46 @@ export class MatchDetail implements OnInit {
         this.loadMockComments();
       }
     });
+  }
+  
+  /**
+   * Obtener IDs de comentarios propios desde localStorage
+   */
+  private getOwnCommentIds(matchId: number): number[] {
+    if (typeof window === 'undefined') return [];
+    const key = `own_comments_${matchId}`;
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  }
+  
+  /**
+   * Guardar ID de comentario propio en localStorage
+   */
+  private saveOwnCommentId(matchId: number, commentId: number): void {
+    if (typeof window === 'undefined') return;
+    const key = `own_comments_${matchId}`;
+    const ids = this.getOwnCommentIds(matchId);
+    if (!ids.includes(commentId)) {
+      ids.push(commentId);
+      localStorage.setItem(key, JSON.stringify(ids));
+    }
+  }
+  
+  /**
+   * Eliminar ID de comentario propio de localStorage
+   */
+  private removeOwnCommentId(matchId: number, commentId: number): void {
+    if (typeof window === 'undefined') return;
+    const key = `own_comments_${matchId}`;
+    const ids = this.getOwnCommentIds(matchId).filter(id => id !== commentId);
+    localStorage.setItem(key, JSON.stringify(ids));
   }
 
   /**
@@ -347,10 +391,12 @@ export class MatchDetail implements OnInit {
    */
   deleteComment(commentId: number): void {
     const userId = this.authService.getUserId();
+    const matchId = this.fixtureId();
     
     if (!userId) {
       // Sin usuario logueado, eliminar localmente (mock)
       this.comments.update(comments => comments.filter(c => c.id !== commentId));
+      this.removeOwnCommentId(matchId, commentId);
       return;
     }
 
@@ -358,12 +404,14 @@ export class MatchDetail implements OnInit {
       next: (deleted) => {
         if (deleted) {
           this.comments.update(comments => comments.filter(c => c.id !== commentId));
+          this.removeOwnCommentId(matchId, commentId);
         }
       },
       error: (err) => {
         console.error('Error eliminando comentario:', err);
         // Eliminar localmente aunque falle
         this.comments.update(comments => comments.filter(c => c.id !== commentId));
+        this.removeOwnCommentId(matchId, commentId);
       }
     });
   }
@@ -394,13 +442,15 @@ export class MatchDetail implements OnInit {
 
     if (!userId) {
       // Sin usuario logueado, crear comentario mock local
+      const mockId = Date.now();
       const mockComment: DisplayComment = {
-        id: Date.now(),
+        id: mockId,
         user: 'Invitado',
         text: text,
         isOwner: true
       };
       this.comments.update(comments => [...comments, mockComment]);
+      this.saveOwnCommentId(matchId, mockId);
       this.newComment.set('');
       return;
     }
@@ -416,19 +466,23 @@ export class MatchDetail implements OnInit {
             isOwner: true
           };
           this.comments.update(comments => [...comments, displayComment]);
+          // Guardar en localStorage para persistencia
+          this.saveOwnCommentId(matchId, comment.id);
         }
         this.newComment.set('');
       },
       error: (err) => {
         console.error('Error creando comentario:', err);
         // Crear localmente aunque falle
+        const localId = Date.now();
         const localComment: DisplayComment = {
-          id: Date.now(),
+          id: localId,
           user: this.currentUser()?.username || 'Usuario',
           text: text,
           isOwner: true
         };
         this.comments.update(comments => [...comments, localComment]);
+        this.saveOwnCommentId(matchId, localId);
         this.newComment.set('');
       }
     });

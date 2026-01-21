@@ -167,11 +167,12 @@
                     @if (comment.isOwner) {
                       <button class="comment-item__delete" (click)="deleteComment(comment.id)" title="Eliminar comentario">
                         <!-- Icono de papelera -->
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#a14545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block; width: 16px; height: 16px;">
-                          <path d="M3 6H5H21"/>
-                          <path d="M8 6V4C8 3.47 8.21 2.96 8.59 2.59C8.96 2.21 9.47 2 10 2H14C14.53 2 15.04 2.21 15.41 2.59C15.79 2.96 16 3.47 16 4V6M19 6V20C19 20.53 18.79 21.04 18.41 21.41C18.04 21.79 17.53 22 17 22H7C6.47 22 5.96 21.79 5.59 21.41C5.21 21.04 5 20.53 5 20V6H19Z"/>
-                          <path d="M10 11V17"/>
-                          <path d="M14 11V17"/>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M3 6h18"/>
+                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                          <path d="M10 11v6"/>
+                          <path d="M14 11v6"/>
                         </svg>
                       </button>
                     }
@@ -197,7 +198,7 @@
                     type="button"
                     title="Enviar comentario">
                     <!-- Icono de flecha de envío -->
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2d8f5a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block; width: 20px; height: 20px;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M22 2L11 13"/>
                       <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
                     </svg>
