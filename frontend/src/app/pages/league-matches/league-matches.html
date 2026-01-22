@@ -8,10 +8,10 @@
       <h1 class="league-matches__title">Partidos - {{ leagueName() }}</h1>
     </header>
 
-    <!-- Navegación de jornadas -->
+    <!-- Navegación de jornadas y temporada -->
     <nav class="date-navigation">
       <button class="date-navigation__btn date-navigation__btn--prev" (click)="goToPreviousRound()" [disabled]="loading() || isFirstRound()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D26A" stroke-width="2.5">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </button>
@@ -27,10 +27,24 @@
       </div>
       
       <button class="date-navigation__btn date-navigation__btn--next" (click)="goToNextRound()" [disabled]="loading() || isLastRound()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D26A" stroke-width="2.5">
           <path d="M9 18l6-6-6-6"/>
         </svg>
       </button>
+      
+      <!-- Selector de temporada -->
+      <div class="date-navigation__season">
+        <label for="season-select" class="date-navigation__season-label">Temporada:</label>
+        <select 
+          id="season-select"
+          class="date-navigation__season-select"
+          [value]="season()"
+          (change)="changeSeason($event)">
+          @for (seasonYear of availableSeasons(); track seasonYear) {
+            <option [value]="seasonYear">{{ seasonYear }}-{{ seasonYear + 1 }}</option>
+          }
+        </select>
+      </div>
     </nav>
 
     <!-- Estado de carga -->

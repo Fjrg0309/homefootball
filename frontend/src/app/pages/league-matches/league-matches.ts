@@ -17,7 +17,7 @@ const LEAGUE_SEASONS: Record<number, number> = {
   88: 2023,   // Eredivisie
   203: 2023,  // Süper Lig
   253: 2023,  // MLS
-  262: 2023,  // Liga MX
+  71: 2023,   // Brasileirão
   40: 2023,   // Championship
   2: 2023,    // Champions League
   3: 2023,    // Europa League
@@ -36,7 +36,7 @@ const LEAGUE_LAST_ROUND: Record<number, number> = {
   88: 34,   // Eredivisie - 34 jornadas
   203: 38,  // Süper Lig - 38 jornadas
   253: 34,  // MLS - 34 jornadas
-  262: 34,  // Liga MX - 34 jornadas
+  71: 38,   // Brasileirão - 38 jornadas
   40: 46,   // Championship - 46 jornadas
   2: 8,     // Champions League - fase de grupos
   3: 8,     // Europa League - fase de grupos
@@ -55,7 +55,7 @@ const LEAGUE_ID_MAP: Record<string, number> = {
   'eredivisie': 88,
   'super-lig': 203,
   'mls': 253,
-  'liga-mx': 262,
+  'brasileirao': 71,
   'championship': 40,
   'champions-league': 2,
   'europa-league': 3,
@@ -73,7 +73,7 @@ const LEAGUE_NAMES: Record<string, string> = {
   'eredivisie': 'Eredivisie',
   'super-lig': 'Süper Lig',
   'mls': 'MLS',
-  'liga-mx': 'Liga MX',
+  'brasileirao': 'Brasileirão',
   'championship': 'Championship',
   'champions-league': 'Champions League',
   'europa-league': 'Europa League',
@@ -115,6 +115,9 @@ export class LeagueMatches implements OnInit {
   currentRound = signal<number>(38);
   maxRound = signal<number>(38);
   season = signal<number>(2023);
+  
+  // Temporadas disponibles (basadas en datos disponibles en la API)
+  availableSeasons = signal<number[]>([2024, 2023, 2022, 2021, 2020]);
   
   // Fecha de los partidos de la jornada (se obtiene del primer partido)
   roundDate = signal<string>('');
@@ -362,6 +365,18 @@ export class LeagueMatches implements OnInit {
   goToFirstRound(): void {
     this.currentRound.set(1);
     this.loadMatchesForRound(1);
+  }
+
+  /**
+   * Cambiar temporada
+   */
+  changeSeason(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const newSeason = parseInt(select.value, 10);
+    this.season.set(newSeason);
+    // Volver a la última jornada de la nueva temporada
+    this.currentRound.set(this.maxRound());
+    this.loadMatchesForRound(this.currentRound());
   }
 
   /**

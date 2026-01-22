@@ -62,7 +62,7 @@ export class LeagueTeams implements OnInit {
             'eredivisie': 88,
             'super-lig': 203,
             'mls': 253,
-            'liga-mx': 262,
+            'brasileirao': 71,
             'championship': 40,
             'ligue-2': 62
           };

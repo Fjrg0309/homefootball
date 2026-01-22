@@ -22,7 +22,7 @@ const LEAGUE_DESCRIPTIONS: Record<string, string> = {
   'eredivisie': 'La Eredivisie es la primera división del fútbol neerlandés, famosa por su filosofía de fútbol ofensivo y atractivo. Ajax de Ámsterdam, PSV Eindhoven y Feyenoord son los clubes más importantes. Holanda ha sido pionera en el "fútbol total" y ha producido leyendas como Cruyff, Van Basten, Bergkamp y actualmente sigue exportando grandes talentos.',
   'super-lig': 'La Süper Lig es la máxima categoría del fútbol turco, conocida por la pasión de sus aficionados. Galatasaray, Fenerbahçe y Beşiktaş, los tres grandes de Estambul, dominan la competición. En los últimos años ha atraído a estrellas internacionales veteranas buscando nuevos desafíos.',
   'mls': 'La Major League Soccer (MLS) es la máxima liga de fútbol en Estados Unidos y Canadá. Fundada en 1996, ha experimentado un crecimiento exponencial, atrayendo tanto a estrellas veteranas como a jóvenes promesas. Equipos como LA Galaxy, Inter Miami y Atlanta United lideran la expansión del fútbol en Norteamérica.',
-  'liga-mx': 'La Liga MX es la primera división del fútbol mexicano y una de las más competitivas de América. Clubes históricos como Club América, Chivas de Guadalajara, Cruz Azul y Pumas UNAM protagonizan intensas rivalidades. Es conocida por su formato de liguilla y por ser el destino de muchos jugadores sudamericanos.',
+  'brasileirao': 'El Campeonato Brasileiro Série A, conocido como Brasileirão, es la liga de fútbol más importante de Brasil y una de las más competitivas del mundo. Clubes legendarios como Flamengo, Palmeiras, São Paulo, Corinthians y Santos luchan por el título cada temporada. Es conocida por su alto nivel técnico y por ser la cuna de grandes estrellas del fútbol mundial.',
   'championship': 'El Championship es la segunda división del fútbol inglés y es considerada una de las ligas más competitivas del mundo por nivel. Con 24 equipos luchando por el ascenso a la Premier League, cada temporada ofrece drama e intensidad. Muchos clubes históricos como Leeds United y Nottingham Forest han pasado por esta categoría.',
   'ligue-2': 'La Ligue 2 es la segunda división del fútbol francés. Sirve como escalón hacia la Ligue 1 y es conocida por su competitividad. Muchos clubes históricos franceses han pasado por esta categoría en su camino de vuelta a la élite.',
   // Ligas europeas adicionales
@@ -58,7 +58,7 @@ const LEAGUE_API_IDS: Record<string, number> = {
   'eredivisie': 88,
   'super-lig': 203,
   'mls': 253,
-  'liga-mx': 262,
+  'brasileirao': 71,
   'championship': 40,
   'scottish-premiership': 179,
   'belgian-pro-league': 144,
@@ -126,7 +126,7 @@ export class LeagueDetail implements OnInit {
       'eredivisie': { id: 'eredivisie', name: 'Eredivisie', country: 'Países Bajos' },
       'super-lig': { id: 'super-lig', name: 'Süper Lig', country: 'Turquía' },
       'mls': { id: 'mls', name: 'MLS', country: 'Estados Unidos' },
-      'liga-mx': { id: 'liga-mx', name: 'Liga MX', country: 'México' },
+      'brasileirao': { id: 'brasileirao', name: 'Brasileirão', country: 'Brasil' },
       'championship': { id: 'championship', name: 'Championship', country: 'Inglaterra' },
       // Ligas europeas adicionales
       'scottish-premiership': { id: 'scottish-premiership', name: 'Scottish Premiership', country: 'Escocia' },

@@ -17,7 +17,7 @@ const LEAGUE_SEASONS: Record<number, number> = {
   88: 2023,   // Eredivisie
   203: 2023,  // Süper Lig
   253: 2023,  // MLS
-  262: 2023,  // Liga MX
+  71: 2023,   // Brasileirão
   40: 2023,   // Championship
   2: 2023,    // Champions League
   3: 2023,    // Europa League
@@ -36,7 +36,7 @@ const LEAGUE_ID_MAP: Record<string, number> = {
   'eredivisie': 88,
   'super-lig': 203,
   'mls': 253,
-  'liga-mx': 262,
+  'brasileirao': 71,
   'championship': 40,
   'champions-league': 2,
   'europa-league': 3,
@@ -54,7 +54,7 @@ const LEAGUE_NAMES: Record<string, string> = {
   'eredivisie': 'Eredivisie',
   'super-lig': 'Süper Lig',
   'mls': 'MLS',
-  'liga-mx': 'Liga MX',
+  'brasileirao': 'Brasileirão',
   'championship': 'Championship',
   'champions-league': 'Champions League',
   'europa-league': 'Europa League',

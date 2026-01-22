@@ -154,10 +154,16 @@
     }
   }
 
-  &__empty-hint {
+  &__empty-hint,
+  &__hint-tip {
     font-size: 0.875rem;
     margin-top: 0.5rem;
     opacity: 0.8;
+  }
+
+  &__hint-tip {
+    color: var(--color-accent);
+    font-style: italic;
   }
 }
 

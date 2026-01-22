@@ -76,14 +76,15 @@ export class Main implements OnInit {
   loadMatches(): void {
     this.loadingMatches.set(true);
     
-    // Obtener partidos de las ligas más importantes
+    // Obtener partidos recientes/en vivo de las ligas más importantes
     // LaLiga (140), Premier League (39), Serie A (135), Bundesliga (78), Ligue 1 (61)
-    const leagueIds = [140, 39, 135, 78, 61];
+    // Champions League (2), Europa League (3)
+    const leagueIds = [140, 39, 135, 78, 61, 2, 3];
     const currentSeason = 2024;
     
-    // Obtener partidos recientes/próximos de las ligas principales
+    // Obtener partidos de la última jornada/ronda de cada liga
     const requests = leagueIds.map(leagueId => 
-      this.footballApi.getFixturesByLeague(leagueId, currentSeason)
+      this.footballApi.getLatestRound(leagueId, currentSeason)
     );
 
     forkJoin(requests).subscribe({
