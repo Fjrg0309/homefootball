@@ -1,8 +1,11 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
+import { FavoritoService } from '../../services/favorito.service';
+import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 interface League {
   id: string;
@@ -88,6 +91,10 @@ const LEAGUE_API_IDS: Record<string, number> = {
   styleUrl: './league-detail.scss'
 })
 export class LeagueDetail implements OnInit {
+  private route = inject(ActivatedRoute);
+  private favoritoService = inject(FavoritoService);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
   
   // Signal para la liga actual
   league = signal<League | null>(null);
@@ -100,8 +107,6 @@ export class LeagueDetail implements OnInit {
   
   // Información "Acerca de" de la liga - ahora dinámico
   aboutText = signal<string>('');
-
-  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     // Obtener el ID de la liga desde la URL
@@ -165,57 +170,71 @@ export class LeagueDetail implements OnInit {
    * Verificar si la liga actual está en favoritos
    */
   private checkFavoriteStatus(leagueId: string): void {
-    const favorites = this.getFavorites();
-    this.isFavorite.set(favorites.includes(leagueId));
-  }
-
-  /**
-   * Obtener lista de favoritos desde localStorage
-   */
-  private getFavorites(): string[] {
-    try {
-      const favoritesJson = localStorage.getItem('favorite-leagues');
-      return favoritesJson ? JSON.parse(favoritesJson) : [];
-    } catch (error) {
-      console.error('Error al leer favoritos:', error);
-      return [];
+    if (!this.authService.isLoggedIn()) {
+      this.isFavorite.set(false);
+      return;
     }
-  }
 
-  /**
-   * Guardar lista de favoritos en localStorage
-   */
-  private saveFavorites(favorites: string[]): void {
-    try {
-      localStorage.setItem('favorite-leagues', JSON.stringify(favorites));
-    } catch (error) {
-      console.error('Error al guardar favoritos:', error);
+    const apiId = LEAGUE_API_IDS[leagueId];
+    if (!apiId) {
+      this.isFavorite.set(false);
+      return;
     }
+
+    this.favoritoService.isFavorito('LIGA', apiId).subscribe({
+      next: (isFav) => {
+        console.log('League favorite status:', isFav);
+        this.isFavorite.set(isFav);
+      },
+      error: (err) => {
+        console.error('Error checking favorite:', err);
+        this.isFavorite.set(false);
+      }
+    });
   }
 
   /**
    * Toggle favorito - añadir o quitar liga de favoritos
    */
   toggleFavorite(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.toastService.error('Inicia sesión para guardar favoritos');
+      return;
+    }
+
     const league = this.league();
     if (!league) return;
 
-    const favorites = this.getFavorites();
-    const index = favorites.indexOf(league.id);
-
-    if (index > -1) {
-      // Quitar de favoritos
-      favorites.splice(index, 1);
-      this.isFavorite.set(false);
-      console.log(`${league.name} quitada de favoritos`);
-    } else {
-      // Añadir a favoritos
-      favorites.push(league.id);
-      this.isFavorite.set(true);
-      console.log(`${league.name} añadida a favoritos`);
+    const apiId = LEAGUE_API_IDS[league.id];
+    if (!apiId) {
+      this.toastService.error('Error: Liga no válida');
+      return;
     }
 
-    this.saveFavorites(favorites);
+    const request = {
+      tipo: 'LIGA',
+      itemId: apiId,
+      nombre: league.name,
+      imagen: `/assets/images/leagues/${league.id}.png`
+    };
+
+    this.favoritoService.toggleFavorito(request).subscribe({
+      next: (response) => {
+        console.log('Toggle response:', response);
+        const nowIsFavorite = response.isFavorito;
+        this.isFavorite.set(nowIsFavorite);
+        
+        if (nowIsFavorite) {
+          this.toastService.success(`${league.name} añadida a favoritos`);
+        } else {
+          this.toastService.info(`${league.name} eliminada de favoritos`);
+        }
+      },
+      error: (err) => {
+        console.error('Error toggle favorito:', err);
+        this.toastService.error('Error al actualizar favoritos');
+      }
+    });
   }
 
   // Navegación a secciones

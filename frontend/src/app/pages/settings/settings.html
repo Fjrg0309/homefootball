@@ -1,0 +1,73 @@
+<app-header />
+
+<main class="settings">
+  <section class="settings__container">
+    
+    <!-- Contenido de configuración -->
+    <h1 class="settings__title">Configuración</h1>
+
+    <!-- Opciones de configuración -->
+    <div class="settings__options">
+      
+      <!-- Idioma -->
+      <div class="settings__option">
+        <label class="settings__label" for="language">Idioma</label>
+        <select 
+          id="language" 
+          class="settings__select"
+          [value]="selectedLanguage()"
+          (change)="onLanguageChange($event)"
+        >
+          @for (lang of languages; track lang) {
+            <option [value]="lang">{{ lang }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Notificaciones -->
+      <div class="settings__option">
+        <label class="settings__label">Notificaciones</label>
+        <button 
+          type="button"
+          class="settings__toggle-btn"
+          [class.settings__toggle-btn--active]="notificationsEnabled()"
+          (click)="toggleNotifications()"
+        >
+          {{ notificationsEnabled() ? 'Activadas' : 'Desactivadas' }}
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Botones de acción -->
+    @if (isLoggedIn()) {
+      <div class="settings__actions">
+        <button 
+          type="button" 
+          class="settings__btn settings__btn--logout"
+          (click)="logout()"
+        >
+          Cerrar sesión
+        </button>
+        
+        <button 
+          type="button" 
+          class="settings__btn settings__btn--delete"
+          (click)="deleteAccount()"
+        >
+          Borrar cuenta
+        </button>
+      </div>
+    } @else {
+      <div class="settings__login-prompt">
+        <p class="settings__login-text">Inicia sesión para acceder a más opciones</p>
+        <a routerLink="/" class="settings__btn settings__btn--primary">
+          Ir al inicio
+        </a>
+      </div>
+    }
+
+  </section>
+</main>
+
+<app-footer />

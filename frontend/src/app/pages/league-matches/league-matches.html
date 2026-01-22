@@ -10,11 +10,22 @@
 
     <!-- Navegación de jornadas y temporada -->
     <nav class="date-navigation">
-      <button class="date-navigation__btn date-navigation__btn--prev" (click)="goToPreviousRound()" [disabled]="loading() || isFirstRound()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D26A" stroke-width="2.5">
-          <path d="M15 18l-6-6 6-6"/>
-        </svg>
-      </button>
+      <svg 
+        class="date-navigation__arrow date-navigation__arrow--prev" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="2.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        (click)="goToPreviousRound()"
+        [class.date-navigation__arrow--disabled]="loading() || isFirstRound()"
+        role="button"
+        tabindex="0"
+        [attr.aria-disabled]="loading() || isFirstRound()"
+        aria-label="Jornada anterior">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
       
       <div class="date-navigation__center">
         <span class="date-navigation__date">{{ formattedRound() }}</span>
@@ -26,11 +37,22 @@
         }
       </div>
       
-      <button class="date-navigation__btn date-navigation__btn--next" (click)="goToNextRound()" [disabled]="loading() || isLastRound()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D26A" stroke-width="2.5">
-          <path d="M9 18l6-6-6-6"/>
-        </svg>
-      </button>
+      <svg 
+        class="date-navigation__arrow date-navigation__arrow--next" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="2.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        (click)="goToNextRound()"
+        [class.date-navigation__arrow--disabled]="loading() || isLastRound()"
+        role="button"
+        tabindex="0"
+        [attr.aria-disabled]="loading() || isLastRound()"
+        aria-label="Jornada siguiente">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
       
       <!-- Selector de temporada -->
       <div class="date-navigation__season">

@@ -1,0 +1,326 @@
+// =============================================
+// PÁGINA DE AJUSTES / CONFIGURACIÓN
+// =============================================
+
+.settings {
+  min-height: 100vh;
+  padding-top: var(--header-height, 70px);
+  background-color: var(--color-primary);
+  display: flex;
+  justify-content: center;
+}
+
+.settings__container {
+  width: 100%;
+  max-width: 500px;
+  padding: var(--spacing-8) var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-6);
+}
+
+.settings__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 2px solid var(--color-neutral-200);
+  width: 100%;
+
+  [data-theme="dark"] & {
+    border-color: var(--color-neutral-300);
+    color: var(--color-text);
+  }
+}
+
+// =============================================
+// OPCIONES DE CONFIGURACIÓN
+// =============================================
+.settings__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+  width: 100%;
+}
+
+.settings__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+}
+
+.settings__label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  min-width: 120px;
+}
+
+// Select de idioma
+.settings__select {
+  flex: 1;
+  max-width: 160px;
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background-color: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(0, 217, 95, 0.1);
+  }
+
+  [data-theme="dark"] & {
+    background-color: var(--color-neutral-200);
+    border-color: var(--color-neutral-400);
+    color: var(--color-text);
+
+    &:hover {
+      border-color: var(--color-accent);
+    }
+  }
+}
+
+// Toggle de notificaciones
+.settings__toggle-btn {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  background-color: var(--color-neutral-200);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+
+  &:hover {
+    background-color: var(--color-neutral-300);
+  }
+
+  &--active {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: white;
+
+    &:hover {
+      background-color: var(--color-accent);
+      filter: brightness(0.9);
+    }
+  }
+
+  [data-theme="dark"] & {
+    background-color: var(--color-neutral-200);
+    border-color: var(--color-neutral-400);
+    color: var(--color-text);
+
+    &:hover {
+      background-color: var(--color-neutral-300);
+    }
+
+    &--active {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: white;
+    }
+  }
+}
+
+// =============================================
+// BOTONES DE ACCIÓN
+// =============================================
+.settings__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--color-neutral-200);
+  width: 100%;
+
+  [data-theme="dark"] & {
+    border-color: var(--color-neutral-300);
+  }
+}
+
+.settings__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: 2px solid transparent;
+
+  &--primary {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+
+    &:hover {
+      background-color: transparent;
+      color: var(--color-primary);
+    }
+  }
+
+  &--logout {
+    background-color: var(--color-error);
+    color: white;
+    border-color: var(--color-error);
+
+    &:hover {
+      background-color: transparent;
+      color: var(--color-error);
+    }
+  }
+
+  &--delete {
+    background-color: var(--color-warning);
+    color: white;
+    border-color: var(--color-warning);
+
+    &:hover {
+      background-color: transparent;
+      color: var(--color-warning);
+    }
+  }
+}
+
+// =============================================
+// PROMPT DE LOGIN
+// =============================================
+.settings__login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--color-neutral-200);
+  width: 100%;
+
+  [data-theme="dark"] & {
+    border-color: var(--color-neutral-300);
+  }
+}
+
+.settings__login-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+// =============================================
+// FOOTER CON REDES SOCIALES
+// =============================================
+.settings__footer {
+  width: 100%;
+  padding: var(--spacing-6) 0;
+  text-align: center;
+}
+
+.settings__footer-text {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-4);
+}
+
+.settings__social {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-4);
+}
+
+.settings__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  color: white;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &--twitter {
+    background-color: #000;
+    
+    &:hover {
+      background-color: #333;
+    }
+  }
+
+  &--instagram {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  &--tiktok {
+    background-color: #000;
+    
+    &:hover {
+      background-color: #333;
+    }
+  }
+}
+
+// =============================================
+// RESPONSIVE
+// =============================================
+@media (max-width: 480px) {
+  .settings__container {
+    padding: var(--spacing-4) var(--spacing-3);
+  }
+
+  .settings__header {
+    padding: var(--spacing-6) var(--spacing-4);
+  }
+
+  .settings__card {
+    padding: var(--spacing-6) var(--spacing-4);
+  }
+
+  .settings__option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+
+  .settings__select,
+  .settings__toggle-btn {
+    width: 100%;
+    max-width: none;
+  }
+
+  .settings__footer {
+    padding: var(--spacing-4) 0;
+  }
+
+  .settings__social-link {
+    width: 44px;
+    height: 44px;
+  }
+}

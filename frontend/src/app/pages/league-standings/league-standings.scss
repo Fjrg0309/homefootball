@@ -148,6 +148,12 @@
     
     [data-theme="dark"] & {
       border-color: var(--color-neutral-400);
+      
+      &--active {
+        background-color: rgba(16, 185, 129, 0.15);
+        color: var(--color-accent);
+        border-color: var(--color-accent);
+      }
     }
   }
 

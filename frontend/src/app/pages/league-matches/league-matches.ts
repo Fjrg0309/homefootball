@@ -5,23 +5,23 @@ import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
 import { FootballApiService, FixtureData } from '../../services/football-api.service';
 
-// Configuración de temporadas por liga (2023 = temporada 2023-2024)
+// Configuración de temporadas por liga (2024 = temporada 2024-2025)
 const LEAGUE_SEASONS: Record<number, number> = {
-  140: 2023,  // LaLiga (temporada 2023-2024)
-  39: 2023,   // Premier League
-  135: 2023,  // Serie A
-  78: 2023,   // Bundesliga
-  61: 2023,   // Ligue 1
-  62: 2023,   // Ligue 2
-  94: 2023,   // Primeira Liga
-  88: 2023,   // Eredivisie
-  203: 2023,  // Süper Lig
-  253: 2023,  // MLS
-  71: 2023,   // Brasileirão
-  40: 2023,   // Championship
-  2: 2023,    // Champions League
-  3: 2023,    // Europa League
-  848: 2023   // Conference League
+  140: 2024,  // LaLiga (temporada 2024-2025)
+  39: 2024,   // Premier League
+  135: 2024,  // Serie A
+  78: 2024,   // Bundesliga
+  61: 2024,   // Ligue 1
+  62: 2024,   // Ligue 2
+  94: 2024,   // Primeira Liga
+  88: 2024,   // Eredivisie
+  203: 2024,  // Süper Lig
+  253: 2024,  // MLS
+  71: 2024,   // Brasileirão
+  40: 2024,   // Championship
+  2: 2024,    // Champions League
+  3: 2024,    // Europa League
+  848: 2024   // Conference League
 };
 
 // Última jornada disponible por liga
@@ -114,7 +114,7 @@ export class LeagueMatches implements OnInit {
   // Jornada actual seleccionada
   currentRound = signal<number>(38);
   maxRound = signal<number>(38);
-  season = signal<number>(2023);
+  season = signal<number>(2024);
   
   // Temporadas disponibles (basadas en datos disponibles en la API)
   availableSeasons = signal<number[]>([2024, 2023, 2022, 2021, 2020]);
@@ -153,7 +153,7 @@ export class LeagueMatches implements OnInit {
       this.leagueName.set(LEAGUE_NAMES[id] || id);
       
       // Configurar temporada y jornada máxima para esta liga
-      this.season.set(LEAGUE_SEASONS[apiId] || 2023);
+      this.season.set(LEAGUE_SEASONS[apiId] || 2024);
       this.maxRound.set(LEAGUE_LAST_ROUND[apiId] || 38);
       this.currentRound.set(this.maxRound());
       
@@ -266,11 +266,10 @@ export class LeagueMatches implements OnInit {
     } else {
       console.log('⚠️ No se encontraron partidos');
       
-      // Si no hay datos y podemos intentar con la temporada anterior
-      if (retryWithPreviousSeason && updateCurrentRound && this.season() > 2020) {
-        const previousSeason = this.season() - 1;
-        console.log(`🔄 Intentando con temporada anterior: ${previousSeason}`);
-        this.season.set(previousSeason);
+      // Si no hay datos en temporada 2024, intentar con 2023
+      if (retryWithPreviousSeason && updateCurrentRound && this.season() === 2024) {
+        console.log('🔄 No hay partidos en 2024, intentando con temporada 2023');
+        this.season.set(2023);
         this.loadMatchesForRound(this.maxRound());
         return; // No establecer loading=false, la nueva petición lo hará
       }

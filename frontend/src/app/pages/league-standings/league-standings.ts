@@ -208,10 +208,11 @@ export class LeagueStandings implements OnInit {
   // Título según la vista
   viewTitle = computed(() => {
     const view = this.currentView();
+    const name = this.leagueName();
     switch (view) {
-      case 'home': return 'Clasificación - Local';
-      case 'away': return 'Clasificación - Visitante';
-      default: return 'Clasificación de liga seleccionada';
+      case 'home': return `Clasificación de ${name} - Local`;
+      case 'away': return `Clasificación de ${name} - Visitante`;
+      default: return `Clasificación de ${name}`;
     }
   });
 

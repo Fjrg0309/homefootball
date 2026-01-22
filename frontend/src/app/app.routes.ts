@@ -3,6 +3,7 @@ import { About } from './pages/about/about';
 import { Register } from './pages/register/register';
 import { Profile } from './pages/profile/profile';
 import { Home } from './pages/home/home';
+import { Settings } from './pages/settings/settings';
 import { NotFound } from './components/shared/not-found/not-found';
 import { authGuard, adminGuard } from './guards/auth.guard';
 import { pendingChangesGuard } from './guards/pending-changes.guard';
@@ -18,6 +19,7 @@ export const routes: Routes = [
   // Rutas públicas
   { path: 'register', component: Register, data: { breadcrumb: 'Registro' } },
   { path: 'about', component: About, data: { breadcrumb: 'Acerca' } },
+  { path: 'ajustes', component: Settings, data: { breadcrumb: 'Ajustes' } },
   
   // Rutas protegidas con authGuard
   {

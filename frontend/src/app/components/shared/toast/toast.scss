@@ -8,65 +8,169 @@
 .toast {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
+  gap: 0;
+  padding: 0;
+  border-radius: 12px;
   color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   cursor: pointer;
-  min-width: 300px;
-  max-width: 500px;
-  transition: all 0.3s ease;
+  min-width: 320px;
+  max-width: 420px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  background: #1a1a2e;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
   }
 
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 
+      0 20px 50px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  }
+
+  // Franja lateral estilo banderín de córner
+  &-stripe {
+    width: 6px;
+    height: 100%;
+    min-height: 70px;
+    flex-shrink: 0;
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    flex: 1;
+  }
+
+  // Variantes con colores de fútbol
   &-success {
-    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+    
+    .toast-stripe {
+      background: linear-gradient(180deg, #00d95f 0%, #00a847 100%);
+    }
+    
+    .toast-icon {
+      color: #00d95f;
+      filter: drop-shadow(0 0 8px rgba(0, 217, 95, 0.5));
+    }
   }
 
   &-error {
-    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    background: linear-gradient(135deg, #4a1a1a 0%, #2d0f0f 100%);
+    
+    .toast-stripe {
+      background: linear-gradient(180deg, #ff4757 0%, #c0392b 100%);
+    }
+    
+    .toast-icon {
+      color: #ff4757;
+      filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.5));
+    }
   }
 
   &-info {
-    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    background: linear-gradient(135deg, #1a3a4a 0%, #0f2530 100%);
+    
+    .toast-stripe {
+      background: linear-gradient(180deg, #3498db 0%, #2980b9 100%);
+    }
+    
+    .toast-icon {
+      color: #3498db;
+      filter: drop-shadow(0 0 8px rgba(52, 152, 219, 0.5));
+    }
   }
 
   &-warning {
-    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    background: linear-gradient(135deg, #4a3a1a 0%, #302508 100%);
+    
+    .toast-stripe {
+      background: linear-gradient(180deg, #f1c40f 0%, #d4a00a 100%);
+    }
+    
+    .toast-icon {
+      color: #f1c40f;
+      filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.5));
+    }
   }
 
   &-icon {
-    font-size: 1.5rem;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    
+    svg {
+      width: 24px;
+      height: 24px;
+    }
   }
 
   &-message {
     flex: 1;
-    line-height: 1.4;
+    line-height: 1.5;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   &-close {
-    background: none;
+    background: rgba(255, 255, 255, 0.1);
     border: none;
-    color: white;
-    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
-    padding: 0;
-    width: 24px;
-    height: 24px;
+    padding: 0.5rem;
+    margin: 0.75rem;
+    margin-left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    transition: background 0.2s ease;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      transform: scale(1.1);
     }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// Animación de entrada tipo marcador de gol
+@keyframes goalCelebration {
+  0% {
+    opacity: 0;
+    transform: translateX(100px) scale(0.8);
+  }
+  50% {
+    transform: translateX(-10px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }
 
@@ -79,5 +183,14 @@
 
   .toast {
     min-width: auto;
+    max-width: none;
+    
+    &-content {
+      padding: 0.875rem 1rem;
+    }
+    
+    &-message {
+      font-size: 0.875rem;
+    }
   }
 }

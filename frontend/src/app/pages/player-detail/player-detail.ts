@@ -179,7 +179,7 @@ export class PlayerDetail implements OnInit {
    */
   toggleFavorite(): void {
     if (!this.authService.isLoggedIn()) {
-      this.toastService.warning('Inicia sesión para guardar favoritos');
+      this.toastService.error('Inicia sesión para guardar favoritos');
       return;
     }
 
