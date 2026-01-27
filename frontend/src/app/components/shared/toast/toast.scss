@@ -1,3 +1,6 @@
+// Toast Notifications - Diseño temático de fútbol
+// Estilo de marcador de estadio / pantalla LED
+
 .toast-container {
   position: fixed;
   top: 20px;
@@ -7,106 +10,191 @@
 
 .toast {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 0;
   padding: 0;
-  border-radius: 12px;
+  border-radius: 16px;
   color: white;
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   cursor: pointer;
-  min-width: 320px;
-  max-width: 420px;
+  min-width: 340px;
+  max-width: 450px;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  background: #1a1a2e;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 
+  // Efecto de brillo superior
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
     pointer-events: none;
+    border-radius: 16px 16px 0 0;
+  }
+
+  // Borde LED animado
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255,255,255,0.3) 25%, 
+      rgba(255,255,255,0.5) 50%, 
+      rgba(255,255,255,0.3) 75%, 
+      transparent 100%);
+    background-size: 200% 100%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: shimmer 2s infinite linear;
   }
 
   &:hover {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 
-      0 20px 50px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+      0 20px 50px rgba(0, 0, 0, 0.5),
+      0 0 30px var(--toast-glow, rgba(255,255,255,0.2));
   }
 
-  // Franja lateral estilo banderín de córner
+  // Panel lateral con icono (estilo banderín/marcador)
   &-stripe {
-    width: 6px;
-    height: 100%;
-    min-height: 70px;
+    width: 70px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    position: relative;
+    
+    // Patrón de rayas de campo de fútbol
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 8px,
+        rgba(255,255,255,0.05) 8px,
+        rgba(255,255,255,0.05) 16px
+      );
+    }
   }
 
   &-content {
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    flex-direction: column;
+    justify-content: center;
     padding: 1rem 1.25rem;
     flex: 1;
+    gap: 0.25rem;
   }
 
-  // Variantes con colores de fútbol
+  // ==========================================
+  // VARIANTE: ÉXITO - GOL / PORTERÍA
+  // ==========================================
   &-success {
-    background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+    background: linear-gradient(135deg, #0d9f4f 0%, #0a7b3e 50%, #065f2e 100%);
+    box-shadow: 
+      0 10px 40px rgba(13, 159, 79, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+    --toast-glow: rgba(34, 197, 94, 0.5);
     
     .toast-stripe {
-      background: linear-gradient(180deg, #00d95f 0%, #00a847 100%);
+      background: linear-gradient(180deg, #10b556 0%, #0d9f4f 50%, #0a7b3e 100%);
     }
     
     .toast-icon {
-      color: #00d95f;
-      filter: drop-shadow(0 0 8px rgba(0, 217, 95, 0.5));
+      color: #a7f3d0;
+      filter: drop-shadow(0 0 10px rgba(167, 243, 208, 0.8));
+    }
+
+    .toast-label {
+      color: #a7f3d0;
     }
   }
 
+  // ==========================================
+  // VARIANTE: ERROR - TARJETA ROJA
+  // ==========================================
   &-error {
-    background: linear-gradient(135deg, #4a1a1a 0%, #2d0f0f 100%);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #7f1d1d 100%);
+    box-shadow: 
+      0 10px 40px rgba(220, 38, 38, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+    --toast-glow: rgba(239, 68, 68, 0.5);
     
     .toast-stripe {
-      background: linear-gradient(180deg, #ff4757 0%, #c0392b 100%);
+      background: linear-gradient(180deg, #f87171 0%, #dc2626 50%, #b91c1c 100%);
     }
     
     .toast-icon {
-      color: #ff4757;
-      filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.5));
+      color: #fecaca;
+      filter: drop-shadow(0 0 10px rgba(254, 202, 202, 0.8));
+    }
+
+    .toast-label {
+      color: #fecaca;
     }
   }
 
+  // ==========================================
+  // VARIANTE: INFO - SILBATO / ÁRBITRO
+  // ==========================================
   &-info {
-    background: linear-gradient(135deg, #1a3a4a 0%, #0f2530 100%);
+    background: linear-gradient(135deg, #0369a1 0%, #075985 50%, #0c4a6e 100%);
+    box-shadow: 
+      0 10px 40px rgba(3, 105, 161, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+    --toast-glow: rgba(56, 189, 248, 0.5);
     
     .toast-stripe {
-      background: linear-gradient(180deg, #3498db 0%, #2980b9 100%);
+      background: linear-gradient(180deg, #38bdf8 0%, #0ea5e9 50%, #0369a1 100%);
     }
     
     .toast-icon {
-      color: #3498db;
-      filter: drop-shadow(0 0 8px rgba(52, 152, 219, 0.5));
+      color: #bae6fd;
+      filter: drop-shadow(0 0 10px rgba(186, 230, 253, 0.8));
+    }
+
+    .toast-label {
+      color: #bae6fd;
     }
   }
 
+  // ==========================================
+  // VARIANTE: WARNING - TARJETA AMARILLA
+  // ==========================================
   &-warning {
-    background: linear-gradient(135deg, #4a3a1a 0%, #302508 100%);
+    background: linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%);
+    box-shadow: 
+      0 10px 40px rgba(217, 119, 6, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+    --toast-glow: rgba(251, 191, 36, 0.5);
     
     .toast-stripe {
-      background: linear-gradient(180deg, #f1c40f 0%, #d4a00a 100%);
+      background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
     }
     
     .toast-icon {
-      color: #f1c40f;
-      filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.5));
+      color: #fef3c7;
+      filter: drop-shadow(0 0 10px rgba(254, 243, 199, 0.8));
+    }
+
+    .toast-label {
+      color: #fef3c7;
     }
   }
 
@@ -114,76 +202,89 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
     
     svg {
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
     }
+  }
+
+  &-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.9;
   }
 
   &-message {
     flex: 1;
-    line-height: 1.5;
-    font-size: 0.9375rem;
+    line-height: 1.4;
+    font-size: 0.95rem;
     font-weight: 500;
     letter-spacing: 0.01em;
   }
 
   &-close {
-    background: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.2);
     border: none;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
-    padding: 0.5rem;
-    margin: 0.75rem;
-    margin-left: 0;
+    padding: 0.35rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 50%;
     transition: all 0.2s ease;
+    z-index: 10;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.4);
       color: white;
-      transform: scale(1.1);
+      transform: scale(1.15) rotate(90deg);
     }
     
     svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
     }
   }
 }
 
-// Animación de entrada tipo marcador de gol
-@keyframes goalCelebration {
+// Animación de brillo LED
+@keyframes shimmer {
   0% {
-    opacity: 0;
-    transform: translateX(100px) scale(0.8);
-  }
-  50% {
-    transform: translateX(-10px) scale(1.05);
+    background-position: -200% 0;
   }
   100% {
-    opacity: 1;
-    transform: translateX(0) scale(1);
+    background-position: 200% 0;
   }
 }
 
+// Responsive
 @media (max-width: 768px) {
   .toast-container {
-    left: 10px;
-    right: 10px;
-    top: 10px;
+    left: 12px;
+    right: 12px;
+    top: 12px;
   }
 
   .toast {
     min-width: auto;
     max-width: none;
+    border-radius: 12px;
+    
+    &-stripe {
+      width: 56px;
+      min-height: 70px;
+    }
     
     &-content {
       padding: 0.875rem 1rem;
@@ -191,6 +292,11 @@
     
     &-message {
       font-size: 0.875rem;
+    }
+
+    &-icon svg {
+      width: 26px;
+      height: 26px;
     }
   }
 }

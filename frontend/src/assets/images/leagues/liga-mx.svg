@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Liga MX Logo -->
+  <!-- Fondo con colores mexicanos -->
+  <rect width="100" height="100" fill="#006847" rx="10"/>
+  
+  <!-- Franja blanca -->
+  <rect x="33.33" y="0" width="33.33" height="100" fill="#fff"/>
+  
+  <!-- Franja roja -->
+  <rect x="66.66" y="0" width="33.34" height="100" fill="#ce1126"/>
+  
+  <!-- Águila estilizada en el centro -->
+  <g transform="translate(50, 35)" fill="#8b4513">
+    <path d="M0,-10 C-3,-8 -5,-5 -5,0 C-5,3 -3,5 0,6 C3,5 5,3 5,0 C5,-5 3,-8 0,-10 Z"/>
+    <path d="M-8,-5 C-6,-7 -3,-8 0,-7 C3,-8 6,-7 8,-5 C6,-3 3,-2 0,-3 C-3,-2 -6,-3 -8,-5 Z"/>
+  </g>
+  
+  <!-- Pelota de fútbol -->
+  <g transform="translate(50, 50)">
+    <circle r="8" fill="#fff"/>
+    <g stroke="#006847" stroke-width="1" fill="none">
+      <path d="M-3,-5 L3,-5 L5,0 L3,5 L-3,5 L-5,0 Z"/>
+      <line x1="-3" y1="-5" x2="-5" y2="0"/>
+      <line x1="3" y1="-5" x2="5" y2="0"/>
+      <line x1="5" y1="0" x2="3" y2="5"/>
+      <line x1="-5" y1="0" x2="-3" y2="5"/>
+      <line x1="-3" y1="5" x2="3" y2="5"/>
+    </g>
+  </g>
+  
+  <!-- Texto -->
+  <text x="50" y="85" font-family="Arial Black, sans-serif" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">LIGA MX</text>
+</svg>

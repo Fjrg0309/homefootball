@@ -27,6 +27,7 @@
     max-width: var(--breakpoint-xl);
     margin: 0 auto;
     width: 100%;
+    overflow: hidden; // IMPORTANTE: evitar scroll horizontal
     
     // Mobile-first
     padding: 0 var(--spacing-2);
@@ -120,6 +121,9 @@
   // =============================================
   &__layout {
     display: grid;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden; // IMPORTANTE: evitar scroll horizontal
     
     // Mobile: columna única
     grid-template-columns: 1fr;
@@ -145,6 +149,9 @@
     // Mobile
     min-height: 15rem;
     order: 1;
+    min-width: 0; // Importante para grid/flex
+    max-width: 100%;
+    overflow: hidden; // IMPORTANTE: evitar scroll horizontal
     
     // Transición para efectos de carga
     transition: opacity var(--transition-base) var(--transition-ease);

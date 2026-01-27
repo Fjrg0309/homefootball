@@ -147,6 +147,10 @@ export class FavoritoService {
           );
         }
       }),
+      map(response => ({
+        action: response.action,
+        isFavorito: response.action === 'added'
+      })),
       catchError(error => {
         console.error('Error toggle favorito:', error);
         return of({ action: 'error', isFavorito: false });

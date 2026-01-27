@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Bundesliga Logo -->
+  <!-- Fondo con colores alemanes -->
+  <rect width="100" height="33" fill="#000"/>
+  <rect x="0" y="33" width="100" height="34" fill="#dd0000"/>
+  <rect x="0" y="67" width="100" height="33" fill="#ffce00"/>
+  
+  <!-- Círculo central -->
+  <circle cx="50" cy="50" r="35" fill="#fff" stroke="#000" stroke-width="2"/>
+  
+  <!-- Águila alemana estilizada -->
+  <g fill="#000">
+    <!-- Cuerpo -->
+    <ellipse cx="50" cy="50" rx="12" ry="8"/>
+    <!-- Cabeza -->
+    <circle cx="50" cy="38" r="5"/>
+    <!-- Alas -->
+    <ellipse cx="38" cy="48" rx="8" ry="6" transform="rotate(-20 38 48)"/>
+    <ellipse cx="62" cy="48" rx="8" ry="6" transform="rotate(20 62 48)"/>
+    <!-- Pico -->
+    <polygon points="48,35 52,35 50,32"/>
+  </g>
+  
+  <!-- Texto -->
+  <text x="50" y="75" font-family="Arial Black, sans-serif" font-size="10" font-weight="900" fill="#000" text-anchor="middle">BUNDESLIGA</text>
+</svg>

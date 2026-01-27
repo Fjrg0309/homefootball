@@ -1,7 +1,16 @@
 // Main component styles
 
+// Sección de partidos - IMPORTANTE: overflow hidden para evitar scroll horizontal
+.matches {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .main__content {
   opacity: 1;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .main__search {

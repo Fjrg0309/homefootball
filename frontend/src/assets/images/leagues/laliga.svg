@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- LaLiga Logo -->
+  <!-- Fondo -->
+  <rect width="100" height="100" fill="#ff6c00" rx="10"/>
+  
+  <!-- Texto principal -->
+  <text x="50" y="35" font-family="Arial Black, sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="middle">LA</text>
+  <text x="50" y="55" font-family="Arial Black, sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="middle">LIGA</text>
+  
+  <!-- Línea decorativa -->
+  <rect x="25" y="60" width="50" height="3" fill="#fff" rx="1.5"/>
+  
+  <!-- Pelota de fútbol estilizada -->
+  <g transform="translate(50, 75)">
+    <circle r="8" fill="#fff"/>
+    <g stroke="#ff6c00" stroke-width="1" fill="none">
+      <path d="M-3,-6 L3,-6 L6,0 L3,6 L-3,6 L-6,0 Z"/>
+      <line x1="-3" y1="-6" x2="-6" y2="0"/>
+      <line x1="3" y1="-6" x2="6" y2="0"/>
+      <line x1="6" y1="0" x2="3" y2="6"/>
+      <line x1="-6" y1="0" x2="-3" y2="6"/>
+      <line x1="-3" y1="6" x2="3" y2="6"/>
+    </g>
+  </g>
+</svg>

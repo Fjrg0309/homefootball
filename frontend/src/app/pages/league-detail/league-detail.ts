@@ -9,10 +9,46 @@ import { ToastService } from '../../services/toast.service';
 
 interface League {
   id: string;
+  apiId: number;
   name: string;
   country: string;
-  logo?: string;
+  logo: string;
 }
+
+// Logos originales de la API
+const LEAGUE_LOGOS: Record<string, string> = {
+  'laliga': 'https://media.api-sports.io/football/leagues/140.png',
+  'premier-league': 'https://media.api-sports.io/football/leagues/39.png',
+  'serie-a': 'https://media.api-sports.io/football/leagues/135.png',
+  'bundesliga': 'https://media.api-sports.io/football/leagues/78.png',
+  'ligue-1': 'https://media.api-sports.io/football/leagues/61.png',
+  'champions-league': 'https://media.api-sports.io/football/leagues/2.png',
+  'primeira-liga': 'https://media.api-sports.io/football/leagues/94.png',
+  'eredivisie': 'https://media.api-sports.io/football/leagues/88.png',
+  'mls': 'https://media.api-sports.io/football/leagues/253.png',
+  'brasileirao': 'https://media.api-sports.io/football/leagues/71.png',
+  'liga-mx': 'https://media.api-sports.io/football/leagues/262.png',
+  'ligue-2': 'https://media.api-sports.io/football/leagues/62.png',
+  'super-lig': 'https://media.api-sports.io/football/leagues/203.png',
+  'championship': 'https://media.api-sports.io/football/leagues/40.png',
+  'scottish-premiership': 'https://media.api-sports.io/football/leagues/179.png',
+  'belgian-pro-league': 'https://media.api-sports.io/football/leagues/144.png',
+  'austrian-bundesliga': 'https://media.api-sports.io/football/leagues/218.png',
+  'swiss-super-league': 'https://media.api-sports.io/football/leagues/207.png',
+  'russian-premier-league': 'https://media.api-sports.io/football/leagues/235.png',
+  'ukrainian-premier-league': 'https://media.api-sports.io/football/leagues/333.png',
+  'greek-super-league': 'https://media.api-sports.io/football/leagues/197.png',
+  'danish-superliga': 'https://media.api-sports.io/football/leagues/119.png',
+  'swedish-allsvenskan': 'https://media.api-sports.io/football/leagues/113.png',
+  'norwegian-eliteserien': 'https://media.api-sports.io/football/leagues/103.png',
+  'czech-first-league': 'https://media.api-sports.io/football/leagues/345.png',
+  'polish-ekstraklasa': 'https://media.api-sports.io/football/leagues/106.png',
+  'croatian-prva-hnl': 'https://media.api-sports.io/football/leagues/210.png',
+  'serbian-superliga': 'https://media.api-sports.io/football/leagues/286.png',
+  'romanian-liga-1': 'https://media.api-sports.io/football/leagues/283.png',
+  'europa-league': 'https://media.api-sports.io/football/leagues/3.png',
+  'conference-league': 'https://media.api-sports.io/football/leagues/848.png'
+};
 
 // Descripciones de las principales ligas
 const LEAGUE_DESCRIPTIONS: Record<string, string> = {
@@ -62,6 +98,7 @@ const LEAGUE_API_IDS: Record<string, number> = {
   'super-lig': 203,
   'mls': 253,
   'brasileirao': 71,
+  'liga-mx': 262,
   'championship': 40,
   'scottish-premiership': 179,
   'belgian-pro-league': 144,
@@ -119,47 +156,56 @@ export class LeagueDetail implements OnInit {
   }
 
   private loadLeague(id: string): void {
-    // Simular carga de datos de la liga
-    const leagues: Record<string, League> = {
-      'laliga': { id: 'laliga', name: 'LaLiga', country: 'España' },
-      'premier-league': { id: 'premier-league', name: 'Premier League', country: 'Inglaterra' },
-      'serie-a': { id: 'serie-a', name: 'Serie A', country: 'Italia' },
-      'bundesliga': { id: 'bundesliga', name: 'Bundesliga', country: 'Alemania' },
-      'ligue-1': { id: 'ligue-1', name: 'Ligue 1', country: 'Francia' },
-      'ligue-2': { id: 'ligue-2', name: 'Ligue 2', country: 'Francia' },
-      'primeira-liga': { id: 'primeira-liga', name: 'Primeira Liga', country: 'Portugal' },
-      'eredivisie': { id: 'eredivisie', name: 'Eredivisie', country: 'Países Bajos' },
-      'super-lig': { id: 'super-lig', name: 'Süper Lig', country: 'Turquía' },
-      'mls': { id: 'mls', name: 'MLS', country: 'Estados Unidos' },
-      'brasileirao': { id: 'brasileirao', name: 'Brasileirão', country: 'Brasil' },
-      'championship': { id: 'championship', name: 'Championship', country: 'Inglaterra' },
-      // Ligas europeas adicionales
-      'scottish-premiership': { id: 'scottish-premiership', name: 'Scottish Premiership', country: 'Escocia' },
-      'belgian-pro-league': { id: 'belgian-pro-league', name: 'Belgian Pro League', country: 'Bélgica' },
-      'austrian-bundesliga': { id: 'austrian-bundesliga', name: 'Austrian Bundesliga', country: 'Austria' },
-      'swiss-super-league': { id: 'swiss-super-league', name: 'Swiss Super League', country: 'Suiza' },
-      'russian-premier-league': { id: 'russian-premier-league', name: 'Russian Premier League', country: 'Rusia' },
-      'ukrainian-premier-league': { id: 'ukrainian-premier-league', name: 'Ukrainian Premier League', country: 'Ucrania' },
-      'greek-super-league': { id: 'greek-super-league', name: 'Super League Greece', country: 'Grecia' },
-      'danish-superliga': { id: 'danish-superliga', name: 'Danish Superliga', country: 'Dinamarca' },
-      'swedish-allsvenskan': { id: 'swedish-allsvenskan', name: 'Allsvenskan', country: 'Suecia' },
-      'norwegian-eliteserien': { id: 'norwegian-eliteserien', name: 'Eliteserien', country: 'Noruega' },
-      'czech-first-league': { id: 'czech-first-league', name: 'Czech First League', country: 'República Checa' },
-      'polish-ekstraklasa': { id: 'polish-ekstraklasa', name: 'Ekstraklasa', country: 'Polonia' },
-      'croatian-prva-hnl': { id: 'croatian-prva-hnl', name: 'Prva HNL', country: 'Croacia' },
-      'serbian-superliga': { id: 'serbian-superliga', name: 'Serbian SuperLiga', country: 'Serbia' },
-      'romanian-liga-1': { id: 'romanian-liga-1', name: 'Liga 1', country: 'Rumanía' },
-      // Competiciones europeas
-      'champions-league': { id: 'champions-league', name: 'UEFA Champions League', country: 'Europa' },
-      'europa-league': { id: 'europa-league', name: 'UEFA Europa League', country: 'Europa' },
-      'conference-league': { id: 'conference-league', name: 'UEFA Conference League', country: 'Europa' }
+    const apiId = LEAGUE_API_IDS[id] || 0;
+    const logo = LEAGUE_LOGOS[id] || `https://media.api-sports.io/football/leagues/${apiId}.png`;
+    
+    // Datos de las ligas
+    const leagueData: Record<string, { name: string; country: string }> = {
+      'laliga': { name: 'LaLiga', country: 'España' },
+      'premier-league': { name: 'Premier League', country: 'Inglaterra' },
+      'serie-a': { name: 'Serie A', country: 'Italia' },
+      'bundesliga': { name: 'Bundesliga', country: 'Alemania' },
+      'ligue-1': { name: 'Ligue 1', country: 'Francia' },
+      'ligue-2': { name: 'Ligue 2', country: 'Francia' },
+      'primeira-liga': { name: 'Primeira Liga', country: 'Portugal' },
+      'eredivisie': { name: 'Eredivisie', country: 'Países Bajos' },
+      'super-lig': { name: 'Süper Lig', country: 'Turquía' },
+      'mls': { name: 'MLS', country: 'Estados Unidos' },
+      'brasileirao': { name: 'Brasileirão', country: 'Brasil' },
+      'championship': { name: 'Championship', country: 'Inglaterra' },
+      'scottish-premiership': { name: 'Scottish Premiership', country: 'Escocia' },
+      'belgian-pro-league': { name: 'Belgian Pro League', country: 'Bélgica' },
+      'austrian-bundesliga': { name: 'Austrian Bundesliga', country: 'Austria' },
+      'swiss-super-league': { name: 'Swiss Super League', country: 'Suiza' },
+      'russian-premier-league': { name: 'Russian Premier League', country: 'Rusia' },
+      'ukrainian-premier-league': { name: 'Ukrainian Premier League', country: 'Ucrania' },
+      'greek-super-league': { name: 'Super League Greece', country: 'Grecia' },
+      'danish-superliga': { name: 'Danish Superliga', country: 'Dinamarca' },
+      'swedish-allsvenskan': { name: 'Allsvenskan', country: 'Suecia' },
+      'norwegian-eliteserien': { name: 'Eliteserien', country: 'Noruega' },
+      'czech-first-league': { name: 'Czech First League', country: 'República Checa' },
+      'polish-ekstraklasa': { name: 'Ekstraklasa', country: 'Polonia' },
+      'croatian-prva-hnl': { name: 'Prva HNL', country: 'Croacia' },
+      'serbian-superliga': { name: 'Serbian SuperLiga', country: 'Serbia' },
+      'romanian-liga-1': { name: 'Liga 1', country: 'Rumanía' },
+      'champions-league': { name: 'UEFA Champions League', country: 'Europa' },
+      'europa-league': { name: 'UEFA Europa League', country: 'Europa' },
+      'conference-league': { name: 'UEFA Conference League', country: 'Europa' }
     };
 
-    this.league.set(leagues[id] || { id, name: id, country: 'Desconocido' });
+    const data = leagueData[id] || { name: id, country: 'Desconocido' };
+    
+    this.league.set({
+      id,
+      apiId,
+      name: data.name,
+      country: data.country,
+      logo
+    });
     
     // Cargar descripción de la liga
     const description = LEAGUE_DESCRIPTIONS[id] || 
-      `Información sobre ${leagues[id]?.name || id}. Esta es una de las competiciones de fútbol más importantes de ${leagues[id]?.country || 'su país'}.`;
+      `Información sobre ${data.name}. Esta es una de las competiciones de fútbol más importantes de ${data.country}.`;
     this.aboutText.set(description);
     
     // Verificar si la liga está en favoritos
@@ -203,38 +249,61 @@ export class LeagueDetail implements OnInit {
     }
 
     const league = this.league();
-    if (!league) return;
-
-    const apiId = LEAGUE_API_IDS[league.id];
-    if (!apiId) {
+    if (!league || !league.apiId) {
       this.toastService.error('Error: Liga no válida');
       return;
     }
 
+    const wasIsFavorite = this.isFavorite();
+    console.log('🌟 Toggle favorito:', { 
+      league: league.name, 
+      apiId: league.apiId, 
+      wasIsFavorite,
+      action: wasIsFavorite ? 'REMOVING' : 'ADDING'
+    });
+
     const request = {
       tipo: 'LIGA',
-      itemId: apiId,
+      itemId: league.apiId,
       nombre: league.name,
-      imagen: `/assets/images/leagues/${league.id}.png`
+      imagen: league.logo
     };
 
-    this.favoritoService.toggleFavorito(request).subscribe({
-      next: (response) => {
-        console.log('Toggle response:', response);
-        const nowIsFavorite = response.isFavorito;
-        this.isFavorite.set(nowIsFavorite);
-        
-        if (nowIsFavorite) {
-          this.toastService.success(`${league.name} añadida a favoritos`);
-        } else {
-          this.toastService.info(`${league.name} eliminada de favoritos`);
+    if (wasIsFavorite) {
+      // QUITAR de favoritos
+      this.favoritoService.removeFavorito('LIGA', league.apiId).subscribe({
+        next: (removed) => {
+          console.log('❌ Remove result:', removed);
+          if (removed) {
+            this.isFavorite.set(false);
+            this.toastService.info(`${league.name} eliminada de favoritos`);
+          } else {
+            this.toastService.error('Error al eliminar de favoritos');
+          }
+        },
+        error: (err) => {
+          console.error('❌ Error removing favorite:', err);
+          this.toastService.error('Error al eliminar de favoritos');
         }
-      },
-      error: (err) => {
-        console.error('Error toggle favorito:', err);
-        this.toastService.error('Error al actualizar favoritos');
-      }
-    });
+      });
+    } else {
+      // AÑADIR a favoritos  
+      this.favoritoService.addFavorito(request).subscribe({
+        next: (favorito) => {
+          console.log('✅ Add result:', favorito);
+          if (favorito) {
+            this.isFavorite.set(true);
+            this.toastService.success(`${league.name} añadida a favoritos`);
+          } else {
+            this.toastService.error('Error al añadir a favoritos');
+          }
+        },
+        error: (err) => {
+          console.error('✅ Error adding favorite:', err);
+          this.toastService.error('Error al añadir a favoritos');
+        }
+      });
+    }
   }
 
   // Navegación a secciones

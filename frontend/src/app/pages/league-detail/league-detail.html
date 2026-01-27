@@ -3,7 +3,7 @@
 <main class="league-detail">
   <div class="league-detail__container">
     
-    <!-- Título de la liga -->
+    <!-- Título de la liga con logo de la API -->
     <header class="league-detail__header">
       <button 
         class="league-detail__icon" 
@@ -13,6 +13,13 @@
         type="button">
         {{ isFavorite() ? '★' : '☆' }}
       </button>
+      <img 
+        *ngIf="league()?.logo"
+        [src]="league()!.logo"
+        [alt]="leagueName() + ' logo'"
+        class="league-detail__logo"
+        loading="lazy"
+      >
       <h1 class="league-detail__title">{{ leagueName() }}</h1>
     </header>
 

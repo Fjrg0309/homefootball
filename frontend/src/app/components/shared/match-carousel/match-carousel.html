@@ -1,0 +1,135 @@
+<section 
+  class="match-carousel"
+  role="region"
+  aria-roledescription="carrusel"
+  [attr.aria-label]="title"
+  (mouseenter)="pauseAutoPlay()"
+  (mouseleave)="resumeAutoPlay()"
+  (focusin)="pauseAutoPlay()"
+  (focusout)="resumeAutoPlay()"
+>
+  <!-- Título con estilo igual que Competiciones a seguir -->
+  <h2 class="match-carousel__title" id="carousel-title">{{ title }}</h2>
+
+  <!-- Contenedor del carrusel con flechas -->
+  <div class="match-carousel__content">
+    <!-- Flecha izquierda -->
+    <button 
+      type="button"
+      class="match-carousel__arrow match-carousel__arrow--prev"
+      (click)="previous()"
+      aria-label="Ver partidos anteriores"
+    >
+      <img src="assets/images/flechaback.svg" alt="Anterior" class="match-carousel__arrow-icon">
+    </button>
+
+    <!-- Contenedor del carrusel -->
+    <div class="match-carousel__container">
+      <ul class="match-carousel__track" [style.transform]="getTranslateX()" role="list">
+        @for (match of matches; track match.id) {
+          <li class="match-carousel__slide" role="listitem">
+            <article 
+              class="carousel-match-card"
+              [class.carousel-match-card--live]="isLive(match)"
+              (click)="goToMatch(match.id)"
+              (keydown.enter)="goToMatch(match.id)"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="match.homeTeam + ' contra ' + match.awayTeam"
+            >
+              <!-- Badge en vivo -->
+              @if (isLive(match)) {
+                <span class="carousel-match-card__live-badge" aria-label="En vivo">
+                  <span class="carousel-match-card__live-dot" aria-hidden="true"></span>
+                  LIVE
+                </span>
+              }
+
+              <!-- Equipos y marcador -->
+              <section class="carousel-match-card__teams">
+                <!-- Equipo local -->
+                <figure class="carousel-match-card__team">
+                  @if (match.homeLogo) {
+                    <img 
+                      [src]="match.homeLogo" 
+                      [alt]="match.homeTeam"
+                      class="carousel-match-card__logo"
+                      loading="lazy"
+                    >
+                  } @else {
+                    <div class="carousel-match-card__logo-placeholder" aria-hidden="true">
+                      {{ match.homeTeamShort.charAt(0) }}
+                    </div>
+                  }
+                  <figcaption class="carousel-match-card__team-name">{{ match.homeTeamShort }}</figcaption>
+                </figure>
+
+                <!-- Marcador -->
+                <div class="carousel-match-card__score">
+                  <span 
+                    class="carousel-match-card__score-text"
+                    [class.carousel-match-card__score-text--live]="isLive(match)"
+                  >
+                    {{ getScoreDisplay(match) }}
+                  </span>
+                </div>
+
+                <!-- Equipo visitante -->
+                <figure class="carousel-match-card__team">
+                  @if (match.awayLogo) {
+                    <img 
+                      [src]="match.awayLogo" 
+                      [alt]="match.awayTeam"
+                      class="carousel-match-card__logo"
+                      loading="lazy"
+                    >
+                  } @else {
+                    <div class="carousel-match-card__logo-placeholder" aria-hidden="true">
+                      {{ match.awayTeamShort.charAt(0) }}
+                    </div>
+                  }
+                  <figcaption class="carousel-match-card__team-name">{{ match.awayTeamShort }}</figcaption>
+                </figure>
+              </section>
+
+              <!-- Estado -->
+              <footer class="carousel-match-card__status">
+                {{ getMatchStatus(match) }}
+              </footer>
+            </article>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <!-- Flecha derecha -->
+    <button 
+      type="button"
+      class="match-carousel__arrow match-carousel__arrow--next"
+      (click)="next()"
+      aria-label="Ver siguientes partidos"
+    >
+      <img src="assets/images/flechanext.svg" alt="Siguiente" class="match-carousel__arrow-icon">
+    </button>
+  </div>
+
+  <!-- Indicadores de posición -->
+  <div class="match-carousel__indicators" role="tablist" aria-label="Indicadores de posición del carrusel">
+    @for (indicator of getIndicators(); track $index) {
+      <button 
+        type="button"
+        class="match-carousel__indicator"
+        [class.match-carousel__indicator--active]="$index === currentSlide"
+        (click)="goToSlide($index)"
+        [attr.aria-label]="'Ir a grupo de partidos ' + ($index + 1) + ' de ' + totalSlides"
+        [attr.aria-selected]="$index === currentSlide"
+        role="tab"
+      >
+        <span class="visually-hidden">{{ $index + 1 }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- Región para lectores de pantalla -->
+  <div id="carousel-live-region" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+</section>

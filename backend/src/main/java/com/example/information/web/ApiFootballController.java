@@ -117,7 +117,7 @@ public class ApiFootballController {
     @GetMapping("/teams")
     public ResponseEntity<TeamResponse> getTeamsByLeague(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/teams?league={}&season={}", league, season);
         return ResponseEntity.ok(cachedApiService.getTeamsByLeague(league, season));
     }
@@ -231,7 +231,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures")
     public ResponseEntity<FixtureResponse> getFixturesByLeague(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/fixtures?league={}&season={}", league, season);
         return ResponseEntity.ok(cachedApiService.getFixturesByLeague(league, season));
     }
@@ -260,7 +260,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/team/{teamId}")
     public ResponseEntity<FixtureResponse> getFixturesByTeam(
             @PathVariable int teamId,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/fixtures/team/{}?season={}", teamId, season);
         return ResponseEntity.ok(cachedApiService.getFixturesByTeam(teamId, season));
     }
@@ -272,7 +272,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/latest-round")
     public ResponseEntity<FixtureResponse> getLatestRound(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/fixtures/latest-round?league={}&season={}", league, season);
         return ResponseEntity.ok(cachedApiService.getLatestRound(league, season));
     }
@@ -283,7 +283,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/round")
     public ResponseEntity<FixtureResponse> getFixturesByRound(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season,
+            @RequestParam(defaultValue = "2024") int season,
             @RequestParam String round) {
         log.info("GET /api/football/fixtures/round?league={}&season={}&round={}", league, season, round);
         return ResponseEntity.ok(cachedApiService.getFixturesByRound(league, season, round));
@@ -295,7 +295,7 @@ public class ApiFootballController {
     @GetMapping("/fixtures/latest-date")
     public ResponseEntity<Map<String, String>> getLatestAvailableDate(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/fixtures/latest-date?league={}&season={}", league, season);
         String latestDate = cachedApiService.getLatestAvailableDate(league, season);
         return ResponseEntity.ok(Map.of("date", latestDate));
@@ -309,7 +309,7 @@ public class ApiFootballController {
     @GetMapping("/standings")
     public ResponseEntity<StandingsResponse> getStandings(
             @RequestParam int league,
-            @RequestParam(defaultValue = "2022") int season) {
+            @RequestParam(defaultValue = "2024") int season) {
         log.info("GET /api/football/standings?league={}&season={}", league, season);
         return ResponseEntity.ok(cachedApiService.getStandings(league, season));
     }

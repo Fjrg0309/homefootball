@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Liga Argentina Logo -->
+  <!-- Fondo celeste y blanco (colores argentina) -->
+  <rect width="100" height="100" fill="#75AADB" rx="10"/>
+  
+  <!-- Franja blanca central -->
+  <rect x="0" y="33.33" width="100" height="33.33" fill="#fff"/>
+  
+  <!-- Sol de Mayo estilizado -->
+  <g transform="translate(50, 50)" fill="#F6B40E">
+    <circle r="12" fill="#F6B40E"/>
+    <!-- Rayos del sol -->
+    <g stroke="#F6B40E" stroke-width="2">
+      <line x1="0" y1="-18" x2="0" y2="-15"/>
+      <line x1="12.7" y1="-12.7" x2="10.6" y2="-10.6"/>
+      <line x1="18" y1="0" x2="15" y2="0"/>
+      <line x1="12.7" y1="12.7" x2="10.6" y2="10.6"/>
+      <line x1="0" y1="18" x2="0" y2="15"/>
+      <line x1="-12.7" y1="12.7" x2="-10.6" y2="10.6"/>
+      <line x1="-18" y1="0" x2="-15" y2="0"/>
+      <line x1="-12.7" y1="-12.7" x2="-10.6" y2="-10.6"/>
+    </g>
+  </g>
+  
+  <!-- Pelota de fútbol -->
+  <g transform="translate(30, 25)" fill="#fff">
+    <circle r="6" fill="#fff"/>
+    <g stroke="#75AADB" stroke-width="1" fill="none">
+      <path d="M-2,-4 L2,-4 L3,0 L2,4 L-2,4 L-3,0 Z"/>
+    </g>
+  </g>
+  
+  <!-- Texto -->
+  <text x="50" y="88" font-family="Arial Black, sans-serif" font-size="10" font-weight="900" fill="#002776" text-anchor="middle">LIGA ARGENTINA</text>
+</svg>

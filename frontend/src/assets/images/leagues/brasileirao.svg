@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Brasileirão Logo -->
+  <!-- Fondo verde -->
+  <rect width="100" height="100" fill="#009c3b" rx="10"/>
+  
+  <!-- Rombo central (inspirado en la bandera brasileña) -->
+  <path d="M50 15 L75 50 L50 85 L25 50 Z" fill="#ffdf00"/>
+  
+  <!-- Círculo azul -->
+  <circle cx="50" cy="50" r="20" fill="#002776"/>
+  
+  <!-- Estrella estilizada -->
+  <g transform="translate(50, 50)" fill="#ffdf00">
+    <path d="M0,-8 L2,-2 L8,-2 L3,2 L5,8 L0,4 L-5,8 L-3,2 L-8,-2 L-2,-2 Z"/>
+  </g>
+  
+  <!-- Pelota de fútbol -->
+  <g transform="translate(50, 35)" fill="#fff">
+    <circle r="4" fill="#fff"/>
+    <g stroke="#002776" stroke-width="0.5" fill="none">
+      <path d="M-1.5,-2.5 L1.5,-2.5 L2.5,0 L1.5,2.5 L-1.5,2.5 L-2.5,0 Z"/>
+    </g>
+  </g>
+  
+  <!-- Texto -->
+  <text x="50" y="95" font-family="Arial Black, sans-serif" font-size="10" font-weight="900" fill="#fff" text-anchor="middle">BRASILEIRÃO</text>
+</svg>

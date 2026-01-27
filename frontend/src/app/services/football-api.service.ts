@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { shareReplay, tap } from 'rxjs/operators';
+import { shareReplay, tap, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { CacheService } from './cache.service';
 
 /**
  * Interfaces para las respuestas de API-Football
@@ -279,29 +280,35 @@ export interface MatchStats {
 /**
  * Servicio para consumir la API de Football a través del backend
  * El backend actúa como proxy para proteger la API key
- * Incluye sistema de caché para reducir peticiones
+ * Incluye sistema de caché persistente (localStorage) para reducir peticiones
+ * y permitir navegación offline cuando no hay peticiones disponibles
  */
 @Injectable({
   providedIn: 'root'
 })
 export class FootballApiService {
   private http = inject(HttpClient);
+  private cacheService = inject(CacheService);
   private readonly baseUrl = `${environment.apiUrl}/football`;
   
   // ==================== CACHÉ ====================
-  // Almacena las peticiones cacheadas con su observable
-  private cache = new Map<string, Observable<any>>();
+  // Caché en memoria para observables activos (shareReplay)
+  private memoryCache = new Map<string, Observable<any>>();
   
-  // Tiempo de expiración de la caché (en ms) - 5 minutos
-  private readonly CACHE_DURATION = 5 * 60 * 1000;
+  // Tiempo de expiración de la caché en memoria - 5 minutos
+  private readonly MEMORY_CACHE_DURATION = 5 * 60 * 1000;
   
-  // Timestamps de cuando se guardó cada entrada
-  private cacheTimestamps = new Map<string, number>();
+  // Tiempo de expiración de la caché persistente - 30 minutos
+  private readonly PERSISTENT_CACHE_DURATION = 30 * 60 * 1000;
+  
+  // Timestamps de cuando se guardó cada entrada en memoria
+  private memoryCacheTimestamps = new Map<string, number>();
   
   constructor() {
-    console.log('FootballApiService initialized with caching');
-    console.log('API Base URL:', this.baseUrl);
-    console.log('Cache duration:', this.CACHE_DURATION / 1000, 'seconds');
+    console.log('⚽ FootballApiService initialized with persistent caching');
+    console.log('📍 API Base URL:', this.baseUrl);
+    console.log('⏱️ Memory cache duration:', this.MEMORY_CACHE_DURATION / 1000, 'seconds');
+    console.log('💾 Persistent cache duration:', this.PERSISTENT_CACHE_DURATION / 1000, 'seconds');
   }
 
   /**
@@ -313,49 +320,109 @@ export class FootballApiService {
   }
 
   /**
-   * Verifica si una entrada de caché es válida (no expirada)
+   * Verifica si una entrada de caché en memoria es válida (no expirada)
    */
-  private isCacheValid(key: string): boolean {
-    const timestamp = this.cacheTimestamps.get(key);
+  private isMemoryCacheValid(key: string): boolean {
+    const timestamp = this.memoryCacheTimestamps.get(key);
     if (!timestamp) return false;
-    return Date.now() - timestamp < this.CACHE_DURATION;
+    return Date.now() - timestamp < this.MEMORY_CACHE_DURATION;
   }
 
   /**
-   * Obtiene un observable cacheado o hace la petición y la cachea
+   * Obtiene datos con caché persistente + memoria
+   * 1. Primero busca en caché de memoria (más rápida)
+   * 2. Si no hay, busca en caché persistente (localStorage)
+   * 3. Si no hay, hace la petición HTTP y guarda en ambas cachés
+   * 4. Si falla la petición, devuelve datos de caché persistente si existen
    */
   private getCached<T>(key: string, request: () => Observable<T>): Observable<T> {
-    // Si existe en caché y no ha expirado, devolverla
-    if (this.cache.has(key) && this.isCacheValid(key)) {
-      console.log('📦 Cache HIT:', key.substring(0, 50) + '...');
-      return this.cache.get(key) as Observable<T>;
+    const persistentKey = this.cacheService.generateKey(key);
+    
+    // 1. Verificar caché de memoria
+    if (this.memoryCache.has(key) && this.isMemoryCacheValid(key)) {
+      console.log('⚡ Memory Cache HIT:', key.substring(0, 50) + '...');
+      return this.memoryCache.get(key) as Observable<T>;
     }
 
-    // Si no, hacer la petición y cachearla
-    console.log('🌐 Cache MISS:', key.substring(0, 50) + '...');
+    // 2. Verificar caché persistente
+    const persistentData = this.cacheService.get<T>(persistentKey);
+    if (persistentData) {
+      console.log('💾 Persistent Cache HIT:', key.substring(0, 50) + '...');
+      // Guardar también en memoria para acceso rápido
+      const observable = of(persistentData).pipe(shareReplay(1));
+      this.memoryCache.set(key, observable);
+      this.memoryCacheTimestamps.set(key, Date.now());
+      return observable;
+    }
+
+    // 3. Hacer petición HTTP y cachear en ambos niveles
+    console.log('🌐 Cache MISS - Fetching:', key.substring(0, 50) + '...');
     const observable = request().pipe(
-      tap(() => this.cacheTimestamps.set(key, Date.now())),
+      tap(data => {
+        // Guardar en caché persistente
+        this.cacheService.set(persistentKey, data, this.PERSISTENT_CACHE_DURATION);
+        this.memoryCacheTimestamps.set(key, Date.now());
+      }),
+      catchError(error => {
+        // Si falla, intentar devolver datos de caché aunque estén expirados
+        console.warn('❌ HTTP Error, trying to use expired cache...');
+        const expiredData = localStorage.getItem('hf_cache_' + persistentKey);
+        if (expiredData) {
+          try {
+            const parsed = JSON.parse(expiredData);
+            console.log('📦 Using expired cache data as fallback');
+            return of(parsed.data as T);
+          } catch {
+            throw error;
+          }
+        }
+        throw error;
+      }),
       shareReplay(1)
     );
-    this.cache.set(key, observable);
+    
+    this.memoryCache.set(key, observable);
     return observable;
   }
 
   /**
-   * Limpia toda la caché
+   * Limpia toda la caché (memoria + persistente)
    */
   clearCache(): void {
-    this.cache.clear();
-    this.cacheTimestamps.clear();
-    console.log('🗑️ Cache cleared');
+    this.memoryCache.clear();
+    this.memoryCacheTimestamps.clear();
+    this.cacheService.clear();
+    console.log('🗑️ All cache cleared (memory + persistent)');
+  }
+
+  /**
+   * Limpia solo la caché de memoria
+   */
+  clearMemoryCache(): void {
+    this.memoryCache.clear();
+    this.memoryCacheTimestamps.clear();
+    console.log('🗑️ Memory cache cleared');
+  }
+
+  /**
+   * Obtiene estadísticas de la caché
+   */
+  getCacheStats() {
+    return {
+      memory: {
+        entries: this.memoryCache.size
+      },
+      persistent: this.cacheService.getStats()
+    };
   }
 
   /**
    * Limpia la caché de una clave específica
    */
   clearCacheKey(key: string): void {
-    this.cache.delete(key);
-    this.cacheTimestamps.delete(key);
+    this.memoryCache.delete(key);
+    this.memoryCacheTimestamps.delete(key);
+    this.cacheService.remove(this.cacheService.generateKey(key));
   }
 
   // ==================== STATUS ====================
@@ -589,7 +656,7 @@ export class FootballApiService {
   /**
    * Obtiene la clasificación de una liga (con caché)
    */
-  getStandings(leagueId: number, season: number = 2022): Observable<ApiFootballResponse<StandingsData>> {
+  getStandings(leagueId: number, season: number = 2024): Observable<ApiFootballResponse<StandingsData>> {
     const url = `${this.baseUrl}/standings`;
     const params = { league: leagueId.toString(), season: season.toString() };
     const key = this.getCacheKey(url, params);

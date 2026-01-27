@@ -5,23 +5,23 @@ import { Header } from '../../components/layout/header/header';
 import { Footer } from '../../components/layout/footer/footer';
 import { FootballApiService, Standing } from '../../services/football-api.service';
 
-// Configuración de temporadas por liga (2023 = temporada 2023-2024)
+// Configuración de temporadas por liga (2024 = temporada 2024-2025)
 const LEAGUE_SEASONS: Record<number, number> = {
-  140: 2023,  // LaLiga (temporada 2023-2024)
-  39: 2023,   // Premier League
-  135: 2023,  // Serie A
-  78: 2023,   // Bundesliga
-  61: 2023,   // Ligue 1
-  62: 2023,   // Ligue 2
-  94: 2023,   // Primeira Liga
-  88: 2023,   // Eredivisie
-  203: 2023,  // Süper Lig
-  253: 2023,  // MLS
-  71: 2023,   // Brasileirão
-  40: 2023,   // Championship
-  2: 2023,    // Champions League
-  3: 2023,    // Europa League
-  848: 2023   // Conference League
+  140: 2024,  // LaLiga (temporada 2024-2025)
+  39: 2024,   // Premier League
+  135: 2024,  // Serie A
+  78: 2024,   // Bundesliga
+  61: 2024,   // Ligue 1
+  62: 2024,   // Ligue 2
+  94: 2024,   // Primeira Liga
+  88: 2024,   // Eredivisie
+  203: 2024,  // Süper Lig
+  253: 2024,  // MLS
+  71: 2024,   // Brasileirão
+  40: 2024,   // Championship
+  2: 2024,    // Champions League
+  3: 2024,    // Europa League
+  848: 2024   // Conference League
 };
 
 // Mapeo de IDs de slug a IDs numéricos de la API
@@ -110,7 +110,7 @@ export class LeagueStandings implements OnInit {
   leagueId = signal<string>('');
   leagueApiId = signal<number>(0);
   leagueName = signal<string>('');
-  season = signal<number>(2023);
+  season = signal<number>(2024);
   
   // Datos de clasificación
   standings = signal<Standing[]>([]);
@@ -225,7 +225,7 @@ export class LeagueStandings implements OnInit {
       this.leagueName.set(LEAGUE_NAMES[id] || id);
       
       // Configurar temporada para esta liga
-      this.season.set(LEAGUE_SEASONS[apiId] || 2023);
+      this.season.set(LEAGUE_SEASONS[apiId] || 2024);
       
       // Cargar clasificación
       this.loadStandings();
@@ -250,23 +250,54 @@ export class LeagueStandings implements OnInit {
     this.footballApi.getStandings(apiId, this.season()).subscribe({
       next: (response) => {
         console.log('✅ Clasificación recibida:', response);
+        console.log('📊 Número de resultados:', response.results);
+        
         if (response.response && response.response.length > 0) {
           const leagueData = response.response[0];
+          console.log('🏆 Datos de liga:', leagueData.league.name);
+          
           if (leagueData.league.standings && leagueData.league.standings.length > 0) {
+            console.log('📈 Equipos en clasificación:', leagueData.league.standings[0].length);
             this.standings.set(leagueData.league.standings[0]);
           } else {
+            console.warn('⚠️ No hay datos de standings en la respuesta');
             this.standings.set([]);
-            this.error.set('No hay datos de clasificación disponibles');
+            this.error.set('No hay datos de clasificación disponibles para esta temporada');
           }
         } else {
+          console.warn('⚠️ Respuesta vacía de la API');
           this.standings.set([]);
+          // Intentar con temporada anterior si estamos en 2024
+          if (this.season() === 2024) {
+            console.log('🔄 Intentando con temporada 2023...');
+            this.season.set(2023);
+            this.loadStandings();
+            return;
+          }
           this.error.set('No hay datos de clasificación disponibles');
         }
         this.loading.set(false);
       },
       error: (err) => {
         console.error('❌ Error cargando clasificación:', err);
-        this.error.set('Error al cargar la clasificación. Por favor, intenta de nuevo.');
+        console.error('📍 Detalles del error:', {
+          status: err.status,
+          statusText: err.statusText,
+          message: err.message,
+          url: err.url
+        });
+        
+        // Mensajes más específicos según el error
+        if (err.status === 0) {
+          this.error.set('No se puede conectar con el servidor. Verifica que el backend esté ejecutándose.');
+        } else if (err.status === 404) {
+          this.error.set('No se encontraron datos de clasificación para esta liga y temporada.');
+        } else if (err.status >= 500) {
+          this.error.set('Error del servidor al obtener los datos. La API externa puede estar saturada.');
+        } else {
+          this.error.set(`Error al cargar la clasificación (${err.status}). Intenta de nuevo.`);
+        }
+        
         this.loading.set(false);
       }
     });

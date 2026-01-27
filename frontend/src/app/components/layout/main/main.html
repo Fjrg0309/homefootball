@@ -23,42 +23,24 @@
     <section class="main__layout">
       <!-- Contenido principal -->
       <section class="main__content">
-        <!-- Partidos principales -->
-        <section class="matches">
-          <h2 class="matches__title">Partidos principales</h2>
-          
+        <!-- Carrusel de partidos principales -->
+        <section class="matches" aria-labelledby="matches-heading">
           @if (loadingMatches()) {
-            <div class="matches__loading">
-              <div class="spinner"></div>
+            <div class="matches__loading" role="status" aria-live="polite">
+              <div class="spinner" aria-hidden="true"></div>
               <p>Cargando partidos...</p>
             </div>
+          } @else if (matches().length > 0) {
+            <app-match-carousel 
+              [matches]="matches()"
+              title="Partidos principales"
+              [itemsPerView]="3"
+            />
           } @else {
-            <section class="matches__grid">
-              @for (match of matches(); track match.id) {
-                <article class="match-card" (click)="goToMatch(match.id)">
-                  <section class="match-card__teams">
-                    <section class="match-card__team">
-                      @if (match.homeLogo) {
-                        <img [src]="match.homeLogo" [alt]="match.homeTeam" class="match-card__logo">
-                      }
-                      <span class="match-card__name">{{ match.homeTeamShort }}</span>
-                    </section>
-                    <section class="match-card__score">{{ getScoreDisplay(match) }}</section>
-                    <section class="match-card__team">
-                      @if (match.awayLogo) {
-                        <img [src]="match.awayLogo" [alt]="match.awayTeam" class="match-card__logo">
-                      }
-                      <span class="match-card__name">{{ match.awayTeamShort }}</span>
-                    </section>
-                  </section>
-                  <span class="match-card__status">{{ getMatchStatus(match) }}</span>
-                </article>
-              }
-              
-              @if (matches().length === 0) {
-                <p class="matches__empty">No hay partidos disponibles</p>
-              }
-            </section>
+            <div class="matches__empty" role="status">
+              <h2 id="matches-heading" class="matches__title">Partidos principales</h2>
+              <p>No hay partidos disponibles en este momento</p>
+            </div>
           }
         </section>
 
