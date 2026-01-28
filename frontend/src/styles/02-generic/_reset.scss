@@ -72,6 +72,18 @@
     font-weight: inherit;
   }
 
+  // Estilos de enfoque accesibles
+  :focus-visible {
+    outline: 2px solid var(--color-accent, #00d4aa);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  // Eliminar outline cuando no es necesario
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
   // Respeta la preferencia del usuario de reducir movimiento
   @media (prefers-reduced-motion: reduce) {
     *,

@@ -120,13 +120,280 @@ onKeyDown(event: KeyboardEvent): void {
 
 ---
 
-## 3. Navegación por teclado
+## 3. Auditoría automatizada inicial
+
+### Herramientas utilizadas
+
+Se han ejecutado tres herramientas de análisis de accesibilidad para obtener una evaluación inicial del estado del proyecto:
+
+#### Lighthouse (Chrome DevTools)
+- **Acceso:** F12 → pestaña "Lighthouse" → marcar solo "Accessibility" → "Analyze page load"
+- **Funcionalidad:** Analiza automáticamente la página en busca de problemas de accesibilidad según estándares WCAG
+
+#### WAVE (Web Accessibility Evaluation Tool)
+- **Extensión:** [https://wave.webaim.org/extension/](https://wave.webaim.org/extension/)
+- **Funcionalidad:** Proporciona feedback visual sobre errores y alertas de accesibilidad directamente en la página
+
+#### TAW (Test de Accesibilidad Web)
+- **Plataforma:** [https://www.tawdis.net/?lang=es](https://www.tawdis.net/?lang=es)
+- **Funcionalidad:** Análisis completo de conformidad con WCAG 2.1 niveles A, AA y AAA
+
+### Resultados del análisis
+
+| Herramienta | Puntuación/Errores | Captura |
+|-------------|-------------------|---------|
+| **Lighthouse** | 93/100 | ![Lighthouse inicial](./capturas/lighthouse-antes.png) |
+| **WAVE** | 0 errores, 3 alertas | ![WAVE inicial](./capturas/wave-antes.png) |
+| **TAW** | 10 errores críticos, 26 alertas | ![TAW](./capturas/taw.png) |
+
+### Problemas más graves detectados
+
+Las herramientas de análisis automatizado han identificado los siguientes problemas prioritarios según el informe TAW:
+
+#### 1. Controles de formulario sin etiquetar
+- **Herramienta que lo detecta:** TAW
+- **Descripción:** Múltiples controles de formulario carecen de etiquetas asociadas (`<label>`) o atributos descriptivos apropiados
+- **Impacto:** Los usuarios de lectores de pantalla no pueden identificar el propósito de los campos de formulario, dificultando enormemente la navegación e interacción
+- **Criterio WCAG:** 1.3.1 Información y relaciones (Nivel A), 4.1.2 Nombre, función, valor (Nivel A)
+
+#### 2. Ausencia de encabezado principal (h1)
+- **Herramienta que lo detecta:** TAW  
+- **Descripción:** La página no contiene un elemento `<h1>` que identifique claramente el contenido principal
+- **Impacto:** Los usuarios con tecnologías de asistencia pierden la referencia jerárquica de la página, dificultando la comprensión de la estructura del contenido
+- **Criterio WCAG:** 1.3.1 Información y relaciones (Nivel A)
+
+#### 3. Enlaces sin contenido
+- **Herramienta que lo detecta:** TAW
+- **Descripción:** Se detectaron 4 enlaces que no contienen texto descriptivo o alternativo que indique su destino
+- **Impacto:** Los usuarios de lectores de pantalla no pueden determinar el propósito del enlace, especialmente problemático durante la navegación por elementos
+- **Criterio WCAG:** 2.4.4 Propósito de los enlaces en contexto (Nivel A)
+
+### Problemas adicionales identificados
+
+| Tipo de problema | Cantidad | Nivel de gravedad | Criterio WCAG |
+|------------------|----------|-------------------|---------------|
+| **Imágenes sin descripción larga** | 21 alertas | Medio | 1.1.1 Contenido no textual |
+| **Contenido generado por CSS** | 1 alerta | Medio | 1.3.1 Información y relaciones |
+| **Encabezados y etiquetas inadecuados** | 3 alertas | Medio | 2.4.6 Encabezados y etiquetas |
+| **Orden lógico de navegación** | 1 advertencia | Bajo | 2.4.3 Orden del foco |
+| **Múltiples medios de localización** | 1 advertencia | Bajo | 2.4.5 Múltiples vías |
+
+### Resumen de la evaluación
+
+- **Total de problemas críticos:** 10 errores que deben corregirse para conformidad básica
+- **Total de alertas y advertencias:** 26 elementos que requieren revisión
+- **Áreas prioritarias:** Formularios, estructura semántica y navegación por enlaces
+
+### Siguiente paso: Análisis detallado
+
+Los resultados de esta auditoría automatizada servirán como línea base para:
+- Identificar las áreas de mejora prioritarias
+- Planificar las correcciones necesarias
+- Realizar un análisis manual más profundo
+- Verificar el progreso tras implementar las mejoras
+
+**Nota:** Los análisis automatizados detectan aproximadamente el 30-40% de los problemas de accesibilidad. Es necesario completar con análisis manual y pruebas con usuarios reales.
+
+---
+
+## 4. Análisis y corrección de errores
+
+### Tabla resumen de errores corregidos
+
+| # | Error | Criterio WCAG | Herramienta | Solución aplicada |
+|---|-------|---------------|-------------|-------------------|
+| 1 | Controles de formulario sin etiquetas | 1.3.1, 4.1.2 | TAW | Añadidos atributos `aria-label` y `aria-describedby` |
+| 2 | Ausencia de encabezado h1 | 1.3.1 | TAW | Añadido h1 oculto visualmente en página principal |
+| 3 | Enlaces sin contenido descriptivo | 2.4.4 | TAW | Mejorados `aria-label` en enlaces de navegación |
+| 4 | Referencia ARIA rota | 4.1.2 | WAVE | Sustituido `aria-labelledby` por `aria-label` directo |
+| 5 | Imágenes sin texto alternativo | 1.1.1 | TAW | Añadidos atributos `alt` descriptivos |
+
+### Detalle de errores corregidos
+
+#### Error #1: Controles de formulario sin etiquetas
+
+**Problema:** Los campos de búsqueda y otros formularios carecían de etiquetas asociadas (`<label>`) o atributos ARIA descriptivos.
+**Impacto:** Usuarios de lectores de pantalla no pueden identificar el propósito de los campos de entrada.
+**Criterio WCAG:** 1.3.1 Información y relaciones (Nivel A), 4.1.2 Nombre, función, valor (Nivel A)
+
+**Código ANTES:**
+```html
+<input 
+  type="search" 
+  class="main__search-input" 
+  placeholder="Buscar equipos, ligas, jugadores..."
+>
+```
+
+**Código DESPUÉS:**
+```html
+<input 
+  type="search" 
+  class="main__search-input" 
+  placeholder="Buscar equipos, ligas, jugadores..."
+  aria-label="Buscar contenido"
+>
+```
+
+#### Error #2: Ausencia de encabezado principal (h1)
+
+**Problema:** La página principal no contenía un elemento `<h1>` que identificara claramente el contenido principal.
+**Impacto:** Los usuarios pierden la referencia jerárquica de la página, dificultando la comprensión de la estructura.
+**Criterio WCAG:** 1.3.1 Información y relaciones (Nivel A)
+
+**Código ANTES:**
+```html
+<main class="main">
+  <!-- Sin encabezado principal -->
+  <section class="main__container">
+```
+
+**Código DESPUÉS:**
+```html
+<main class="main">
+  <h1 class="visually-hidden">HomeFootball - Portal de fútbol</h1>
+  <section class="main__container">
+```
+
+#### Error #3: Enlaces sin contenido descriptivo
+
+**Problema:** Enlaces de navegación y social media con texto insuficiente o genérico.
+**Impacto:** Usuarios de lectores de pantalla no pueden determinar el destino del enlace.
+**Criterio WCAG:** 2.4.4 Propósito de los enlaces en contexto (Nivel A)
+
+**Código ANTES:**
+```html
+<a href="https://twitter.com" target="_blank">
+  <svg>...</svg>
+</a>
+```
+
+**Código DESPUÉS:**
+```html
+<a 
+  href="https://twitter.com" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  aria-label="Síguenos en Twitter"
+>
+  <svg>...</svg>
+</a>
+```
+
+#### Error #4: Referencia ARIA rota
+
+**Problema:** El atributo `aria-labelledby="matches-heading"` apuntaba a un ID que no siempre existía en el DOM.
+**Impacto:** Lectores de pantalla no pueden localizar la referencia, causando confusión.
+**Criterio WCAG:** 4.1.2 Nombre, función, valor (Nivel A)
+
+**Código ANTES:**
+```html
+<section class="matches" aria-labelledby="matches-heading">
+  @if (matches().length > 0) {
+    <!-- matches-heading solo existe en @else -->
+```
+
+**Código DESPUÉS:**
+```html
+<section class="matches" aria-label="Partidos principales">
+  @if (matches().length > 0) {
+    <!-- Referencia directa sin dependencias -->
+```
+
+#### Error #5: Imágenes sin texto alternativo
+
+**Problema:** Múltiples imágenes de escudos y logos carecían de atributos `alt` descriptivos.
+**Impacto:** Usuarios ciegos no pueden identificar el contenido visual de las imágenes.
+**Criterio WCAG:** 1.1.1 Contenido no textual (Nivel A)
+
+**Código ANTES:**
+```html
+<img src="assets/images/teams/barcelona.png" class="team-logo">
+```
+
+**Código DESPUÉS:**
+```html
+<img 
+  src="assets/images/teams/barcelona.png" 
+  alt="FC Barcelona"
+  class="team-logo"
+  loading="lazy"
+>
+```
+
+---
+
+## 5. Análisis de estructura semántica
+
+### Landmarks HTML5 utilizados
+
+Evaluación de elementos semánticos implementados en el proyecto:
+
+- [x] `<header>` - Cabecera del sitio con navegación principal y logo
+- [x] `<nav>` - Menú de navegación principal y navegación de redes sociales
+- [x] `<main>` - Contenido principal de cada página
+- [x] `<article>` - Usado para tarjetas de partidos en el carrusel
+- [x] `<section>` - Usado para agrupar contenido relacionado (competiciones, matches, etc.)
+- [x] `<aside>` - Sidebar de noticias en la página principal
+- [x] `<footer>` - Pie de página con enlaces a redes sociales
+
+### Jerarquía de encabezados
+
+La estructura jerárquica de encabezados en la página principal es la siguiente:
+
+```
+H1: HomeFootball - Portal de fútbol (oculto visualmente)
+  H2: Competiciones a seguir
+  H2: Noticias (sidebar)
+  H2: Partidos principales (título del carrusel)
+```
+
+**Estado:** ⚠️ **Parcialmente correcta con mejoras necesarias**
+- ✅ Tiene H1 principal (añadido para accesibilidad)
+- ✅ Los H2 están bien jerarquizados
+- ⚠️ Faltan H3 para subsecciones específicas
+- ⚠️ Algunas páginas secundarias necesitan revisión jerárquica
+
+### Análisis de imágenes
+
+| Tipo de imagen | Cantidad | Estado |
+|----------------|----------|---------|
+| **Total de imágenes** | ~45 | Revisadas |
+| **Con texto alternativo** | 38 | ✅ Corregido |
+| **Decorativas (alt="")** | 5 | ✅ Apropiado |
+| **Sin alt (corregidas)** | 7 | ✅ Añadido alt descriptivo |
+
+#### Desglose por categorías:
+
+**Imágenes funcionales:**
+- Logo del sitio: `alt="HomeFootball"`
+- Escudos de equipos: `alt="[Nombre del equipo]"`
+- Iconos de navegación: `aria-label` descriptivo
+
+**Imágenes decorativas:**
+- Elementos gráficos de fondo: `alt=""` o `aria-hidden="true"`
+- Separadores visuales: Manejados por CSS
+
+**Imágenes informativas:**
+- Capturas de análisis: `alt="Resultados de [herramienta]"`
+- Diagramas: Textos alternativos descriptivos del contenido
+
+### Mejoras implementadas en estructura semántica
+
+1. **Landmarks mejorados:** Añadidos `aria-label` específicos a elementos `<nav>` y `<section>`
+2. **Jerarquía de encabezados:** Incorporado H1 principal oculto visualmente
+3. **Semántica de listas:** Carrusel implementado con `<ul>` y `<li>` apropiados
+4. **Roles ARIA:** Añadidos roles específicos como `role="region"` y `role="tablist"`
+
+**Estado general:** ✅ **Estructura semántica robusta** con mejoras significativas en accesibilidad
+
+---
+
+## 6. Formularios accesibles
 
 *Sección pendiente de completar*
 
 ---
-
-## 4. Textos alternativos y ARIA
 
 *Sección pendiente de completar*
 
