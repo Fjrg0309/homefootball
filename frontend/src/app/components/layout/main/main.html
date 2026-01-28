@@ -25,6 +25,9 @@
       <section class="main__content">
         <!-- Carrusel de partidos principales -->
         <section class="matches" aria-labelledby="matches-heading">
+          <!-- Título siempre presente para accesibilidad -->
+          <h2 id="matches-heading" class="visually-hidden">Partidos principales</h2>
+          
           @if (loadingMatches()) {
             <div class="matches__loading" role="status" aria-live="polite">
               <div class="spinner" aria-hidden="true"></div>
@@ -38,7 +41,6 @@
             />
           } @else {
             <div class="matches__empty" role="status">
-              <h2 id="matches-heading" class="matches__title">Partidos principales</h2>
               <p>No hay partidos disponibles en este momento</p>
             </div>
           }
