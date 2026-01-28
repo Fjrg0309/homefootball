@@ -24,10 +24,7 @@
       <!-- Contenido principal -->
       <section class="main__content">
         <!-- Carrusel de partidos principales -->
-        <section class="matches" aria-labelledby="matches-heading">
-          <!-- Título siempre presente para accesibilidad -->
-          <h2 id="matches-heading" class="visually-hidden">Partidos principales</h2>
-          
+        <section class="matches" aria-label="Partidos principales">
           @if (loadingMatches()) {
             <div class="matches__loading" role="status" aria-live="polite">
               <div class="spinner" aria-hidden="true"></div>
