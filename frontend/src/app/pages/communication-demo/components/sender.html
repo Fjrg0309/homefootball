@@ -3,9 +3,10 @@
   <p>Envía mensajes al hermano receptor</p>
   
   <div class="controls">
-    <button (click)="onAction()">Enviar Mensaje Automático</button>
-    <input #customInput type="text" placeholder="Mensaje personalizado" (keyup.enter)="sendCustomMessage(customInput.value); customInput.value = ''">
-    <button (click)="sendCustomMessage(customInput.value); customInput.value = ''">Enviar Personalizado</button>
+    <button type="button" (click)="onAction()">Enviar Mensaje Automático</button>
+    <label for="custom-message-input" class="visually-hidden">Mensaje personalizado</label>
+    <input #customInput id="custom-message-input" type="text" placeholder="Mensaje personalizado" aria-label="Mensaje personalizado" (keyup.enter)="sendCustomMessage(customInput.value); customInput.value = ''">
+    <button type="button" (click)="sendCustomMessage(customInput.value); customInput.value = ''">Enviar Personalizado</button>
   </div>
   
   <div class="info">

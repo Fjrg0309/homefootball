@@ -107,11 +107,14 @@
       </div>
 
       <div class="demo-form">
-        <h3>Formulario de Ejemplo</h3>
-        <input type="text" placeholder="Nombre" class="demo-input">
-        <input type="email" placeholder="Email" class="demo-input">
-        <textarea placeholder="Mensaje" class="demo-textarea"></textarea>
-        <button class="btn btn-primary">Enviar</button>
+        <h3 id="form-ejemplo-title">Formulario de Ejemplo</h3>
+        <label for="demo-nombre" class="visually-hidden">Nombre</label>
+        <input id="demo-nombre" type="text" placeholder="Nombre" class="demo-input" aria-label="Nombre">
+        <label for="demo-email" class="visually-hidden">Email</label>
+        <input id="demo-email" type="email" placeholder="Email" class="demo-input" aria-label="Email">
+        <label for="demo-mensaje" class="visually-hidden">Mensaje</label>
+        <textarea id="demo-mensaje" placeholder="Mensaje" class="demo-textarea" aria-label="Mensaje"></textarea>
+        <button class="btn btn-primary" type="button">Enviar</button>
       </div>
 
       <div class="demo-list">

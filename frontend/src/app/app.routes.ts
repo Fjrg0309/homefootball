@@ -5,6 +5,7 @@ import { Profile } from './pages/profile/profile';
 import { Home } from './pages/home/home';
 import { Settings } from './pages/settings/settings';
 import { NotFound } from './components/shared/not-found/not-found';
+import { UnderConstruction } from './pages/under-construction/under-construction';
 import { authGuard, adminGuard } from './guards/auth.guard';
 import { pendingChangesGuard } from './guards/pending-changes.guard';
 import { ProductList } from './pages/product-list/product-list';
@@ -15,6 +16,9 @@ import { productResolver } from './resolvers/product.resolver';
 export const routes: Routes = [
   // Página principal
   { path: '', component: Home, data: { breadcrumb: 'Inicio' } },
+  
+  // Página en construcción (para rutas sin contenido)
+  { path: 'en-construccion', component: UnderConstruction, data: { breadcrumb: 'En construcción' } },
   
   // Rutas públicas
   { path: 'register', component: Register, data: { breadcrumb: 'Registro' } },
@@ -263,6 +267,6 @@ export const routes: Routes = [
     data: { breadcrumb: 'Tiempo Real Demo' }
   },
   
-  // Wildcard 404 - SIEMPRE AL FINAL
-  { path: '**', component: NotFound }
+  // Wildcard - Redirige a página en construcción para evitar errores 404
+  { path: '**', component: UnderConstruction }
 ];

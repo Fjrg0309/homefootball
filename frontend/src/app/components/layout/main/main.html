@@ -2,8 +2,10 @@
   <h1 class="visually-hidden">HomeFootball - Portal de fútbol</h1>
   <section class="main__container">
     <!-- Barra de búsqueda -->
-    <section class="main__search">
+    <search class="main__search" role="search">
+      <label for="main-search-input" class="visually-hidden">Buscar equipos, ligas o jugadores</label>
       <input 
+        id="main-search-input"
         type="search" 
         class="main__search-input" 
         placeholder="Buscar equipos, ligas, jugadores..."
@@ -12,13 +14,13 @@
         (input)="onSearchInput($event)"
         (keypress)="onSearchKeypress($event)"
       >
-      <button class="main__search-btn" aria-label="Realizar búsqueda" (click)="onSearch()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button class="main__search-btn" aria-label="Realizar búsqueda" type="submit" (click)="onSearch()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/>
           <path d="m21 21-4.35-4.35"/>
         </svg>
       </button>
-    </section>
+    </search>
 
     <!-- Layout con dos columnas -->
     <section class="main__layout">
@@ -106,11 +108,15 @@
           <ul class="main__sidebar-list">
             @for (item of news(); track item.id) {
               <li class="main__sidebar-item">
-                <a (click)="goToNews(item.id)" class="main__sidebar-link">{{ item.title }}</a>
+                <a 
+                  [routerLink]="['/noticia', item.id]"
+                  class="main__sidebar-link"
+                  [attr.aria-label]="'Leer noticia: ' + item.title"
+                >{{ item.title }}</a>
               </li>
             }
           </ul>
-          <a routerLink="/noticias" class="main__sidebar-more">Ver todas las noticias →</a>
+          <a routerLink="/noticias" class="main__sidebar-more" aria-label="Ver todas las noticias">Ver todas las noticias →</a>
         </aside>
       </section>
     </section>
