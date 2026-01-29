@@ -114,13 +114,18 @@
                 <a [routerLink]="['/equipo', match.homeTeamId]" 
                    class="match-row__team match-row__team--home" 
                    [class.match-row__team--winner]="getWinnerClass(match, 'home') === 'winner'"
+                   [title]="'Ver equipo ' + match.homeTeam"
+                   [attr.aria-label]="'Ver información del equipo ' + match.homeTeam"
                    (click)="$event.stopPropagation()">
                   <img [src]="match.homeLogo" [alt]="match.homeTeam" class="match-row__logo">
                   <span class="match-row__name">{{ match.homeTeam }}</span>
                 </a>
                 
                 <!-- Marcador o Hora (enlace al partido) -->
-                <a [routerLink]="['/partido', match.id]" class="match-row__center">
+                <a [routerLink]="['/partido', match.id]" 
+                   class="match-row__center"
+                   [title]="'Ver partido: ' + match.homeTeam + ' vs ' + match.awayTeam"
+                   [attr.aria-label]="'Ver detalles del partido ' + match.homeTeam + ' contra ' + match.awayTeam">
                   <span class="match-row__score" 
                         [class.match-row__score--live]="match.status === 'live'"
                         [class.match-row__score--upcoming]="match.status === 'upcoming'">
@@ -137,6 +142,8 @@
                 <a [routerLink]="['/equipo', match.awayTeamId]" 
                    class="match-row__team match-row__team--away" 
                    [class.match-row__team--winner]="getWinnerClass(match, 'away') === 'winner'"
+                   [title]="'Ver equipo ' + match.awayTeam"
+                   [attr.aria-label]="'Ver información del equipo ' + match.awayTeam"
                    (click)="$event.stopPropagation()">
                   <span class="match-row__name">{{ match.awayTeam }}</span>
                   <img [src]="match.awayLogo" [alt]="match.awayTeam" class="match-row__logo">

@@ -2,15 +2,12 @@
   class="match-carousel"
   role="region"
   aria-roledescription="carrusel"
-  [attr.aria-label]="title"
+  aria-label="Carrusel de partidos"
   (mouseenter)="pauseAutoPlay()"
   (mouseleave)="resumeAutoPlay()"
   (focusin)="pauseAutoPlay()"
   (focusout)="resumeAutoPlay()"
 >
-  <!-- Título con estilo igual que Competiciones a seguir -->
-  <h2 class="match-carousel__title" id="carousel-title">{{ title }}</h2>
-
   <!-- Contenedor del carrusel con flechas -->
   <div class="match-carousel__content">
     <!-- Flecha izquierda -->
@@ -35,7 +32,8 @@
               (keydown.enter)="goToMatch(match.id)"
               tabindex="0"
               role="button"
-              [attr.aria-label]="match.homeTeam + ' contra ' + match.awayTeam"
+              [title]="'Ver partido: ' + match.homeTeam + ' vs ' + match.awayTeam"
+              [attr.aria-label]="'Partido: ' + match.homeTeam + ' contra ' + match.awayTeam + '. ' + getMatchStatus(match)"
             >
               <!-- Badge en vivo -->
               @if (isLive(match)) {

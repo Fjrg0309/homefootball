@@ -72,11 +72,12 @@
               <a 
                 class="player-card" 
                 [routerLink]="['/jugador', player.id]"
-                [attr.aria-label]="'Ver detalles de ' + getPlayerDisplayName(player)">
+                [title]="'Ver jugador: ' + getPlayerDisplayName(player)"
+                [attr.aria-label]="'Ver detalles del jugador ' + getPlayerDisplayName(player)">
                 <div class="player-card__photo-wrapper">
                   <img 
                     [src]="player.photo" 
-                    [alt]="player.name"
+                    [alt]="'Foto de ' + player.name"
                     class="player-card__photo"
                     loading="lazy"
                     decoding="async"

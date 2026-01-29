@@ -57,7 +57,10 @@
                       {{ team.rank }}
                     </td>
                     <td class="standings-table__team">
-                      <a [routerLink]="['/equipo', team.team.id]" class="team-cell">
+                      <a [routerLink]="['/equipo', team.team.id]" 
+                         class="team-cell"
+                         [title]="'Ver equipo ' + team.team.name"
+                         [attr.aria-label]="'Ver información del equipo ' + team.team.name">
                         <img 
                           [src]="team.team.logo" 
                           [alt]="team.team.name"

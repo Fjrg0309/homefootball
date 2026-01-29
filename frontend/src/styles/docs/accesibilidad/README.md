@@ -4,10 +4,10 @@
 
 1. [Fundamentos de accesibilidad](#1-fundamentos-de-accesibilidad)
 2. [Componente multimedia implementado](#2-componente-multimedia-implementado)
-3. [Navegación por teclado](#3-navegación-por-teclado)
-4. [Textos alternativos y ARIA](#4-textos-alternativos-y-aria)
-5. [Contraste y legibilidad](#5-contraste-y-legibilidad)
-6. [Formularios accesibles](#6-formularios-accesibles)
+3. [Auditoría automatizada inicial](#3-auditoría-automatizada-inicial)
+4. [Análisis y corrección de errores](#4-análisis-y-corrección-de-errores)
+5. [Análisis de estructura semántica](#5-análisis-de-estructura-semántica)
+6. [Verificación manual](#6-verificación-manual)
 7. [Testing de accesibilidad](#7-testing-de-accesibilidad)
 8. [Mejoras futuras](#8-mejoras-futuras)
 
@@ -387,27 +387,108 @@ H1: HomeFootball - Portal de fútbol (oculto visualmente)
 
 **Estado general:** ✅ **Estructura semántica robusta** con mejoras significativas en accesibilidad
 
----
-
-## 6. Formularios accesibles
-
-*Sección pendiente de completar*
+**Criterio evaluado:** RA5.b
 
 ---
 
-*Sección pendiente de completar*
+## 6. Verificación manual
 
----
+### 6.1 Test de navegación por teclado
 
-## 5. Contraste y legibilidad
+Se ha realizado una prueba completa de navegación usando exclusivamente el teclado (sin ratón):
 
-*Sección pendiente de completar*
+#### Checklist de navegación por teclado
 
----
+- [x] Puedo llegar a todos los enlaces y botones con Tab
+- [x] El orden de navegación con Tab es lógico (no salta caóticamente)
+- [x] Veo claramente qué elemento tiene el focus (borde, sombra, color)
+- [x] Puedo usar mi componente multimedia solo con teclado
+- [x] No hay "trampas" de teclado donde quedo bloqueado
+- [x] Los menús/modals se pueden cerrar con Esc (si aplica)
 
-## 6. Formularios accesibles
+#### Problemas encontrados
 
-*Sección pendiente de completar*
+1. **Indicador de focus poco visible en algunos botones:** El outline predeterminado del navegador era difícil de ver en ciertos fondos.
+2. **Orden de tabulación en el footer:** Los enlaces de redes sociales se tabulaban antes del copyright.
+
+#### Soluciones aplicadas
+
+1. **Focus visible mejorado:** Añadido estilo personalizado `:focus-visible` con outline de alto contraste:
+```css
+:focus-visible {
+  outline: 3px solid var(--color-focus, #4a90d9);
+  outline-offset: 2px;
+}
+```
+
+2. **Orden del DOM corregido:** Reorganizado el HTML del footer para que el flujo de navegación sea lógico (navegación social → copyright).
+
+3. **Navegación por teclado en carrusel:** Implementados handlers para `ArrowLeft` y `ArrowRight` que permiten navegar entre slides sin usar el ratón.
+
+### 6.2 Test con lector de pantalla
+
+**Herramienta utilizada:** NVDA 2024.1 (Windows)
+**Descarga:** [https://www.nvaccess.org/](https://www.nvaccess.org/)
+
+#### Pasos realizados:
+1. Instalado y activado NVDA
+2. Navegado la web completa usando Tab y flechas
+3. Escuchado los anuncios del lector en cada elemento
+4. Probado específicamente el carrusel de partidos
+
+#### Resultados de la evaluación
+
+| Aspecto evaluado | Resultado | Observación |
+|------------------|-----------|-------------|
+| ¿Se entiende la estructura sin ver la pantalla? | ✅ | Los landmarks y encabezados permiten navegar claramente |
+| ¿Los landmarks se anuncian correctamente? | ✅ | "Navegación principal", "Contenido principal", "Pie de página" anunciados |
+| ¿Las imágenes tienen descripciones adecuadas? | ✅ | Escudos anuncian nombre del equipo, logo anuncia "HomeFootball" |
+| ¿Los enlaces tienen textos descriptivos? | ✅ | "Síguenos en Twitter", "Ir a página principal" se anuncian correctamente |
+| ¿El componente multimedia es accesible? | ✅ | Carrusel anuncia posición, controles y contenido de cada partido |
+
+#### Principales problemas detectados
+
+1. **Anuncio redundante en carrusel:** Se anunciaba dos veces el nombre del equipo (por alt de imagen y texto visible).
+2. **Región live muy verbosa:** Los cambios de slide generaban anuncios demasiado largos.
+
+#### Mejoras aplicadas
+
+1. **Eliminada redundancia:** Añadido `aria-hidden="true"` a elementos decorativos que duplicaban información.
+2. **Mensajes concisos:** Reducido el contenido de `aria-live` a información esencial: "Partido 3 de 8".
+3. **Textos alternativos optimizados:** Revisados para ser descriptivos pero concisos.
+
+### 6.3 Verificación cross-browser
+
+Se ha verificado el funcionamiento de la aplicación en tres navegadores principales:
+
+| Navegador | Versión | Layout correcto | Multimedia funciona | Observaciones |
+|-----------|---------|-----------------|---------------------|---------------|
+| Chrome | 131.0 | ✅ | ✅ | Sin problemas. Renderizado óptimo |
+| Firefox | 133.0 | ✅ | ✅ | Sin problemas. Focus visible correcto |
+| Edge | 131.0 | ✅ | ✅ | Sin problemas. Compatible 100% |
+
+#### Capturas de pantalla
+
+- [Captura en Chrome](./capturas/chrome.png)
+- [Captura en Firefox](./capturas/firefox.png)
+- [Captura en Edge](./capturas/edge.png)
+
+#### Observaciones adicionales
+
+- **CSS Grid y Flexbox:** Funcionan correctamente en los tres navegadores
+- **Animaciones del carrusel:** Transiciones suaves sin diferencias apreciables
+- **Focus styles:** El outline personalizado se muestra correctamente en todos los navegadores
+- **Responsive design:** El layout se adapta correctamente en diferentes resoluciones
+
+### Resumen de verificación manual
+
+| Área de prueba | Estado | Notas |
+|----------------|--------|-------|
+| Navegación por teclado | ✅ Aprobado | Orden lógico, focus visible, sin trampas |
+| Lector de pantalla (NVDA) | ✅ Aprobado | Anuncios claros, estructura comprensible |
+| Cross-browser | ✅ Aprobado | Compatible con Chrome, Firefox, Edge |
+
+**Criterios evaluados:** RA5.g, RA4.g
 
 ---
 
@@ -423,4 +504,4 @@ H1: HomeFootball - Portal de fútbol (oculto visualmente)
 
 ---
 
-**Criterios evaluados:** RA5.a, RA5.c
+**Documento actualizado:** Enero 2026

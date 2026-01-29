@@ -25,7 +25,10 @@
     @if (!loading() && !error() && fixture()) {
       <!-- Marcador principal -->
       <section class="match-score">
-        <a [routerLink]="['/equipo', fixture()!.teams.home.id]" class="match-score__team match-score__team--home">
+        <a [routerLink]="['/equipo', fixture()!.teams.home.id]" 
+           class="match-score__team match-score__team--home"
+           [title]="'Ver equipo ' + fixture()!.teams.home.name"
+           [attr.aria-label]="'Ver información del equipo ' + fixture()!.teams.home.name">
           <img 
             [src]="fixture()!.teams.home.logo" 
             [alt]="fixture()!.teams.home.name"
@@ -43,7 +46,10 @@
           </span>
         </div>
         
-        <a [routerLink]="['/equipo', fixture()!.teams.away.id]" class="match-score__team match-score__team--away">
+        <a [routerLink]="['/equipo', fixture()!.teams.away.id]" 
+           class="match-score__team match-score__team--away"
+           [title]="'Ver equipo ' + fixture()!.teams.away.name"
+           [attr.aria-label]="'Ver información del equipo ' + fixture()!.teams.away.name">
           <img 
             [src]="fixture()!.teams.away.logo" 
             [alt]="fixture()!.teams.away.name"

@@ -28,6 +28,7 @@
       <section class="main__content">
         <!-- Carrusel de partidos principales -->
         <section class="matches" aria-label="Partidos principales">
+          <h2 class="matches__title">Partidos principales</h2>
           @if (loadingMatches()) {
             <div class="matches__loading" role="status" aria-live="polite">
               <div class="spinner" aria-hidden="true"></div>
@@ -36,7 +37,6 @@
           } @else if (matches().length > 0) {
             <app-match-carousel 
               [matches]="matches()"
-              title="Partidos principales"
               [itemsPerView]="3"
             />
           } @else {
@@ -50,51 +50,51 @@
         <section class="competitions">
           <h2 class="competitions__title">Competiciones a seguir</h2>
           <section class="competitions__grid">
-            <a routerLink="/liga/laliga" class="competition-card">
+            <a routerLink="/liga/laliga" class="competition-card" title="Ver LaLiga" aria-label="Ver competición LaLiga">
               <span class="competition-card__name">LaLiga</span>
             </a>
             
-            <a routerLink="/liga/ligue-1" class="competition-card">
+            <a routerLink="/liga/ligue-1" class="competition-card" title="Ver Ligue 1" aria-label="Ver competición Ligue 1">
               <span class="competition-card__name">Ligue 1</span>
             </a>
             
-            <a routerLink="/liga/premier-league" class="competition-card">
+            <a routerLink="/liga/premier-league" class="competition-card" title="Ver Premier League" aria-label="Ver competición Premier League">
               <span class="competition-card__name">Premier League</span>
             </a>
             
-            <a routerLink="/liga/primeira-liga" class="competition-card">
+            <a routerLink="/liga/primeira-liga" class="competition-card" title="Ver Primeira Liga" aria-label="Ver competición Primeira Liga">
               <span class="competition-card__name">Primeira Liga</span>
             </a>
             
-            <a routerLink="/liga/serie-a" class="competition-card">
+            <a routerLink="/liga/serie-a" class="competition-card" title="Ver Serie A" aria-label="Ver competición Serie A">
               <span class="competition-card__name">Serie A</span>
             </a>
             
-            <a routerLink="/liga/eredivisie" class="competition-card">
+            <a routerLink="/liga/eredivisie" class="competition-card" title="Ver Eredivisie" aria-label="Ver competición Eredivisie">
               <span class="competition-card__name">Eredivisie</span>
             </a>
             
-            <a routerLink="/liga/bundesliga" class="competition-card">
+            <a routerLink="/liga/bundesliga" class="competition-card" title="Ver Bundesliga" aria-label="Ver competición Bundesliga">
               <span class="competition-card__name">Bundesliga</span>
             </a>
             
-            <a routerLink="/liga/super-lig" class="competition-card">
+            <a routerLink="/liga/super-lig" class="competition-card" title="Ver Süper Lig" aria-label="Ver competición Süper Lig">
               <span class="competition-card__name">Süper Lig</span>
             </a>
             
-            <a routerLink="/liga/mls" class="competition-card">
+            <a routerLink="/liga/mls" class="competition-card" title="Ver MLS" aria-label="Ver competición MLS">
               <span class="competition-card__name">MLS</span>
             </a>
             
-            <a routerLink="/liga/brasileirao" class="competition-card">
+            <a routerLink="/liga/brasileirao" class="competition-card" title="Ver Brasileirão" aria-label="Ver competición Brasileirão">
               <span class="competition-card__name">Brasileirão</span>
             </a>
             
-            <a routerLink="/liga/championship" class="competition-card">
+            <a routerLink="/liga/championship" class="competition-card" title="Ver Championship" aria-label="Ver competición Championship">
               <span class="competition-card__name">Championship</span>
             </a>
             
-            <a routerLink="/liga/ligue-2" class="competition-card">
+            <a routerLink="/liga/ligue-2" class="competition-card" title="Ver Ligue 2" aria-label="Ver competición Ligue 2">
               <span class="competition-card__name">Ligue 2</span>
             </a>
           </section>
