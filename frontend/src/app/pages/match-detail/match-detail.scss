@@ -62,8 +62,8 @@
   &__retry {
     margin-top: var(--spacing-2);
     padding: var(--spacing-1) var(--spacing-3);
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
@@ -121,8 +121,8 @@
   }
 
   &__panel-header {
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     padding: var(--spacing-1) var(--spacing-2); // 8px 16px
     
     // Modo oscuro
@@ -199,10 +199,10 @@
     max-width: 300px;
     margin: var(--spacing-3) auto 0;
     padding: var(--spacing-1-5) var(--spacing-3);
-    background-color: var(--color-accent);
+    background-color: var(--color-accent-hover);
     border: none;
     border-radius: var(--radius-full);
-    color: white;
+    color: var(--color-text);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
     cursor: pointer;
@@ -212,6 +212,7 @@
     &:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-lg);
+      background-color: var(--color-accent);
     }
     
     &--active {

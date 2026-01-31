@@ -1,14 +1,24 @@
 <article class="card" [class.card--horizontal]="horizontal">
-  <!-- Picture con soporte WebP, srcset y lazy loading -->
+  <!-- Picture con soporte AVIF, WebP y srcset para imágenes optimizadas -->
   <picture *ngIf="imageSrc" class="card__picture">
+    <!-- AVIF - Mejor compresión (si está disponible) -->
     <source 
-      *ngIf="imageWebp" 
-      [srcset]="imageWebp" 
+      *ngIf="optimizedAvifSrcset" 
+      [srcset]="optimizedAvifSrcset"
+      [sizes]="imageSizes" 
+      type="image/avif">
+    
+    <!-- WebP - Buena compresión con amplio soporte -->
+    <source 
+      *ngIf="optimizedWebpSrcset" 
+      [srcset]="optimizedWebpSrcset"
+      [sizes]="imageSizes" 
       type="image/webp">
+    
+    <!-- Imagen fallback (JPG/PNG) con srcset para densidades de pantalla -->
     <img 
       [src]="imageSrc"
-      [srcset]="imageSrcset"
-      [sizes]="imageSizes"
+      [srcset]="optimizedSrcset || imageSrcset"
       [alt]="imageAlt || ''"
       [loading]="lazyLoad ? 'lazy' : 'eager'"
       decoding="async"

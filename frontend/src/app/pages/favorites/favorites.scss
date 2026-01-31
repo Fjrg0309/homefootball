@@ -27,8 +27,8 @@
   // HEADER CON FONDO VERDE
   // =============================================
   &__header {
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     padding: 1.25rem 2rem;
     text-align: center;
     margin-bottom: 1.5rem;
@@ -75,15 +75,15 @@
   &__login-btn {
     display: inline-block;
     padding: var(--spacing-2) var(--spacing-4);
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     border-radius: var(--radius-md);
     font-weight: var(--font-weight-semibold);
     text-decoration: none;
     transition: all 0.2s ease;
 
     &:hover {
-      background-color: var(--color-accent-dark, #00b359);
+      background-color: var(--color-accent);
       transform: translateY(-2px);
     }
   }
@@ -120,12 +120,12 @@
     }
     
     &--active {
-      background-color: var(--color-accent);
-      border-color: var(--color-accent);
-      color: white;
+      background-color: var(--color-accent-hover);
+      border-color: var(--color-accent-hover);
+      color: var(--color-text);
       
       &:hover {
-        color: white;
+        color: var(--color-text);
       }
       
       // Modo oscuro

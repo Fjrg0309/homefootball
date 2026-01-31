@@ -131,8 +131,8 @@
   &__badge {
     display: inline-block;
     border-radius: var(--radius-full);
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     font-weight: var(--font-weight-medium, 500);
     // Mobile-first
     padding: 2px 8px;

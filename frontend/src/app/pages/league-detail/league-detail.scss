@@ -258,8 +258,8 @@
     justify-content: center;
     width: 100%;
     padding: var(--spacing-3) var(--spacing-4); // 24px 32px
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     font-size: var(--font-size-lg); // 24px - Tamaño destacado para elementos importantes
     font-weight: var(--font-weight-semibold);
     text-decoration: none;
@@ -277,7 +277,7 @@
     @include dark-mode-title;
 
     &:hover {
-      background-color: var(--color-accent-hover);
+      background-color: var(--color-accent);
       transform: translateY(-2px);
       box-shadow: 0 var(--spacing-1) var(--spacing-2) rgba(0, 217, 95, 0.3);
       
@@ -313,8 +313,8 @@
   }
 
   &__about-title {
-    background-color: var(--color-accent); // Verde como en el wireframe
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     padding: var(--spacing-1) var(--spacing-2); // 8px 16px
     margin: 0;
     font-size: var(--font-size-md); // 16px

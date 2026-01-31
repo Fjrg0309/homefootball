@@ -63,11 +63,11 @@
 }
 
 .button--secondary {
-  background-color: var(--color-accent);
+  background-color: var(--color-accent-hover);
   color: var(--color-text);
   
   &:hover:not(:disabled) {
-    background-color: var(--color-accent-hover);
+    background-color: var(--color-accent);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }

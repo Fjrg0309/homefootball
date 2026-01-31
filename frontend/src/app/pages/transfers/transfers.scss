@@ -27,8 +27,8 @@
   // HEADER CON FONDO VERDE
   // =============================================
   &__header {
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     padding: 1.25rem 2rem;
     text-align: center;
     border-radius: 12px;
@@ -73,8 +73,8 @@
     display: block;
     width: fit-content;
     padding: 0.75rem 1.25rem;
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     border: none;
     border-radius: var(--radius-md);
     font-weight: var(--font-weight-semibold);
@@ -86,7 +86,7 @@
     }
     
     &:hover {
-      background-color: var(--color-accent-hover);
+      background-color: var(--color-accent);
     }
     
     // Modo oscuro
@@ -244,11 +244,11 @@
     transition: all 0.2s;
 
     &--primary {
-      background-color: var(--color-accent);
-      color: white;
+      background-color: var(--color-accent-hover);
+      color: var(--color-text);
       
       &:hover {
-        background-color: var(--color-accent-hover);
+        background-color: var(--color-accent);
       }
       
       // Modo oscuro

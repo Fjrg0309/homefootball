@@ -27,8 +27,8 @@
   // HEADER CON FONDO VERDE
   // =============================================
   &__header {
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     padding: 1.25rem 2rem;
     text-align: center;
     margin-bottom: 2rem;
@@ -88,8 +88,8 @@
   &__retry {
     margin-top: 1rem;
     padding: 0.5rem 1.5rem;
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;

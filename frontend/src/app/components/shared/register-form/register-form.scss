@@ -131,7 +131,7 @@
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text);
-    background-color: var(--color-accent);
+    background-color: var(--color-accent-hover);
     border: none;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -142,7 +142,7 @@
     gap: var(--spacing-2);
     
     &:hover:not(:disabled):not(&--loading) {
-      background-color: var(--color-accent-hover);
+      background-color: var(--color-accent);
       box-shadow: 0 4px 12px rgba(0, 217, 95, 0.25);
     }
 

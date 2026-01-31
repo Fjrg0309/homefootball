@@ -1,16 +1,25 @@
 <header class="header">
   <section class="header__container">
-    <!-- Logo y marca con imagen responsive -->
+    <!-- Logo y marca con imagen responsive optimizada -->
     <a href="/" class="header__logo" aria-label="Ir a página principal">
-      <img 
-        src="/logo.png"
-        alt="HomeFootball" 
-        class="header__logo-img"
-        width="56" 
-        height="56"
-        loading="eager"
-        decoding="async"
-      >
+      <picture>
+        <!-- WebP para navegadores modernos -->
+        <source 
+          srcset="/assets/images/webp/small/logo.webp 1x, /assets/images/webp/medium/logo.webp 2x"
+          type="image/webp">
+        
+        <!-- Fallback PNG -->
+        <img 
+          src="/logo.png"
+          srcset="/logo.png 1x, /assets/images/optimized/medium/logo.png 2x"
+          alt="HomeFootball" 
+          class="header__logo-img"
+          width="56" 
+          height="56"
+          loading="eager"
+          decoding="async"
+        >
+      </picture>
       <span class="visually-hidden">Inicio - HomeFootball</span>
     </a>
 

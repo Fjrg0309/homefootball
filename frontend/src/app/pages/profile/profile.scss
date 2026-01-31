@@ -158,11 +158,11 @@
   border: none;
 
   &--primary {
-    background-color: var(--color-accent);
-    color: white;
+    background-color: var(--color-accent-hover);
+    color: var(--color-text);
 
     &:hover {
-      background-color: var(--color-accent-dark, #00b359);
+      background-color: var(--color-accent);
       transform: translateY(-1px);
     }
   }
