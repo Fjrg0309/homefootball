@@ -38,8 +38,8 @@ COPY nginx.conf /etc/nginx/templates/default.conf.template
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-# Exponer puerto 80
-EXPOSE 80
+# Exponer puerto 8080 (requerido por Digital Ocean App Platform)
+EXPOSE 8080
 
 # Usar el entrypoint personalizado
 ENTRYPOINT ["/docker-entrypoint.sh"]
