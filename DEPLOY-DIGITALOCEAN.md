@@ -63,8 +63,13 @@
    - El formato debe ser: `https://nombre-backend.ondigitalocean.app` (sin trailing slash)
 
 4. **Puertos y HTTP Routes:**
-   - HTTP Port: `80`
+   - **HTTP Port: `8080`** ← ⚠️ IMPORTANTE: El nginx escucha en 8080, NO en 80
    - HTTP Routes: `/` (debe servir desde la raíz)
+   
+   ⚠️ **CRÍTICO PARA EL DESPLIEGUE:**
+   En DigitalOcean App Platform, ve a **Settings → Components → Frontend → Edit**:
+   - Internal HTTP Port: **8080** (no 80)
+   - Si ves "Public HTTP Port: 80", eso es el puerto externo, pero internamente debe ser 8080
 
 ### 3. Verificación
 
