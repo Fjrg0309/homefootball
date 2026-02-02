@@ -12,7 +12,11 @@
     @if (!isLoggedIn()) {
       <div class="favorites__login-prompt">
         <p>🔒 Inicia sesión para guardar tus favoritos</p>
-        <button (click)="openLoginModal()" class="favorites__login-btn">
+        <button 
+          (click)="openLoginModal()" 
+          class="favorites__login-btn"
+          title="Ir a iniciar sesión"
+          aria-label="Iniciar sesión para guardar favoritos">
           Iniciar sesión
         </button>
       </div>
@@ -23,25 +27,37 @@
       <button 
         class="favorites__tab"
         [class.favorites__tab--active]="activeTab() === 'all'"
-        (click)="setTab('all')">
+        (click)="setTab('all')"
+        title="Ver todos los favoritos"
+        [attr.aria-label]="activeTab() === 'all' ? 'Todos los favoritos, tab activo' : 'Ver todos los favoritos'"
+        [attr.aria-pressed]="activeTab() === 'all'">
         Todos
       </button>
       <button 
         class="favorites__tab"
         [class.favorites__tab--active]="activeTab() === 'teams'"
-        (click)="setTab('teams')">
+        (click)="setTab('teams')"
+        title="Ver equipos favoritos"
+        [attr.aria-label]="activeTab() === 'teams' ? 'Equipos favoritos, tab activo' : 'Ver equipos favoritos'"
+        [attr.aria-pressed]="activeTab() === 'teams'">
         Equipos
       </button>
       <button 
         class="favorites__tab"
         [class.favorites__tab--active]="activeTab() === 'leagues'"
-        (click)="setTab('leagues')">
+        (click)="setTab('leagues')"
+        title="Ver ligas favoritas"
+        [attr.aria-label]="activeTab() === 'leagues' ? 'Ligas favoritas, tab activo' : 'Ver ligas favoritas'"
+        [attr.aria-pressed]="activeTab() === 'leagues'">
         Ligas
       </button>
       <button 
         class="favorites__tab"
         [class.favorites__tab--active]="activeTab() === 'players'"
-        (click)="setTab('players')">
+        (click)="setTab('players')"
+        title="Ver jugadores favoritos"
+        [attr.aria-label]="activeTab() === 'players' ? 'Jugadores favoritos, tab activo' : 'Ver jugadores favoritos'"
+        [attr.aria-pressed]="activeTab() === 'players'">
         Jugadores
       </button>
     </nav>
@@ -66,7 +82,8 @@
                 tabindex="0"
                 (keydown.enter)="goToFavorite(fav)"
                 role="button"
-                [attr.aria-label]="'Ver ' + fav.name">
+                [title]="'Ver ' + fav.name"
+                [attr.aria-label]="'Ver detalles de ' + fav.name">
                 <div class="favorite-item__image-wrapper">
                   <img 
                     [src]="fav.image" 
@@ -82,13 +99,13 @@
                     <span class="favorite-item__subtitle">{{ fav.subtitle }}</span>
                   }
                 </div>
-                <span class="favorite-item__type">{{ getTypeIcon(fav.type) }}</span>
+                <span class="favorite-item__type" aria-hidden="true">{{ getTypeIcon(fav.type) }}</span>
                 <button 
                   class="favorite-item__remove"
                   (click)="removeFavorite(fav, $event)"
-                  title="Quitar de favoritos"
-                  aria-label="Quitar de favoritos">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  [title]="'Quitar ' + fav.name + ' de favoritos'"
+                  [attr.aria-label]="'Quitar ' + fav.name + ' de favoritos'">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                   </svg>

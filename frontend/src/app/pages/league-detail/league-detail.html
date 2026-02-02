@@ -9,6 +9,7 @@
         class="league-detail__icon" 
         [class.league-detail__icon--active]="isFavorite()"
         (click)="toggleFavorite()"
+        [title]="isFavorite() ? 'Quitar ' + leagueName() + ' de favoritos' : 'Añadir ' + leagueName() + ' a favoritos'"
         [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'"
         type="button">
         {{ isFavorite() ? '★' : '☆' }}

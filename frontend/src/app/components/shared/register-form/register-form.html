@@ -3,8 +3,8 @@
     <legend class="register-form__legend">Crear cuenta</legend>
     
     @if (errorMessage()) {
-      <div class="register-form__error-banner">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="register-form__error-banner" role="alert" aria-live="polite">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="8" x2="12" y2="12"></line>
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -105,9 +105,11 @@
         class="register-form__btn"
         [class.register-form__btn--loading]="isLoading()"
         [disabled]="registerForm.invalid || isLoading()"
+        title="Crear nueva cuenta de usuario"
+        aria-label="Crear cuenta"
       >
         @if (isLoading()) {
-          <span class="register-form__spinner"></span>
+          <span class="register-form__spinner" aria-hidden="true"></span>
           Creando cuenta...
         } @else {
           Crear cuenta
@@ -122,6 +124,8 @@
           type="button" 
           class="register-form__login-link"
           (click)="onGoToLogin()"
+          title="Ir al formulario de inicio de sesión"
+          aria-label="Ir a iniciar sesión"
         >
           Inicia sesión
         </button>

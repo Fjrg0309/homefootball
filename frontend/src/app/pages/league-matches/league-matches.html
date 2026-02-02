@@ -33,7 +33,13 @@
           <span class="date-navigation__subtext">{{ roundDate() }}</span>
         }
         @if (!isLastRound()) {
-          <button class="date-navigation__today" (click)="goToLastRound()">Ir a última jornada</button>
+          <button 
+            class="date-navigation__today" 
+            (click)="goToLastRound()"
+            title="Ir a la última jornada de la temporada"
+            aria-label="Saltar a la última jornada disponible">
+            Ir a última jornada
+          </button>
         }
       </div>
       
@@ -61,7 +67,9 @@
           id="season-select"
           class="date-navigation__season-select"
           [value]="season()"
-          (change)="changeSeason($event)">
+          (change)="changeSeason($event)"
+          title="Seleccionar temporada para ver partidos"
+          aria-label="Seleccionar temporada">
           @for (seasonYear of availableSeasons(); track seasonYear) {
             <option [value]="seasonYear">{{ seasonYear }}-{{ seasonYear + 1 }}</option>
           }
@@ -79,9 +87,13 @@
 
     <!-- Error -->
     @if (error()) {
-      <section class="league-matches__error">
+      <section class="league-matches__error" role="alert">
         <p>{{ error() }}</p>
-        <button class="league-matches__retry" (click)="loadMatchesForRound(currentRound())">
+        <button 
+          class="league-matches__retry" 
+          (click)="loadMatchesForRound(currentRound())"
+          title="Reintentar carga de partidos"
+          aria-label="Reintentar cargar partidos de la jornada">
           Reintentar
         </button>
       </section>
@@ -95,12 +107,20 @@
             <p class="no-matches__text">No hay partidos disponibles para esta jornada</p>
             <div class="no-matches__actions">
               @if (!isFirstRound()) {
-                <button class="no-matches__btn" (click)="goToPreviousRound()">
+                <button 
+                  class="no-matches__btn" 
+                  (click)="goToPreviousRound()"
+                  title="Ver jornada anterior"
+                  aria-label="Ir a la jornada anterior">
                   ← Jornada anterior
                 </button>
               }
               @if (!isLastRound()) {
-                <button class="no-matches__btn" (click)="goToNextRound()">
+                <button 
+                  class="no-matches__btn" 
+                  (click)="goToNextRound()"
+                  title="Ver jornada siguiente"
+                  aria-label="Ir a la jornada siguiente">
                   Jornada siguiente →
                 </button>
               }
@@ -157,7 +177,10 @@
 
     <!-- Botón volver -->
     <nav class="league-matches__nav">
-      <a [routerLink]="['/liga', leagueId()]" class="league-matches__back">
+      <a [routerLink]="['/liga', leagueId()]" 
+         class="league-matches__back"
+         [title]="'Volver a ' + leagueName()"
+         [attr.aria-label]="'Volver a la página de ' + leagueName()">
         ← Volver a {{ leagueName() }}
       </a>
     </nav>

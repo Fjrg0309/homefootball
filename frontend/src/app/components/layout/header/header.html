@@ -5,13 +5,13 @@
       <picture>
         <!-- WebP para navegadores modernos -->
         <source 
-          srcset="/assets/images/webp/small/logo.webp 1x, /assets/images/webp/medium/logo.webp 2x"
+          srcset="assets/images/webp/small/logo.webp 1x, assets/images/webp/medium/logo.webp 2x"
           type="image/webp">
         
-        <!-- Fallback PNG -->
+        <!-- Fallback WebP (navegadores que no soportan picture usarán esto) -->
         <img 
-          src="/logo.png"
-          srcset="/logo.png 1x, /assets/images/optimized/medium/logo.png 2x"
+          src="assets/images/webp/small/logo.webp"
+          srcset="assets/images/webp/small/logo.webp 1x, assets/images/webp/medium/logo.webp 2x"
           alt="HomeFootball" 
           class="header__logo-img"
           width="56" 
@@ -118,7 +118,8 @@
         <button 
           class="header__login-btn" 
           (click)="openLoginModal()"
-          aria-label="Iniciar sesión"
+          title="Iniciar sesión en tu cuenta"
+          aria-label="Abrir formulario de inicio de sesión"
           type="button"
         >
           Iniciar sesión

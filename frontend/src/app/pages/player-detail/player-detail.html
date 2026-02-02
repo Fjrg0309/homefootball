@@ -18,9 +18,13 @@
 
     <!-- Error -->
     @if (error()) {
-      <div class="player-detail__error">
+      <div class="player-detail__error" role="alert">
         <p>{{ error() }}</p>
-        <button class="player-detail__retry" (click)="loadPlayerData()">
+        <button 
+          class="player-detail__retry" 
+          (click)="loadPlayerData()"
+          title="Reintentar carga de datos del jugador"
+          aria-label="Reintentar cargar información del jugador">
           Reintentar
         </button>
       </div>
@@ -46,6 +50,7 @@
               class="player-card__favorite"
               [class.player-card__favorite--active]="isFavorite()"
               (click)="toggleFavorite()"
+              [title]="isFavorite() ? 'Quitar ' + player()!.name + ' de favoritos' : 'Añadir ' + player()!.name + ' a favoritos'"
               [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'">
               {{ isFavorite() ? '★' : '☆' }}
             </button>
@@ -168,7 +173,11 @@
 
       <!-- Botón volver -->
       <nav class="player-detail__nav">
-        <button class="player-detail__back" (click)="goBack()">
+        <button 
+          class="player-detail__back" 
+          (click)="goBack()"
+          title="Volver a la página anterior"
+          aria-label="Volver atrás">
           ← Volver
         </button>
       </nav>

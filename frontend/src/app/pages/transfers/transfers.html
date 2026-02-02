@@ -13,7 +13,10 @@
       <button 
         class="transfers__filter-toggle"
         (click)="toggleSidebar()"
-        [class.transfers__filter-toggle--active]="sidebarOpen()">
+        [class.transfers__filter-toggle--active]="sidebarOpen()"
+        [title]="sidebarOpen() ? 'Cerrar buscador avanzado' : 'Abrir buscador avanzado'"
+        [attr.aria-label]="sidebarOpen() ? 'Cerrar panel de filtros' : 'Abrir panel de filtros avanzados'"
+        [attr.aria-expanded]="sidebarOpen()">
         Buscador avanzado
       </button>
       
@@ -34,6 +37,8 @@
               placeholder="Nombre del equipo..."
               [value]="selectedTeam()"
               (input)="selectedTeam.set($any($event.target).value)"
+              title="Escribir nombre de equipo para filtrar fichajes"
+              aria-label="Filtrar fichajes por nombre de equipo"
             >
           </div>
           
@@ -44,7 +49,9 @@
               id="competition-filter"
               class="filter-group__select"
               [value]="selectedCompetition()"
-              (change)="selectedCompetition.set($any($event.target).value)">
+              (change)="selectedCompetition.set($any($event.target).value)"
+              title="Seleccionar competición para filtrar fichajes"
+              aria-label="Filtrar fichajes por competición">
               <option value="">Todas</option>
               @for (comp of competitions(); track comp.id) {
                 <option [value]="comp.id">{{ comp.name }}</option>
@@ -60,6 +67,8 @@
                 class="filter-group__checkbox"
                 [checked]="showOnlyFavorites()"
                 (change)="showOnlyFavorites.set($any($event.target).checked)"
+                title="Marcar para mostrar solo fichajes de tus favoritos"
+                aria-label="Mostrar solo fichajes de equipos favoritos"
               >
               ¿Mostrar solo favoritos?
             </label>
@@ -69,12 +78,16 @@
           <div class="filter-group__actions">
             <button 
               class="filter-group__btn filter-group__btn--primary"
-              (click)="applyFilters()">
+              (click)="applyFilters()"
+              title="Aplicar filtros de búsqueda"
+              aria-label="Buscar fichajes con los filtros seleccionados">
               Buscar
             </button>
             <button 
               class="filter-group__btn filter-group__btn--secondary"
-              (click)="clearFilters()">
+              (click)="clearFilters()"
+              title="Limpiar todos los filtros"
+              aria-label="Limpiar filtros y mostrar todos los fichajes">
               Limpiar
             </button>
           </div>
@@ -101,7 +114,9 @@
                     class="transfer-card__name transfer-card__name--clickable"
                     (click)="goToPlayer(transfer.playerId)"
                     tabindex="0"
-                    role="button">
+                    role="button"
+                    [title]="'Ver ficha de ' + transfer.playerName"
+                    [attr.aria-label]="'Ver detalles del jugador ' + transfer.playerName">
                     {{ transfer.playerName }}
                   </span>
                   
@@ -110,7 +125,9 @@
                       class="transfer-card__team"
                       (click)="goToTeam(transfer.fromTeam.id)"
                       tabindex="0"
-                      role="button">
+                      role="button"
+                      [title]="'Ver equipo ' + transfer.fromTeam.name"
+                      [attr.aria-label]="'Ver detalles del equipo de origen: ' + transfer.fromTeam.name">
                       <img 
                         [src]="transfer.fromTeam.logo" 
                         [alt]="transfer.fromTeam.name"
@@ -120,8 +137,8 @@
                       >
                     </div>
                     
-                    <div class="transfer-card__arrow">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <div class="transfer-card__arrow" aria-hidden="true">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                       </svg>
                     </div>
@@ -130,7 +147,9 @@
                       class="transfer-card__team"
                       (click)="goToTeam(transfer.toTeam.id)"
                       tabindex="0"
-                      role="button">
+                      role="button"
+                      [title]="'Ver equipo ' + transfer.toTeam.name"
+                      [attr.aria-label]="'Ver detalles del equipo de destino: ' + transfer.toTeam.name">
                       <img 
                         [src]="transfer.toTeam.logo" 
                         [alt]="transfer.toTeam.name"

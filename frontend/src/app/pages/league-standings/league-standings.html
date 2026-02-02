@@ -24,9 +24,13 @@
 
         <!-- Error -->
         @if (error()) {
-          <div class="league-standings__error">
+          <div class="league-standings__error" role="alert">
             <p>{{ error() }}</p>
-            <button class="league-standings__retry" (click)="loadStandings()">
+            <button 
+              class="league-standings__retry" 
+              (click)="loadStandings()"
+              title="Reintentar carga de clasificación"
+              aria-label="Reintentar cargar datos de clasificación">
               Reintentar
             </button>
           </div>
@@ -124,26 +128,35 @@
 
       <!-- Sidebar derecho - Botones de navegación -->
       <aside class="league-standings__sidebar">
-        <nav class="league-standings__nav">
-          <a [routerLink]="['/liga', leagueId(), 'partidos']" class="league-standings__btn">
+        <nav class="league-standings__nav" aria-label="Navegación de la liga">
+          <a [routerLink]="['/liga', leagueId(), 'partidos']" 
+             class="league-standings__btn"
+             title="Ver partidos de la liga"
+             aria-label="Ver partidos de la liga">
             Partidos
           </a>
           <button 
             class="league-standings__btn" 
             [class.league-standings__btn--active]="currentView() === 'general'"
-            (click)="setView('general')">
+            (click)="setView('general')"
+            title="Ver clasificación general"
+            aria-label="Ver clasificación general">
             Clasificación
           </button>
           <button 
             class="league-standings__btn" 
             [class.league-standings__btn--active]="currentView() === 'home'"
-            (click)="setView('home')">
+            (click)="setView('home')"
+            title="Ver clasificación de partidos como local"
+            aria-label="Ver clasificación de partidos como local">
             Local
           </button>
           <button 
             class="league-standings__btn" 
             [class.league-standings__btn--active]="currentView() === 'away'"
-            (click)="setView('away')">
+            (click)="setView('away')"
+            title="Ver clasificación de partidos como visitante"
+            aria-label="Ver clasificación de partidos como visitante">
             Visitante
           </button>
         </nav>
@@ -153,7 +166,10 @@
 
     <!-- Botón volver -->
     <nav class="league-standings__back-nav">
-      <a [routerLink]="['/liga', leagueId()]" class="league-standings__back">
+      <a [routerLink]="['/liga', leagueId()]" 
+         class="league-standings__back"
+         [title]="'Volver a ' + leagueName()"
+         [attr.aria-label]="'Volver a la página de ' + leagueName()">
         ← Volver a {{ leagueName() }}
       </a>
     </nav>

@@ -18,9 +18,13 @@
 
     <!-- Error -->
     @if (error()) {
-      <div class="league-teams__error">
+      <div class="league-teams__error" role="alert">
         <p>{{ error() }}</p>
-        <button class="league-teams__retry" (click)="loadTeams()">
+        <button 
+          class="league-teams__retry" 
+          (click)="loadTeams()"
+          title="Reintentar carga de equipos"
+          aria-label="Reintentar cargar lista de equipos">
           Reintentar
         </button>
       </div>
@@ -38,7 +42,8 @@
                 tabindex="0"
                 (keydown.enter)="goToTeam(team.id)"
                 role="button"
-                [attr.aria-label]="'Ver ' + team.name">
+                [title]="'Ver detalles de ' + team.name"
+                [attr.aria-label]="'Ver información del equipo ' + team.name">
                 <div class="team-card__logo-wrapper">
                   <img 
                     [src]="team.logo" 
@@ -63,7 +68,11 @@
 
     <!-- Botón volver -->
     <nav class="league-teams__nav">
-      <button class="league-teams__back" (click)="goBack()">
+      <button 
+        class="league-teams__back" 
+        (click)="goBack()"
+        title="Volver a la página anterior"
+        aria-label="Volver atrás">
         ← Volver
       </button>
     </nav>

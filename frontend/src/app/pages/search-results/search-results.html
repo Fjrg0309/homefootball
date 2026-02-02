@@ -18,10 +18,15 @@
           [value]="searchQuery()"
           (input)="searchQuery.set($any($event.target).value)"
           (keydown)="handleKeydown($event)"
-          aria-label="Buscar"
+          title="Escribir término de búsqueda"
+          aria-label="Campo de búsqueda de ligas, equipos y jugadores"
         >
-        <button class="search-results__btn" (click)="onSearch()" aria-label="Buscar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button 
+          class="search-results__btn" 
+          (click)="onSearch()" 
+          title="Realizar búsqueda"
+          aria-label="Ejecutar búsqueda">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
           </svg>
@@ -49,7 +54,8 @@
                 tabindex="0"
                 (keydown.enter)="goToResult(result)"
                 role="button"
-                [attr.aria-label]="'Ver ' + result.name">
+                [title]="'Ver ' + result.name"
+                [attr.aria-label]="'Ver detalles de ' + result.name + ' (' + getTypeLabel(result.type) + ')'">
                 <div class="result-item__image-wrapper">
                   <img 
                     [src]="result.image" 
@@ -63,10 +69,10 @@
                   <span class="result-item__name">{{ result.name }}</span>
                   <span class="result-item__subtitle">{{ result.subtitle }}</span>
                 </div>
-                <span class="result-item__type" [attr.data-type]="result.type">
+                <span class="result-item__type" [attr.data-type]="result.type" aria-hidden="true">
                   {{ getTypeIcon(result.type) }} {{ getTypeLabel(result.type) }}
                 </span>
-                <svg class="result-item__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="result-item__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M9 18l6-6-6-6"/>
                 </svg>
               </article>

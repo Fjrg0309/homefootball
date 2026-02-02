@@ -13,9 +13,13 @@
 
     <!-- Error -->
     @if (error()) {
-      <div class="team-detail__error">
+      <div class="team-detail__error" role="alert">
         <p>{{ error() }}</p>
-        <button class="team-detail__retry" (click)="loadTeamData()">
+        <button 
+          class="team-detail__retry" 
+          (click)="loadTeamData()"
+          title="Reintentar carga de datos del equipo"
+          aria-label="Reintentar cargar información del equipo">
           Reintentar
         </button>
       </div>
@@ -31,6 +35,7 @@
             class="team-detail__favorite" 
             [class.team-detail__favorite--active]="isFavorite()"
             (click)="toggleFavorite()"
+            [title]="isFavorite() ? 'Quitar ' + teamName() + ' de favoritos' : 'Añadir ' + teamName() + ' a favoritos'"
             [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'"
             type="button">
             {{ isFavorite() ? '★' : '☆' }}
@@ -94,7 +99,11 @@
 
     <!-- Botón volver -->
     <nav class="team-detail__nav">
-      <button class="team-detail__back" onclick="history.back()">
+      <button 
+        class="team-detail__back" 
+        onclick="history.back()"
+        title="Volver a la página anterior"
+        aria-label="Volver atrás">
         ← Volver
       </button>
     </nav>

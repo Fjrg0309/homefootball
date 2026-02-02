@@ -13,7 +13,10 @@
       <button 
         class="news-page__filter-toggle"
         (click)="toggleSidebar()"
-        [class.news-page__filter-toggle--active]="sidebarOpen()">
+        [class.news-page__filter-toggle--active]="sidebarOpen()"
+        [title]="sidebarOpen() ? 'Cerrar buscador avanzado' : 'Abrir buscador avanzado'"
+        [attr.aria-label]="sidebarOpen() ? 'Cerrar panel de filtros' : 'Abrir panel de filtros avanzados'"
+        [attr.aria-expanded]="sidebarOpen()">
         Buscador avanzado
       </button>
       
@@ -31,7 +34,9 @@
               id="team-filter"
               class="filter-group__select"
               [value]="selectedTeam()"
-              (change)="selectedTeam.set($any($event.target).value)">
+              (change)="selectedTeam.set($any($event.target).value)"
+              title="Seleccionar equipo para filtrar noticias"
+              aria-label="Filtrar noticias por equipo">
               <option value="">Todos</option>
               @for (team of teams(); track team.id) {
                 <option [value]="team.id">{{ team.name }}</option>
@@ -46,7 +51,9 @@
               id="competition-filter"
               class="filter-group__select"
               [value]="selectedCompetition()"
-              (change)="selectedCompetition.set($any($event.target).value)">
+              (change)="selectedCompetition.set($any($event.target).value)"
+              title="Seleccionar competición para filtrar noticias"
+              aria-label="Filtrar noticias por competición">
               <option value="">Todas</option>
               @for (comp of competitions(); track comp.id) {
                 <option [value]="comp.id">{{ comp.name }}</option>
@@ -64,6 +71,8 @@
               placeholder="Nombre del jugador..."
               [value]="selectedPlayer()"
               (input)="selectedPlayer.set($any($event.target).value)"
+              title="Escribir nombre de jugador para filtrar noticias"
+              aria-label="Filtrar noticias por nombre de jugador"
             >
           </div>
           
@@ -75,6 +84,8 @@
                 class="filter-group__checkbox"
                 [checked]="showOnlyFavorites()"
                 (change)="showOnlyFavorites.set($any($event.target).checked)"
+                title="Marcar para mostrar solo noticias de tus favoritos"
+                aria-label="Mostrar solo noticias de equipos y jugadores favoritos"
               >
               ¿Mostrar solo favoritos?
             </label>
@@ -84,12 +95,16 @@
           <div class="filter-group__actions">
             <button 
               class="filter-group__btn filter-group__btn--primary"
-              (click)="applyFilters()">
+              (click)="applyFilters()"
+              title="Aplicar filtros de búsqueda"
+              aria-label="Buscar noticias con los filtros seleccionados">
               Buscar
             </button>
             <button 
               class="filter-group__btn filter-group__btn--secondary"
-              (click)="clearFilters()">
+              (click)="clearFilters()"
+              title="Limpiar todos los filtros"
+              aria-label="Limpiar filtros y mostrar todas las noticias">
               Limpiar
             </button>
           </div>
@@ -116,7 +131,9 @@
                   (click)="goToNews(item.id)"
                   tabindex="0"
                   (keydown.enter)="goToNews(item.id)"
-                  role="button">
+                  role="button"
+                  [title]="'Leer noticia: ' + item.title"
+                  [attr.aria-label]="'Ver noticia completa: ' + item.title">
                   <h3 class="news-item__title">{{ item.title }}</h3>
                   <p class="news-item__summary">{{ item.summary }}</p>
                   <div class="news-item__meta">

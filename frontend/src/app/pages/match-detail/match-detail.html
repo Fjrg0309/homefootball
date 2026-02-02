@@ -13,9 +13,13 @@
 
     <!-- Error -->
     @if (error()) {
-      <section class="match-detail__error">
+      <section class="match-detail__error" role="alert">
         <p>{{ error() }}</p>
-        <button class="match-detail__retry" (click)="loadMatchData()">
+        <button 
+          class="match-detail__retry" 
+          (click)="loadMatchData()"
+          title="Reintentar carga de datos del partido"
+          aria-label="Reintentar cargar información del partido">
           Reintentar
         </button>
       </section>
@@ -98,7 +102,10 @@
             <button 
               class="match-detail__stats-toggle" 
               (click)="toggleStatistics()"
-              type="button">
+              type="button"
+              [title]="showStatistics() ? 'Ocultar estadísticas detalladas' : 'Mostrar estadísticas detalladas del partido'"
+              [attr.aria-label]="showStatistics() ? 'Ocultar estadísticas' : 'Ver estadísticas detalladas del partido'"
+              [attr.aria-expanded]="showStatistics()">
               {{ showStatistics() ? 'Ocultar estadísticas' : 'Ver estadísticas detalladas' }}
               <svg 
                 class="match-detail__stats-toggle-icon" 
@@ -108,7 +115,8 @@
                 viewBox="0 0 24 24" 
                 fill="none" 
                 stroke="currentColor" 
-                stroke-width="2">
+                stroke-width="2"
+                aria-hidden="true">
                 <path d="M6 9l6 6 6-6"/>
               </svg>
             </button>
@@ -226,17 +234,23 @@
         class="match-detail__comments-toggle" 
         [class.match-detail__comments-toggle--active]="showComments()"
         (click)="toggleComments()"
-        type="button">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        type="button"
+        [title]="showComments() ? 'Ocultar panel de comentarios' : 'Mostrar panel de comentarios'"
+        [attr.aria-label]="showComments() ? 'Ocultar comentarios' : 'Ver comentarios del partido'"
+        [attr.aria-expanded]="showComments()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
         {{ showComments() ? 'Ocultar comentarios' : 'Ver comentarios' }}
-        <span class="match-detail__comments-badge">{{ comments().length }}</span>
+        <span class="match-detail__comments-badge" aria-label="Número de comentarios">{{ comments().length }}</span>
       </button>
 
       <!-- Navegación: Volver -->
       <nav class="match-detail__nav">
-        <a routerLink="/" class="match-detail__back">
+        <a routerLink="/" 
+           class="match-detail__back"
+           title="Volver a la página de inicio"
+           aria-label="Volver al inicio">
           ← Volver al inicio
         </a>
       </nav>

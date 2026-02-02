@@ -1,20 +1,28 @@
 @if (breadcrumbs().length > 0) {
-  <nav class="breadcrumb-nav" aria-label="breadcrumb">
+  <nav class="breadcrumb-nav" aria-label="Migas de pan - navegación">
     <ol class="breadcrumb-list">
       <li class="breadcrumb-item">
-        <a routerLink="/home" class="breadcrumb-link">
-          <span class="home-icon">🏠</span>
+        <a 
+          routerLink="/home" 
+          class="breadcrumb-link"
+          title="Ir a la página de inicio"
+          aria-label="Ir al inicio">
+          <span class="home-icon" aria-hidden="true">🏠</span>
           <span>Inicio</span>
         </a>
       </li>
       
       @for (crumb of breadcrumbs(); track crumb.url; let last = $last) {
         <li class="breadcrumb-item" [class.active]="last">
-          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-separator" aria-hidden="true">›</span>
           @if (last) {
-            <span class="breadcrumb-current">&#123;&#123; crumb.label &#125;&#125;</span>
+            <span class="breadcrumb-current" aria-current="page">&#123;&#123; crumb.label &#125;&#125;</span>
           } @else {
-            <a [routerLink]="crumb.url" class="breadcrumb-link">
+            <a 
+              [routerLink]="crumb.url" 
+              class="breadcrumb-link"
+              [title]="'Ir a ' + crumb.label"
+              [attr.aria-label]="'Navegar a ' + crumb.label">
               &#123;&#123; crumb.label &#125;&#125;
             </a>
           }

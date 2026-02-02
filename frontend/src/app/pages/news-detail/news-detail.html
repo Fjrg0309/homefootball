@@ -18,9 +18,13 @@
 
     <!-- Error -->
     @if (error()) {
-      <div class="news-detail__error">
+      <div class="news-detail__error" role="alert">
         <p>{{ error() }}</p>
-        <button class="news-detail__btn" (click)="goBack()">
+        <button 
+          class="news-detail__btn" 
+          (click)="goBack()"
+          title="Volver a la lista de noticias"
+          aria-label="Volver a la página de noticias">
           Volver a noticias
         </button>
       </div>
@@ -49,7 +53,11 @@
 
       <!-- Navegación -->
       <nav class="news-detail__nav">
-        <button class="news-detail__back" (click)="goBack()">
+        <button 
+          class="news-detail__back" 
+          (click)="goBack()"
+          title="Volver a la lista de noticias"
+          aria-label="Volver a la página de noticias">
           ← Volver a noticias
         </button>
       </nav>

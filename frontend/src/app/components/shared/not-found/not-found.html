@@ -16,10 +16,18 @@
     </section>
 
     <nav class="actions">
-      <a routerLink="/" class="btn-primary">
+      <a 
+        routerLink="/" 
+        class="btn-primary"
+        title="Ir a la página de inicio"
+        aria-label="Volver a la página de inicio">
         🏠 Volver al Inicio
       </a>
-      <button (click)="goBack()" class="btn-secondary">
+      <button 
+        (click)="goBack()" 
+        class="btn-secondary"
+        title="Volver a la página anterior"
+        aria-label="Volver a la página anterior">
         ← Página Anterior
       </button>
     </nav>

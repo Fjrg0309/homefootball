@@ -82,6 +82,8 @@
           type="button" 
           class="btn-quick user"
           (click)="quickLogin('user')"
+          title="Iniciar sesión como usuario normal de prueba"
+          aria-label="Acceso rápido como usuario normal"
         >
           👤 Usuario Normal
         </button>
@@ -89,6 +91,8 @@
           type="button" 
           class="btn-quick admin"
           (click)="quickLogin('admin')"
+          title="Iniciar sesión como administrador de prueba"
+          aria-label="Acceso rápido como administrador"
         >
           👨‍💼 Administrador
         </button>
@@ -97,7 +101,7 @@
 
     <!-- Link a registro -->
     <div class="login-footer">
-      <p>¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+      <p>¿No tienes cuenta? <a routerLink="/register" title="Crear una cuenta nueva" aria-label="Ir a la página de registro">Regístrate aquí</a></p>
     </div>
   </div>
 </div>
