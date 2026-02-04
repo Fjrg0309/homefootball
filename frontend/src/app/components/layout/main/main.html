@@ -30,7 +30,7 @@
         <section class="matches" aria-label="Partidos principales">
           <h2 class="matches__title">Partidos principales</h2>
           @if (loadingMatches()) {
-            <div class="matches__loading" role="status" aria-live="polite">
+            <div class="matches__loading" role="status" aria-live="polite" aria-busy="true">
               <div class="spinner" aria-hidden="true"></div>
               <p>Cargando partidos...</p>
             </div>

@@ -1,8 +1,14 @@
 @if (isOpen) {
-  <section class="modal" (click)="onOverlayClick($event)" role="dialog" aria-modal="true">
+  <section 
+    class="modal" 
+    (click)="onOverlayClick($event)" 
+    role="dialog" 
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-content">
     <aside class="modal__overlay" [@fadeIn]></aside>
     <article class="modal__container" [@slideIn]>
-      <section class="modal__content" (click)="$event.stopPropagation()">
+      <section class="modal__content" id="modal-content" (click)="$event.stopPropagation()">
         <button 
           class="modal__close" 
           (click)="close()"

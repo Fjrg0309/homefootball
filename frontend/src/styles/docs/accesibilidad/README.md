@@ -431,31 +431,123 @@ Se ha realizado una prueba completa de navegación usando exclusivamente el tecl
 **Descarga:** [https://www.nvaccess.org/](https://www.nvaccess.org/)
 
 #### Pasos realizados:
-1. Instalado y activado NVDA
-2. Navegado la web completa usando Tab y flechas
-3. Escuchado los anuncios del lector en cada elemento
-4. Probado específicamente el carrusel de partidos
+1. Abierto el lector de pantalla NVDA
+2. Navegado la web completa usando Tab
+3. Escuchado qué anuncia el lector en cada elemento
+4. Probado específicamente el carrusel de partidos (componente multimedia)
 
 #### Resultados de la evaluación
 
 | Aspecto evaluado | Resultado | Observación |
 |------------------|-----------|-------------|
-| ¿Se entiende la estructura sin ver la pantalla? | ✅ | Los landmarks y encabezados permiten navegar claramente |
-| ¿Los landmarks se anuncian correctamente? | ✅ | "Navegación principal", "Contenido principal", "Pie de página" anunciados |
-| ¿Las imágenes tienen descripciones adecuadas? | ✅ | Escudos anuncian nombre del equipo, logo anuncia "HomeFootball" |
-| ¿Los enlaces tienen textos descriptivos? | ✅ | "Síguenos en Twitter", "Ir a página principal" se anuncian correctamente |
-| ¿El componente multimedia es accesible? | ✅ | Carrusel anuncia posición, controles y contenido de cada partido |
+| ¿Se entiende la estructura sin ver la pantalla? | ✅ | H1 oculto visualmente anuncia "HomeFootball - Portal de fútbol", estructura con `<header>`, `<main>`, `<nav>`, `<footer>` correcta |
+| ¿Los landmarks se anuncian correctamente? | ✅ | `nav aria-label="Navegación principal"`, `aria-label="Redes sociales"`, `role="search"`, `role="region"` en carrusel se anuncian correctamente |
+| ¿Las imágenes tienen descripciones adecuadas? | ✅ | Logo con `alt="HomeFootball"`, iconos decorativos con `aria-hidden="true"`, escudos de equipos con nombre del equipo |
+| ¿Los enlaces tienen textos descriptivos? | ✅ | Todos los enlaces tienen `aria-label` descriptivo: "Ir a Favoritos", "Ver competición LaLiga", "Leer noticia: [título]" |
+| ¿El componente multimedia es accesible? | ✅ | Carrusel con `aria-roledescription="carrusel"`, flechas con `aria-label`, indicadores con `role="tablist"`, región `aria-live` para anuncios |
 
 #### Principales problemas detectados
 
-1. **Anuncio redundante en carrusel:** Se anunciaba dos veces el nombre del equipo (por alt de imagen y texto visible).
-2. **Región live muy verbosa:** Los cambios de slide generaban anuncios demasiado largos.
+1. **Modal sin `aria-labelledby`**: El diálogo modal no tenía vinculación con el título del formulario, por lo que NVDA no anunciaba el propósito del modal al abrirlo.
+
+2. **Formulario de registro sin `aria-describedby`**: Los inputs no estaban vinculados a los mensajes de error, por lo que los usuarios de lectores de pantalla no sabían qué campo tenía error ni cuál era el mensaje.
+
+3. **Indicadores de contraseña sin retroalimentación**: El indicador de fortaleza de contraseña no anunciaba el estado de cada requisito (cumplido/pendiente), haciendo imposible para usuarios ciegos saber si cumplían los requisitos.
 
 #### Mejoras aplicadas
 
-1. **Eliminada redundancia:** Añadido `aria-hidden="true"` a elementos decorativos que duplicaban información.
-2. **Mensajes concisos:** Reducido el contenido de `aria-live` a información esencial: "Partido 3 de 8".
-3. **Textos alternativos optimizados:** Revisados para ser descriptivos pero concisos.
+1. **Modal mejorado con ARIA**: 
+   - Añadido `aria-labelledby="modal-title"` para vincular el modal con su título
+   - Añadido `aria-describedby="modal-content"` para describir el contenido
+   - Ahora NVDA anuncia: "Diálogo, Iniciar sesión" al abrir el modal
+
+   ```html
+   <!-- ANTES -->
+   <section class="modal" role="dialog" aria-modal="true">
+   
+   <!-- DESPUÉS -->
+   <section class="modal" role="dialog" aria-modal="true"
+     aria-labelledby="modal-title"
+     aria-describedby="modal-content">
+   ```
+
+2. **Formulario de registro con vinculación de errores**:
+   - Añadido `aria-describedby` vinculando inputs con mensajes de error
+   - Añadido `role="alert"` a mensajes de error para anuncio automático
+   - Añadido `aria-invalid` dinámico en campos con error
+   - Añadido `autocomplete` para mejor experiencia de usuario
+   
+   ```html
+   <!-- ANTES -->
+   <input type="email" id="reg-email" formControlName="email" />
+   @if (isFieldInvalid('email')) {
+     <span class="register-form__error">{{ getErrorMessage('email') }}</span>
+   }
+   
+   <!-- DESPUÉS -->
+   <input type="email" id="reg-email" formControlName="email"
+     autocomplete="email"
+     [attr.aria-invalid]="isFieldInvalid('email')"
+     [attr.aria-describedby]="isFieldInvalid('email') ? 'email-error' : null" />
+   @if (isFieldInvalid('email')) {
+     <span class="register-form__error" id="email-error" role="alert">
+       {{ getErrorMessage('email') }}
+     </span>
+   }
+   ```
+
+3. **Indicador de fortaleza de contraseña accesible**:
+   - Añadido `aria-live="polite"` al contenedor de requisitos
+   - Cada requisito tiene su propio `aria-label` con estado "cumplido/pendiente"
+   - NVDA ahora anuncia: "6 o más caracteres: cumplido", "Mayúscula: pendiente", etc.
+
+   ```html
+   <!-- ANTES -->
+   <section class="register-form__password-hints" aria-label="Requisitos de contraseña">
+     <span [class.valid]="passwordControl.value.length >= 6">✓ 6+ caracteres</span>
+   </section>
+   
+   <!-- DESPUÉS -->
+   <section class="register-form__password-hints" id="password-hints" 
+     aria-label="Requisitos de contraseña" aria-live="polite">
+     <span [class.valid]="passwordControl.value.length >= 6"
+       [attr.aria-label]="passwordControl.value.length >= 6 ? 
+         '6 o más caracteres: cumplido' : '6 o más caracteres: pendiente'">
+       ✓ 6+ caracteres
+     </span>
+   </section>
+   ```
+
+4. **Carrusel con mejoras de accesibilidad**:
+   - Añadido `title` a botones de navegación
+   - Corregido `aria-hidden="true"` en imágenes decorativas de flechas
+   - Estados de carga con `aria-busy="true"` para indicar contenido cargando
+
+   ```html
+   <!-- ANTES -->
+   <button class="match-carousel__arrow" (click)="previous()" 
+     aria-label="Ver partidos anteriores">
+     <img src="assets/images/flechaback.svg" alt="Anterior">
+   </button>
+   
+   <!-- DESPUÉS -->
+   <button class="match-carousel__arrow" (click)="previous()"
+     aria-label="Ver partidos anteriores"
+     title="Ir a partidos anteriores">
+     <img src="/assets/images/flechaback.svg" alt="" aria-hidden="true">
+   </button>
+   ```
+
+#### Archivos modificados
+
+| Archivo | Cambios realizados |
+|---------|-------------------|
+| `modal.html` | Añadido `aria-labelledby` y `aria-describedby` |
+| `login-form.html` | Añadido `id="modal-title"` al legend |
+| `register-form.html` | Añadido `aria-describedby`, `aria-invalid`, `role="alert"`, `aria-live` |
+| `match-carousel.html` | Añadido `title`, corregido `aria-hidden` en imágenes, rutas absolutas |
+| `main.html` | Añadido `aria-busy="true"` al estado de carga |
+| `match-detail.html` | Añadido `role="status"` y `aria-busy` al spinner de carga |
 
 ### 6.3 Verificación cross-browser
 

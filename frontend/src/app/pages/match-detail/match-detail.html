@@ -5,8 +5,8 @@
 
     <!-- Estado de carga -->
     @if (loading()) {
-      <section class="match-detail__loading">
-        <div class="spinner"></div>
+      <section class="match-detail__loading" role="status" aria-live="polite" aria-busy="true">
+        <div class="spinner" aria-hidden="true"></div>
         <p>Cargando datos del partido...</p>
       </section>
     }

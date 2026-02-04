@@ -1,6 +1,6 @@
 <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <fieldset class="register-form__fieldset" [disabled]="isLoading()">
-    <legend class="register-form__legend">Crear cuenta</legend>
+    <legend class="register-form__legend" id="modal-title">Crear cuenta</legend>
     
     @if (errorMessage()) {
       <div class="register-form__error-banner" role="alert" aria-live="polite">
@@ -16,7 +16,8 @@
     <!-- Nombre -->
     <section class="register-form__field-group">
       <label class="register-form__label" for="reg-name">
-        Nombre <span class="register-form__required">*</span>
+        Nombre <span class="register-form__required" aria-hidden="true">*</span>
+        <span class="visually-hidden">(campo obligatorio)</span>
       </label>
       <input 
         class="register-form__input"
@@ -25,16 +26,19 @@
         id="reg-name"
         formControlName="name"
         placeholder="Tu nombre completo"
+        [attr.aria-invalid]="isFieldInvalid('name')"
+        [attr.aria-describedby]="isFieldInvalid('name') ? 'name-error' : null"
       />
       @if (isFieldInvalid('name')) {
-        <span class="register-form__error">{{ getErrorMessage('name') }}</span>
+        <span class="register-form__error" id="name-error" role="alert">{{ getErrorMessage('name') }}</span>
       }
     </section>
 
     <!-- Email -->
     <section class="register-form__field-group">
       <label class="register-form__label" for="reg-email">
-        Email <span class="register-form__required">*</span>
+        Email <span class="register-form__required" aria-hidden="true">*</span>
+        <span class="visually-hidden">(campo obligatorio)</span>
       </label>
       <input 
         class="register-form__input"
@@ -43,16 +47,20 @@
         id="reg-email"
         formControlName="email"
         placeholder="tu@email.com"
+        autocomplete="email"
+        [attr.aria-invalid]="isFieldInvalid('email')"
+        [attr.aria-describedby]="isFieldInvalid('email') ? 'email-error' : null"
       />
       @if (isFieldInvalid('email')) {
-        <span class="register-form__error">{{ getErrorMessage('email') }}</span>
+        <span class="register-form__error" id="email-error" role="alert">{{ getErrorMessage('email') }}</span>
       }
     </section>
 
     <!-- Contraseña -->
     <section class="register-form__field-group">
       <label class="register-form__label" for="reg-password">
-        Contraseña <span class="register-form__required">*</span>
+        Contraseña <span class="register-form__required" aria-hidden="true">*</span>
+        <span class="visually-hidden">(campo obligatorio)</span>
       </label>
       <input 
         class="register-form__input"
@@ -61,19 +69,22 @@
         id="reg-password"
         formControlName="password"
         placeholder="Mínimo 6 caracteres"
+        autocomplete="new-password"
+        [attr.aria-invalid]="isFieldInvalid('password')"
+        [attr.aria-describedby]="isFieldInvalid('password') ? 'password-error' : 'password-hints'"
       />
       @if (isFieldInvalid('password')) {
-        <span class="register-form__error">{{ getErrorMessage('password') }}</span>
+        <span class="register-form__error" id="password-error" role="alert">{{ getErrorMessage('password') }}</span>
       }
       
       <!-- Indicador de fortaleza de contraseña -->
       @if (passwordControl.value) {
-        <section class="register-form__password-hints" aria-label="Requisitos de contraseña">
-          <span [class.valid]="passwordControl.value.length >= 6">✓ 6+ caracteres</span>
-          <span [class.valid]="passwordControl.value.match('[A-Z]')">✓ Mayúscula</span>
-          <span [class.valid]="passwordControl.value.match('[a-z]')">✓ Minúscula</span>
-          <span [class.valid]="passwordControl.value.match('[0-9]')">✓ Número</span>
-          <span [class.valid]="passwordControl.value.match('[!@#$%^&*]')">✓ Especial</span>
+        <section class="register-form__password-hints" id="password-hints" aria-label="Requisitos de contraseña" aria-live="polite">
+          <span [class.valid]="passwordControl.value.length >= 6" [attr.aria-label]="passwordControl.value.length >= 6 ? '6 o más caracteres: cumplido' : '6 o más caracteres: pendiente'">✓ 6+ caracteres</span>
+          <span [class.valid]="passwordControl.value.match('[A-Z]')" [attr.aria-label]="passwordControl.value.match('[A-Z]') ? 'Mayúscula: cumplido' : 'Mayúscula: pendiente'">✓ Mayúscula</span>
+          <span [class.valid]="passwordControl.value.match('[a-z]')" [attr.aria-label]="passwordControl.value.match('[a-z]') ? 'Minúscula: cumplido' : 'Minúscula: pendiente'">✓ Minúscula</span>
+          <span [class.valid]="passwordControl.value.match('[0-9]')" [attr.aria-label]="passwordControl.value.match('[0-9]') ? 'Número: cumplido' : 'Número: pendiente'">✓ Número</span>
+          <span [class.valid]="passwordControl.value.match('[!@#$%^&*]')" [attr.aria-label]="passwordControl.value.match('[!@#$%^&*]') ? 'Carácter especial: cumplido' : 'Carácter especial: pendiente'">✓ Especial</span>
         </section>
       }
     </section>
@@ -81,7 +92,8 @@
     <!-- Confirmar Contraseña -->
     <section class="register-form__field-group">
       <label class="register-form__label" for="reg-confirm-password">
-        Confirmar Contraseña <span class="register-form__required">*</span>
+        Confirmar Contraseña <span class="register-form__required" aria-hidden="true">*</span>
+        <span class="visually-hidden">(campo obligatorio)</span>
       </label>
       <input 
         class="register-form__input"
@@ -90,12 +102,15 @@
         id="reg-confirm-password"
         formControlName="confirmPassword"
         placeholder="Repite tu contraseña"
+        autocomplete="new-password"
+        [attr.aria-invalid]="isFieldInvalid('confirmPassword') || getPasswordMatchError()"
+        [attr.aria-describedby]="isFieldInvalid('confirmPassword') ? 'confirm-error' : (getPasswordMatchError() ? 'match-error' : null)"
       />
       @if (isFieldInvalid('confirmPassword')) {
-        <span class="register-form__error">{{ getErrorMessage('confirmPassword') }}</span>
+        <span class="register-form__error" id="confirm-error" role="alert">{{ getErrorMessage('confirmPassword') }}</span>
       }
       @if (getPasswordMatchError()) {
-        <span class="register-form__error">{{ getPasswordMatchError() }}</span>
+        <span class="register-form__error" id="match-error" role="alert">{{ getPasswordMatchError() }}</span>
       }
     </section>
 
