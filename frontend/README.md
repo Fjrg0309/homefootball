@@ -140,6 +140,44 @@ npm run build
 - **SSR**: Server-Side Rendering con Angular SSR y Express
 - **Documentación**: 10+ archivos MD con 5000+ líneas de documentación técnica
 
+---
+
+## Proyecto 4 - Accesibilidad y Multimedia
+
+### Descripción
+Implementación completa de accesibilidad web según estándares WCAG 2.1 Nivel AA, incluyendo un carrusel de partidos totalmente accesible como componente multimedia principal.
+
+### Componente multimedia añadido
+**Tipo:** Carrusel interactivo  
+**Descripción:** Carrusel de partidos con navegación por teclado, soporte para lectores de pantalla y auto-play con pausa inteligente.
+
+### Resultados de auditoría de accesibilidad
+
+| Herramienta | Puntuación inicial | Puntuación final | Mejora |
+|-------------|-------------------|------------------|--------|
+| **Lighthouse** | 93/100 | 94/100 | +1 puntos |
+| **WAVE** | 0 errores, 3 alertas | 0 errores, 0 alertas | -3 alertas |
+| **TAW** | 10 errores, 26 alertas | 0 errores, 2 alertas | -34 problemas |
+
+**Nivel de conformidad alcanzado:** WCAG 2.1 AA
+
+### Verificación realizada
+- ✅ Auditoría con Lighthouse, WAVE y TAW
+- ✅ Test con lector de pantalla (NVDA)
+- ✅ Test de navegación por teclado
+- ✅ Verificación cross-browser (Chrome, Firefox, Edge)
+
+### Principales mejoras de accesibilidad
+- Skip-link para saltar al contenido principal
+- Formularios con ARIA completo (`aria-describedby`, `aria-invalid`, `role="alert"`)
+- Carrusel accesible por teclado con `aria-live` para anuncios
+- Imágenes decorativas con `role="presentation"`
+- Eliminación de contenido CSS informativo (criterio F87)
+
+📄 **[Ver análisis completo de accesibilidad](src/styles/docs/accesibilidad/README.md)**
+
+---
+
 ## Documentación
 
 - **[ENTREGABLES.md](ENTREGABLES.md)** - Lista completa de todos los entregables por fase

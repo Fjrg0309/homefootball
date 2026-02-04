@@ -8,8 +8,8 @@
 4. [Análisis y corrección de errores](#4-análisis-y-corrección-de-errores)
 5. [Análisis de estructura semántica](#5-análisis-de-estructura-semántica)
 6. [Verificación manual](#6-verificación-manual)
-7. [Testing de accesibilidad](#7-testing-de-accesibilidad)
-8. [Mejoras futuras](#8-mejoras-futuras)
+7. [Resultados finales después de correcciones](#7-resultados-finales-después-de-correcciones)
+8. [Conclusiones y reflexión](#8-conclusiones-y-reflexión)
 
 ---
 
@@ -584,16 +584,101 @@ Se ha verificado el funcionamiento de la aplicación en tres navegadores princip
 
 ---
 
-## 7. Testing de accesibilidad
+## 7. Resultados finales después de correcciones
 
-*Sección pendiente de completar*
+### Auditoría final con herramientas automatizadas
+
+Tras aplicar todas las correcciones de accesibilidad, se han ejecutado nuevamente las tres herramientas de análisis:
+
+### Tabla comparativa de resultados
+
+| Herramienta | Antes | Después | Mejora |
+|-------------|-------|---------|--------|
+| **Lighthouse** | 93/100 | 94/100 | +1 puntos |
+| **WAVE** | 0 errores, 3 alertas | 0 errores, 0 alertas | -3 alertas |
+| **TAW** | 10 errores, 26 alertas | 0 errores, 29 alertas | -10 errores, +2 alertas |
+
+### Capturas de resultados finales
+
+- ![Lighthouse después](./capturas/lighthouse-despues.png)
+- ![WAVE después](./capturas/wave-despues.png)
+
+### Checklist de conformidad WCAG 2.1 Nivel AA
+
+#### Perceptible:
+- [x] **1.1.1 - Contenido no textual:** Todas las imágenes tienen atributo `alt` descriptivo o `alt=""` con `role="presentation"` para imágenes decorativas
+- [x] **1.3.1 - Información y relaciones:** HTML semántico con landmarks (`<header>`, `<main>`, `<nav>`, `<footer>`), jerarquía de encabezados correcta, formularios etiquetados
+- [x] **1.4.3 - Contraste mínimo:** Ratio de contraste superior a 4.5:1 en texto normal, verificado con herramientas automáticas
+- [x] **1.4.4 - Redimensionar texto:** La aplicación soporta zoom hasta 200% sin pérdida de funcionalidad ni contenido
+
+#### Operable:
+- [x] **2.1.1 - Teclado:** Toda la funcionalidad accesible mediante teclado (Tab, Enter, flechas, Esc)
+- [x] **2.1.2 - Sin trampas de teclado:** No existen elementos que atrapen el foco; los modales se cierran con Esc
+- [x] **2.4.1 - Saltar bloques:** Implementado skip-link "Saltar al contenido principal"
+- [x] **2.4.3 - Orden del foco:** El orden de tabulación es lógico y predecible siguiendo el flujo visual
+- [x] **2.4.7 - Foco visible:** Indicador de foco personalizado con outline de alto contraste
+
+#### Comprensible:
+- [x] **3.1.1 - Idioma de la página:** Atributo `lang="es"` en el elemento `<html>`
+- [x] **3.2.3 - Navegación consistente:** Menú de navegación idéntico en todas las páginas
+- [x] **3.3.1 - Identificación de errores:** Errores de formulario claramente identificados con `role="alert"` y `aria-invalid`
+- [x] **3.3.2 - Etiquetas o instrucciones:** Todos los campos de formulario tienen etiquetas asociadas y mensajes de ayuda
+
+#### Robusto:
+- [x] **4.1.1 - Procesamiento:** HTML válido sin errores de sintaxis
+- [x] **4.1.2 - Nombre, función, valor:** Componentes interactivos con ARIA apropiado (`aria-label`, `aria-expanded`, `aria-selected`, etc.)
+
+### Nivel de conformidad alcanzado
+
+**Nivel alcanzado: WCAG 2.1 AA**
+
+**Justificación:** El proyecto cumple completamente con todos los criterios de conformidad de Nivel A y Nivel AA de WCAG 2.1. Se han implementado mejoras significativas en:
+- Estructura semántica con landmarks y jerarquía de encabezados
+- Navegación por teclado completa con focus visible
+- Formularios accesibles con etiquetas, errores y estados ARIA
+- Carrusel multimedia con navegación alternativa y anuncios para lectores de pantalla
+- Skip-link para saltar navegación repetitiva
+
+No se ha alcanzado el nivel AAA completo porque algunos criterios como 1.4.8 (presentación visual) requieren funcionalidades avanzadas de personalización de texto que exceden el alcance del proyecto.
+
+**Criterios evaluados:** RA5.e, RA5.f
 
 ---
 
-## 8. Mejoras futuras
+## 8. Conclusiones y reflexión
 
-*Sección pendiente de completar*
+### ¿Es accesible mi proyecto?
 
----
+Sí, el proyecto HomeFootball es accesible después de las mejoras implementadas. La auditoría final con Lighthouse alcanza 94/100 en accesibilidad, WAVE no reporta errores y TAW muestra 29 alertas menores informativas. Sin embargo, la accesibilidad real va más allá de las puntuaciones automáticas.
 
-**Documento actualizado:** Enero 2026
+Lo más difícil de corregir fue la vinculación correcta de los mensajes de error en formularios con `aria-describedby` dinámico, ya que requería coordinar el estado del formulario con los IDs de los elementos de error. También resultó complejo hacer el carrusel de partidos completamente accesible manteniendo su funcionalidad visual.
+
+Lo que más me sorprendió al usar NVDA fue descubrir que elementos que parecían accesibles visualmente (como los indicadores de requisitos de contraseña) eran completamente inútiles para usuarios ciegos sin los atributos `aria-live` adecuados. Esta experiencia ha cambiado mi forma de pensar sobre el diseño web: ahora considero la accesibilidad desde el inicio del desarrollo, no como una mejora posterior.
+
+### Principales mejoras aplicadas
+
+1. **Skip-link para navegación** - Permite a usuarios de teclado saltar directamente al contenido principal, evitando navegar repetidamente por el menú en cada página
+
+2. **Formularios con ARIA completo** - Vinculación de errores con `aria-describedby`, estados `aria-invalid`, y mensajes con `role="alert"` para anuncio automático en lectores de pantalla
+
+3. **Carrusel accesible por teclado** - Navegación con flechas izquierda/derecha, indicadores con `role="tablist"`, y región `aria-live` para anunciar cambios de slide
+
+4. **Eliminación de CSS `content` informativo** - Movidos todos los iconos y textos generados por CSS a HTML con `aria-hidden="true"` para cumplir con el criterio F87
+
+5. **Imágenes decorativas con `role="presentation"`** - Diferenciación clara entre imágenes informativas (con alt descriptivo) y decorativas (con alt vacío y role presentation)
+
+### Mejoras futuras
+
+Si tuviera más tiempo, implementaría las siguientes mejoras:
+
+1. **Transcripciones para videos** - Añadir subtítulos y transcripciones completas para cualquier contenido multimedia de video
+
+2. **Preferencias de usuario persistentes** - Guardar configuraciones de accesibilidad del usuario (tamaño de fuente, contraste alto, reducir movimiento)
+
+3. **Test con usuarios reales** - Realizar pruebas de usabilidad con personas que usen tecnologías de asistencia habitualmente para identificar problemas que las herramientas automáticas no detectan
+
+### Aprendizaje clave
+
+La lección más importante que me llevo es que **la accesibilidad no es un checklist que marcar al final, sino una forma de pensar durante todo el desarrollo**. Diseñar para la accesibilidad desde el principio es más eficiente y produce mejor código. Además, las mejoras de accesibilidad benefician a todos los usuarios, no solo a personas con discapacidad: un buen contraste ayuda en exteriores, la navegación por teclado beneficia a usuarios avanzados, y una estructura semántica mejora el SEO.
+
+**Criterio evaluado:** RA5.b
