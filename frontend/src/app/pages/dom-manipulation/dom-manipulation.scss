@@ -230,15 +230,14 @@
   border-radius: 8px;
   padding: 1.5rem;
   margin: 1.5rem 0;
-  
-  &:empty::before {
-    content: 'Los elementos creados aparecerán aquí...';
-    color: #999;
-    font-style: italic;
-    display: block;
-    text-align: center;
-    padding: 2rem;
-  }
+}
+
+// Placeholder para contenedor vacío
+.contenedor-placeholder {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
 }
 
 // Elementos dinámicos

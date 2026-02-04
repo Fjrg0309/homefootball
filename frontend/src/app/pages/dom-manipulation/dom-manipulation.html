@@ -85,7 +85,9 @@
 
     <!-- Contenedor dinámico -->
     <div #contenedor class="contenedor-dinamico" role="region" aria-live="polite" aria-label="Elementos creados dinámicamente">
-      <!-- Los elementos se crearán aquí dinámicamente -->
+      @if (contarElementos() === 0) {
+        <p class="contenedor-placeholder">Los elementos creados aparecerán aquí...</p>
+      }
     </div>
 
     <div class="info-metodos">
