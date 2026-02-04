@@ -19,8 +19,8 @@
           [class.invalid]="form.get('customer')?.invalid && form.get('customer')?.touched">
         
         @if (form.get('customer')?.invalid && form.get('customer')?.touched) {
-          <div class="error-message">
-            Cliente es requerido
+          <div class="error-message" role="alert">
+            <span aria-hidden="true">⚠</span> Cliente es requerido
           </div>
         }
       </div>
@@ -50,8 +50,8 @@
             </div>
             
             @if (isPhoneInvalid(i)) {
-              <div class="error-message">
-                Teléfono inválido (formato: 6XXXXXXXX o 7XXXXXXXX)
+              <div class="error-message" role="alert">
+                <span aria-hidden="true">⚠</span> Teléfono inválido (formato: 6XXXXXXXX o 7XXXXXXXX)
               </div>
             }
           </div>
@@ -104,8 +104,8 @@
             </button>
             
             @if (isAddressInvalid(i)) {
-              <div class="error-message">
-                Todos los campos son obligatorios. CP debe tener 5 dígitos.
+              <div class="error-message" role="alert">
+                <span aria-hidden="true">⚠</span> Todos los campos son obligatorios. CP debe tener 5 dígitos.
               </div>
             }
           </div>
@@ -167,8 +167,8 @@
             </button>
             
             @if (isItemInvalid(i)) {
-              <div class="error-message">
-                Descripción requerida. Cantidad mínima: 1. Precio debe ser ≥ 0.
+              <div class="error-message" role="alert">
+                <span aria-hidden="true">⚠</span> Descripción requerida. Cantidad mínima: 1. Precio debe ser ≥ 0.
               </div>
             }
           </div>

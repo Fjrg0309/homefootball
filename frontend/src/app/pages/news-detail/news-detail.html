@@ -39,7 +39,11 @@
         <!-- Meta información -->
         <div class="news-article__meta">
           <span class="news-article__category">{{ news()!.category }}</span>
-          <span class="news-article__date">{{ formatDate(news()!.date) }}</span>
+          <span class="news-article__date">
+            <span aria-hidden="true">📅 </span>
+            <span class="visually-hidden">Fecha: </span>
+            {{ formatDate(news()!.date) }}
+          </span>
           <span class="news-article__author">Por {{ news()!.author }}</span>
         </div>
         

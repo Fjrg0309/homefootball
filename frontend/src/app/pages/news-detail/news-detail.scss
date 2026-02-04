@@ -178,10 +178,6 @@
   &__date {
     color: var(--color-text-secondary);
     font-size: 0.9rem;
-
-    &::before {
-      content: '📅 ';
-    }
   }
 
   &__author {

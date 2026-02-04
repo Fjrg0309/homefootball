@@ -18,8 +18,8 @@
         [class.invalid]="isFieldInvalid('name')">
       
       @if (isFieldInvalid('name')) {
-        <div class="error-message">
-          {{ getErrorMessage('name') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('name') }}
         </div>
       }
     </div>
@@ -40,8 +40,8 @@
       }
       
       @if (isFieldInvalid('username')) {
-        <div class="error-message">
-          {{ getErrorMessage('username') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('username') }}
         </div>
       }
     </div>
@@ -63,8 +63,8 @@
       }
       
       @if (isFieldInvalid('email')) {
-        <div class="error-message">
-          {{ getErrorMessage('email') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('email') }}
         </div>
       }
     </div>
@@ -80,8 +80,8 @@
         [class.invalid]="isFieldInvalid('age')">
       
       @if (isFieldInvalid('age')) {
-        <div class="error-message">
-          {{ getErrorMessage('age') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('age') }}
         </div>
       }
     </div>
@@ -97,8 +97,8 @@
         [class.invalid]="isFieldInvalid('nif')">
       
       @if (isFieldInvalid('nif')) {
-        <div class="error-message">
-          {{ getErrorMessage('nif') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('nif') }}
         </div>
       }
     </div>
@@ -114,8 +114,8 @@
         [class.invalid]="isFieldInvalid('telefono')">
       
       @if (isFieldInvalid('telefono')) {
-        <div class="error-message">
-          {{ getErrorMessage('telefono') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('telefono') }}
         </div>
       }
     </div>
@@ -131,8 +131,8 @@
         [class.invalid]="isFieldInvalid('codigoPostal')">
       
       @if (isFieldInvalid('codigoPostal')) {
-        <div class="error-message">
-          {{ getErrorMessage('codigoPostal') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('codigoPostal') }}
         </div>
       }
     </div>
@@ -170,8 +170,8 @@
         [class.invalid]="isFieldInvalid('confirmPassword')">
       
       @if (isFieldInvalid('confirmPassword')) {
-        <div class="error-message">
-          {{ getErrorMessage('confirmPassword') }}
+        <div class="error-message" role="alert">
+          <span aria-hidden="true">⚠</span> {{ getErrorMessage('confirmPassword') }}
         </div>
       }
     </div>
