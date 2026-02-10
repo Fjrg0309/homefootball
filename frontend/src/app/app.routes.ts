@@ -268,5 +268,17 @@ export const routes: Routes = [
   },
   
   // Wildcard - Redirige a página en construcción para evitar errores 404
-  { path: '**', component: UnderConstruction }
+  { path: '**', component: UnderConstruction },
+
+  {
+    path: 'landing',
+    loadComponent: () => import('./pages/landing/landing').then(m => m.Landing),
+    data: { breadcrumb: 'Landing page'}
+  },
+
+  {
+    path: 'minimatch',
+    loadComponent: () => import ('./pages/minimatch/minimatch').then(m => m.Minimatch),
+    data: {breadcrumb: 'Mini match'}
+  }
 ];
