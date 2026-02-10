@@ -8,8 +8,8 @@
   --color-text: #212121;              // Negro casi puro (texto principal)
   --color-text-secondary: #757575;    // Gris medio (metadatos, fechas)
   --color-header-text: #FFFFFF;       // Texto sobre header azul marino
-  --color-landing: rgb(76, 76, 255);
-  --color-text-landing: rgb(84, 241, 84);
+  --color-landing: rgb(160, 160, 255);
+  --color-text-landing: rgb(0, 0, 0);
   
   /* COLORES DE ACCIÓN */
   --color-accent: #00D95F;            // Verde brillante (títulos, acciones positivas)
@@ -140,6 +140,8 @@
   --color-text: #FFFFFF;              // Texto principal blanco
   --color-text-secondary: #B0B0B0;    // Texto secundario gris claro
   --color-header-text: #FFFFFF;       // Mantiene blanco
+  --color-landing: rgb(29, 29, 44);
+  --color-text-landing: rgb(94, 253, 94);
   
   /* TEXTO SOBRE FONDOS ESPECIALES - SE MANTIENEN BLANCOS */
   --color-text-on-accent: #FFFFFF;    // Siempre blanco sobre verde
