@@ -48,6 +48,7 @@
 // ============================================
 @layer objects {
   @use '04-layout/layouts';
+  @use '04-layout/grid-landingpage';
 }
 
 // ============================================
@@ -59,6 +60,7 @@
   @use 'components/footer';
   @use 'components/buttons';
   @use 'components/container-queries';
+  @use 'components/landing';
 }
 
 // ============================================

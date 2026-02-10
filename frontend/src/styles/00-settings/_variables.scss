@@ -8,10 +8,12 @@
   --color-text: #212121;              // Negro casi puro (texto principal)
   --color-text-secondary: #757575;    // Gris medio (metadatos, fechas)
   --color-header-text: #FFFFFF;       // Texto sobre header azul marino
-  --color-landing: rgb(160, 160, 255);
+  --color-landing: rgb(255, 255, 255);
   --color-text-landing: rgb(0, 0, 0);
-  
-  /* COLORES DE ACCIÓN */
+    /* NUEVOS COLORES DIW - Complementarios para Landing */
+  --color-landing-accent: #4A90D9;       // Azul complementario para elementos interactivos
+  --color-landing-highlight: #F4A261;    // Naranja cálido para destacados y hover states
+    /* COLORES DE ACCIÓN */
   --color-accent: #00D95F;            // Verde brillante (títulos, acciones positivas)
   --color-accent-hover: #00B350;      // Verde hover
   --color-sendcomment: #00D95F;       // Verde (enviar comentario, confirmar)

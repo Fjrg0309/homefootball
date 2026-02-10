@@ -1,6 +1,6 @@
-# PRUEBA PRÁCTICA DWEC - Desarrollo en Entorno Cliente
+# PRUEBA PRACTICA DWEC - Desarrollo en Entorno Cliente
 
-## 📋 Información General
+## Informacion General
 
 **Bloque**: DESARROLLO EN ENTORNO CLIENTE (DWEC)  
 **Resultados de Aprendizaje**: RA4, RA5.d, RA6, RA7  
@@ -9,7 +9,7 @@
 
 ---
 
-## 1. 🗺️ Routing y Navegación
+## 1. Routing y Navegacion
 
 ### 1.1 Nueva Ruta Implementada
 
@@ -58,7 +58,7 @@ La ruta utiliza **carga perezosa (Lazy Loading)** mediante `loadComponent`:
 
 ---
 
-## 2. 🏗️ Arquitectura de Componentes
+## 2. Arquitectura de Componentes
 
 ### 2.1 Jerarquía Padre-Hijo
 
@@ -164,7 +164,7 @@ export class Minilanding {
 
 ---
 
-## 3. 📝 Tipado con Interfaces
+## 3. Tipado con Interfaces
 
 ### 3.1 Interfaces Definidas
 
@@ -201,7 +201,7 @@ export interface LandingPageData {
 
 ---
 
-## 4. 📁 Estructura de Archivos
+## 4. Estructura de Archivos
 
 ```
 frontend/src/app/
@@ -230,7 +230,7 @@ frontend/src/app/
 
 ---
 
-## 5. 🚀 Instrucciones de Ejecución
+## 5. Instrucciones de Ejecucion
 
 ### 5.1 Prerrequisitos
 
@@ -280,24 +280,24 @@ La aplicación estará disponible en: `http://localhost:4200`
 
 ---
 
-## 6. ✅ Requisitos Cumplidos
+## 6. Requisitos Cumplidos
 
-| Requisito | Estado | Descripción |
+| Requisito | Estado | Descripcion |
 |-----------|--------|-------------|
-| Nueva ruta | ✅ | `/landing` implementada |
-| Lazy Loading | ✅ | `loadComponent()` utilizado |
-| Navegación Header | ✅ | Link añadido con `routerLink` |
-| Navegación Footer | ✅ | Link añadido con `routerLink` |
-| Componente Padre | ✅ | `Landing` - Contenedor |
-| Componente Hijo | ✅ | `Minilanding` - Presentacional |
-| Standalone | ✅ | `Minilanding` es standalone |
-| @Input decoradores | ✅ | 5 inputs definidos |
-| Interfaces tipadas | ✅ | `landing.model.ts` |
-| Sin `any` | ✅ | Todo tipado correctamente |
+| Nueva ruta | SI | `/landing` implementada |
+| Lazy Loading | SI | `loadComponent()` utilizado |
+| Navegacion Header | SI | Link agregado con `routerLink` |
+| Navegacion Footer | SI | Link agregado con `routerLink` |
+| Componente Padre | SI | `Landing` - Contenedor |
+| Componente Hijo | SI | `Minilanding` - Presentacional |
+| Standalone | SI | `Minilanding` es standalone |
+| @Input decoradores | SI | 5 inputs definidos |
+| Interfaces tipadas | SI | `landing.model.ts` |
+| Sin `any` | SI | Todo tipado correctamente |
 
 ---
 
-## 7. 📊 Diagrama de Flujo de Datos
+## 7. Diagrama de Flujo de Datos
 
 ```
 ┌─────────────┐    HTTP GET     ┌─────────────┐

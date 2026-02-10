@@ -1,20 +1,335 @@
+// ============================================
+// LANDING PAGE GRID SYSTEM
+// CSS Grid bidimensional + Flexbox para items
+// Responsive: 1 col (mobile) / 2 col (tablet) / 3 col (desktop)
+// ============================================
 
-.landinglist {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-4);
-    justify-content: center;
-    padding: var(--spacing-4);
-    box-shadow: var(--shadow-lg);
-    border-radius: var(--radius-lg);
+@use '../00-settings/variables' as *;
+@use '../01-tools/mixins' as *;
+
+// ============================================
+// GRID PRINCIPAL - Features
+// Sistema de rejilla bidimensional (CSS Grid)
+// ============================================
+
+.landing__features-grid {
+  display: grid;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  list-style: none;
+  margin: 0 auto;
+  max-width: 1200px;
+  
+  // Mobile: 1 columna
+  grid-template-columns: 1fr;
+  
+  // Tablet (768px): 2 columnas
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-5);
+  }
+  
+  // Desktop (1024px): 3 columnas
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-6);
+  }
 }
 
-.landingusers {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-4);
-    justify-items: center;
-    padding: var(--spacing-4);
+// ============================================
+// FEATURE CARD - Flexbox
+// Cada elemento del listado usa caja flexible
+// Comportamiento adaptativo: apilado (mobile) / lateral (desktop)
+// ============================================
+
+.landing__feature-card {
+  display: flex;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background: var(--bg-secondary, white);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-base), 
+              box-shadow var(--transition-base),
+              border-color var(--transition-base);
+  border: 2px solid transparent;
+  
+  // Mobile: eje principal vertical (apilado)
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  
+  // Desktop (768px+): eje principal horizontal (lateral)
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  // Estados interactivos con nuevos colores
+  &:hover {
+    transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
-    border-radius: var(--radius-lg);
+    border-color: var(--color-landing-accent);
+  }
+  
+  &:focus-within {
+    outline: 3px solid var(--color-landing-accent);
+    outline-offset: 2px;
+  }
+}
+
+// ============================================
+// FEATURE ICON - Estilos CSS para iconos
+// Reemplazo de emojis por iconos CSS
+// ============================================
+
+.landing__feature-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-landing-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // Icono base (balon)
+  &::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    border: 2px dashed var(--color-landing-accent);
+  }
+  
+  // Variante: estadisticas
+  &--stats {
+    background: var(--color-landing-highlight);
+    
+    &::before {
+      border-radius: 2px;
+      width: 18px;
+      height: 18px;
+      border: none;
+      background: linear-gradient(
+        to top,
+        white 25%,
+        transparent 25%,
+        transparent 35%,
+        white 35%,
+        white 55%,
+        transparent 55%,
+        transparent 65%,
+        white 65%
+      );
+    }
+  }
+  
+  // Variante: noticias
+  &--news {
+    background: var(--color-info);
+    
+    &::before {
+      border-radius: 3px;
+      border: 2px solid white;
+      background: transparent;
+    }
+  }
+  
+  // Variante: favoritos
+  &--favorites {
+    background: var(--color-warning);
+    
+    &::before {
+      width: 0;
+      height: 0;
+      border-radius: 0;
+      border: none;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 20px solid white;
+    }
+  }
+}
+
+.landing__feature-title {
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.landing__feature-text {
+  font-size: var(--font-size-md);
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+// ============================================
+// GRID USUARIOS - Lista de miembros
+// Responsive: 1/2/3 columnas
+// ============================================
+
+.minilanding__usuarios-grid {
+  display: grid;
+  gap: var(--spacing-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  // Mobile: 1 columna
+  grid-template-columns: 1fr;
+  
+  // Tablet: 2 columnas
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  // Desktop: 3 columnas
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// ============================================
+// USUARIO ITEM - Flexbox
+// Card de usuario con layout flexible
+// ============================================
+
+.minilanding__usuario-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--bg-secondary, white);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base),
+              box-shadow var(--transition-base),
+              background-color var(--transition-base);
+  border: 1px solid var(--border-primary, #e0e0e0);
+  
+  // Estados interactivos
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    background-color: var(--color-landing-highlight);
+    border-color: var(--color-landing-highlight);
+    
+    .minilanding__usuario-name {
+      color: var(--text-on-dark, white);
+    }
+  }
+  
+  &:focus-within {
+    outline: 2px solid var(--color-landing-accent);
+    outline-offset: 2px;
+  }
+}
+
+.minilanding__usuario-avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-landing-accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+  text-decoration: none;
+  border: none;
+}
+
+.minilanding__usuario-name {
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-base);
+}
+
+// ============================================
+// EQUIPO CONTENT - Flexbox responsive
+// ============================================
+
+.minilanding__equipo-content {
+  display: flex;
+  gap: var(--spacing-4);
+  
+  // Mobile: apilado vertical
+  flex-direction: column;
+  align-items: center;
+  
+  // Desktop: horizontal
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+// ============================================
+// LANDING BUTTONS - Estados interactivos
+// Usando las nuevas variables de color
+// ============================================
+
+.landing__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md, 8px);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-base);
+  
+  // Variante primaria
+  &--primary {
+    background: var(--color-landing-accent);
+    color: white;
+    
+    &:hover {
+      background: var(--color-landing-highlight);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    }
+    
+    &:focus {
+      outline: 3px solid var(--color-landing-highlight);
+      outline-offset: 2px;
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  // Variante secundaria
+  &--secondary {
+    background: transparent;
+    color: white;
+    border-color: white;
+    
+    &:hover {
+      background: var(--color-landing-highlight);
+      border-color: var(--color-landing-highlight);
+    }
+    
+    &:focus {
+      outline: 3px solid white;
+      outline-offset: 2px;
+    }
+  }
+  
+  // Modificador grande
+  &--large {
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-lg);
+  }
 }

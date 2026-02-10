@@ -249,7 +249,7 @@ curl -X GET http://localhost:8080/api/landing/summary \
 
 ---
 
-## 5. 📸 Capturas de Pantalla
+## 5. Capturas de Pantalla
 
 ### 5.1 Petición con Postman/Insomnia
 
@@ -265,7 +265,7 @@ curl -X GET http://localhost:8080/api/landing/summary \
 
 ---
 
-## 6. 📁 Estructura de Archivos Creados
+## 6. Estructura de Archivos Creados
 
 ```
 backend/src/main/java/com/example/information/
@@ -284,16 +284,16 @@ backend/src/main/java/com/example/information/
 
 ---
 
-## 7. ✅ Resumen de Requisitos Cumplidos
+## 7. Resumen de Requisitos Cumplidos
 
-| Requisito | Estado | Descripción |
+| Requisito | Estado | Descripcion |
 |-----------|--------|-------------|
-| Endpoint nuevo | ✅ | `/api/landing` y `/api/landing/summary` |
-| Propósito claro | ✅ | Datos para landing page (usuarios + equipo) |
-| Coherencia con dominio | ✅ | Alineado con temática futbolística |
-| Arquitectura en capas | ✅ | Controller → Service → Repository |
-| Seguridad JWT | ✅ | Filtro de autenticación implementado |
-| Pruebas documentadas | ✅ | Comandos cURL incluidos |
+| Endpoint nuevo | SI | `/api/landing` y `/api/landing/summary` |
+| Proposito claro | SI | Datos para landing page (usuarios + equipo) |
+| Coherencia con dominio | SI | Alineado con tematica futbolistica |
+| Arquitectura en capas | SI | Controller -> Service -> Repository |
+| Seguridad JWT | SI | Filtro de autenticacion implementado |
+| Pruebas documentadas | SI | Comandos cURL incluidos |
 
 ---
 

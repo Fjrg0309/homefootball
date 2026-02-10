@@ -1,102 +1,96 @@
-<!-- Minilanding - Componente Presentacional (Hijo) Standalone -->
-<!-- Recibe datos vía @Input desde el componente padre (Landing) -->
-
-<section class="minilanding">
+<section class="minilanding" aria-label="Informacion adicional de la landing">
   <!-- Estado de carga -->
   @if (loading) {
-    <div class="minilanding__loading">
-      <div class="minilanding__spinner"></div>
-      <p>Cargando información...</p>
-    </div>
+    <aside class="minilanding__loading" aria-busy="true" aria-live="polite">
+      <span class="minilanding__spinner" role="status"></span>
+      <p>Cargando informacion...</p>
+    </aside>
   }
 
   <!-- Estado de error -->
   @if (error && !loading) {
-    <div class="minilanding__error">
-      <span class="minilanding__error-icon">⚠️</span>
+    <aside class="minilanding__error" role="alert">
+      <span class="minilanding__error-icon" aria-hidden="true"></span>
       <p>{{ error }}</p>
-      <p class="minilanding__error-hint">Inicia sesión para ver la información completa.</p>
-    </div>
+      <p class="minilanding__error-hint">Inicia sesion para ver la informacion completa.</p>
+    </aside>
   }
 
   <!-- Contenido principal cuando hay datos -->
   @if (!loading && !error) {
-    <!-- Sección: Equipo Destacado con Escudo -->
+    <!-- Seccion: Equipo Destacado con Escudo -->
     @if (equipoDestacado) {
-      <article class="minilanding__equipo">
-        <h2 class="minilanding__section-title">
-          <span class="minilanding__icon">🏆</span>
-          Equipo Destacado
-        </h2>
+      <article class="minilanding__equipo" aria-labelledby="equipo-title">
+        <header class="minilanding__equipo-header">
+          <h2 id="equipo-title" class="minilanding__section-title">
+            <span class="minilanding__icon minilanding__icon--trophy" aria-hidden="true"></span>
+            Equipo Destacado
+          </h2>
+        </header>
         
-        <div class="minilanding__equipo-content">
+        <figure class="minilanding__equipo-content">
           <!-- Escudo del equipo -->
-          <div class="minilanding__escudo-container">
-            <img 
-              [src]="equipoDestacado.escudoUrl" 
-              [alt]="'Escudo de ' + equipoDestacado.nombre"
-              class="minilanding__escudo"
-              loading="lazy"
-            />
-          </div>
+          <img 
+            [src]="equipoDestacado.escudoUrl" 
+            [alt]="'Escudo de ' + equipoDestacado.nombre"
+            class="minilanding__escudo"
+            loading="lazy"
+          />
           
-          <!-- Información del equipo -->
-          <div class="minilanding__equipo-info">
+          <!-- Informacion del equipo -->
+          <figcaption class="minilanding__equipo-info">
             <h3 class="minilanding__equipo-nombre">{{ equipoDestacado.nombre }}</h3>
-            <ul class="minilanding__equipo-detalles">
-              <li>
-                <span class="minilanding__label">Liga:</span>
-                <span class="minilanding__value">{{ equipoDestacado.ligaNombre }}</span>
-              </li>
-              <li>
-                <span class="minilanding__label">Fundado:</span>
-                <span class="minilanding__value">{{ equipoDestacado.fechaFundacion }}</span>
-              </li>
-              <li>
-                <span class="minilanding__label">Entrenador:</span>
-                <span class="minilanding__value">{{ equipoDestacado.entrenadorNombre }}</span>
-              </li>
-              <li>
-                <span class="minilanding__label">Jugadores:</span>
-                <span class="minilanding__value">{{ equipoDestacado.totalJugadores }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+            <dl class="minilanding__equipo-detalles">
+              <dt class="minilanding__label">Liga:</dt>
+              <dd class="minilanding__value">{{ equipoDestacado.ligaNombre }}</dd>
+              
+              <dt class="minilanding__label">Fundado:</dt>
+              <dd class="minilanding__value">{{ equipoDestacado.fechaFundacion }}</dd>
+              
+              <dt class="minilanding__label">Entrenador:</dt>
+              <dd class="minilanding__value">{{ equipoDestacado.entrenadorNombre }}</dd>
+              
+              <dt class="minilanding__label">Jugadores:</dt>
+              <dd class="minilanding__value">{{ equipoDestacado.totalJugadores }}</dd>
+            </dl>
+          </figcaption>
+        </figure>
       </article>
     }
 
-    <!-- Sección: Usuarios Registrados -->
-    <article class="minilanding__usuarios">
-      <h2 class="minilanding__section-title">
-        <span class="minilanding__icon">👥</span>
-        Comunidad HomeFootball
-      </h2>
+    <!-- Seccion: Usuarios Registrados -->
+    <article class="minilanding__usuarios" aria-labelledby="usuarios-title">
+      <header class="minilanding__usuarios-header">
+        <h2 id="usuarios-title" class="minilanding__section-title">
+          <span class="minilanding__icon minilanding__icon--users" aria-hidden="true"></span>
+          Comunidad HomeFootball
+        </h2>
+      </header>
       
-      <div class="minilanding__stats">
-        <div class="minilanding__stat-card">
-          <span class="minilanding__stat-number">{{ totalUsuarios }}</span>
+      <section class="minilanding__stats">
+        <p class="minilanding__stat-card">
+          <strong class="minilanding__stat-number">{{ totalUsuarios }}</strong>
           <span class="minilanding__stat-label">Usuarios registrados</span>
-        </div>
-      </div>
+        </p>
+      </section>
 
       @if (usuarios && usuarios.length > 0) {
-        <div class="minilanding__usuarios-lista">
-          <h3 class="minilanding__usuarios-title">Miembros de la comunidad:</h3>
-          <ul class="minilanding__usuarios-grid">
+        <section class="minilanding__usuarios-lista" aria-labelledby="miembros-title">
+          <h3 id="miembros-title" class="minilanding__usuarios-title">Miembros de la comunidad:</h3>
+          <ul class="minilanding__usuarios-grid" role="list">
             @for (usuario of usuarios; track usuario.id) {
               <li class="minilanding__usuario-item">
-                <span class="minilanding__usuario-avatar">
+                <abbr class="minilanding__usuario-avatar" [title]="usuario.username">
                   {{ usuario.username.charAt(0).toUpperCase() }}
-                </span>
+                </abbr>
                 <span class="minilanding__usuario-name">{{ usuario.username }}</span>
               </li>
             }
           </ul>
-        </div>
+        </section>
       } @else {
         <p class="minilanding__empty">
-          Inicia sesión para ver la lista de miembros de la comunidad.
+          Inicia sesion para ver la lista de miembros de la comunidad.
         </p>
       }
     </article>
