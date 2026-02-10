@@ -5,6 +5,8 @@
     gap: var(--spacing-4);
     justify-content: center;
     padding: var(--spacing-4);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg);
 }
 
 .landingusers {
@@ -13,4 +15,6 @@
     gap: var(--spacing-4);
     justify-items: center;
     padding: var(--spacing-4);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg);
 }
