@@ -55,7 +55,7 @@
   @include tablet {
     gap: var(--spacing-4);
   }
-  
+
   // Grid con columnas automáticas
   &--auto {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
