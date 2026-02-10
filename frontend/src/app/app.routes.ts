@@ -277,8 +277,8 @@ export const routes: Routes = [
   },
 
   {
-    path: 'minimatch',
-    loadComponent: () => import ('./pages/minimatch/minimatch').then(m => m.Minimatch),
-    data: {breadcrumb: 'Mini match'}
+    path: 'minilanding',
+    loadComponent: () => import('./pages/minilanding/minilanding').then(m => m.Minilanding)
+    data: {breadcrumb: 'Minilanding page'}
   }
 ];

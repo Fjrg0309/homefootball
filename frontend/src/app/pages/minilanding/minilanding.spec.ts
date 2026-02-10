@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Minimatch } from './minimatch';
+import { Minilanding } from './minilanding';
 
-describe('Minimatch', () => {
-  let component: Minimatch;
-  let fixture: ComponentFixture<Minimatch>;
+describe('Minilanding', () => {
+  let component: Minilanding;
+  let fixture: ComponentFixture<Minilanding>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Minimatch]
+      imports: [Minilanding]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Minimatch);
+    fixture = TestBed.createComponent(Minilanding);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
