@@ -1,5 +1,7 @@
 package com.example.information.config;
 
+import com.example.information.security.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -17,7 +20,10 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,11 +42,15 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 // Permitir acceso público a endpoints de autenticación
                 .requestMatchers("/api/auth/**").permitAll()
-                // Por ahora permitir todos los endpoints de la API
+                // PROTEGER el endpoint de landing page - requiere autenticación JWT
+                .requestMatchers("/api/landing/**").authenticated()
+                // Por ahora permitir todos los demás endpoints de la API
                 .requestMatchers("/api/**").permitAll()
                 // Requerir autenticación para todo lo demás
                 .anyRequest().authenticated()
             )
+            // Agregar el filtro JWT antes del filtro de autenticación estándar
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             // Permitir frames para H2 Console (solo desarrollo)
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
