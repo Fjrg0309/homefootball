@@ -12,6 +12,9 @@ import { ProductList } from './pages/product-list/product-list';
 import { ProductDetail } from './pages/product-detail/product-detail';
 import { ProductForm } from './pages/product-form/product-form';
 import { productResolver } from './resolvers/product.resolver';
+import { LeagueMatches } from './pages/league-matches/league-matches';
+import { Landing } from './pages/landing/landing';
+import { Minilanding } from './pages/minilanding/minilanding';
 
 export const routes: Routes = [
   // Página principal
@@ -278,7 +281,7 @@ export const routes: Routes = [
 
   {
     path: 'minilanding',
-    loadComponent: () => import('./pages/minilanding/minilanding').then(m => m.Minilanding)
+    loadComponent: () => import('./pages/minilanding/minilanding').then(m => m.Minilanding),
     data: {breadcrumb: 'Minilanding page'}
   }
 ];
