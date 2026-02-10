@@ -43,6 +43,11 @@
       aria-label="Navegación principal">
       <ul class="header__nav-list">
         <li>
+          <a routerLink="/landing" class="header__nav-link" routerLinkActive="header__nav-link--active" (click)="closeMobileMenu()" title="Página de bienvenida" aria-label="Ir a Landing">
+            Landing
+          </a>
+        </li>
+        <li>
           <a href="/favoritos" class="header__nav-link header__nav-link--active" (click)="closeMobileMenu()" title="Mis equipos favoritos" aria-label="Ir a Favoritos">
             Favoritos
           </a>

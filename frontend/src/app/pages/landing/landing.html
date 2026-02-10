@@ -1,38 +1,74 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Landing Page</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <app-header />
-        <main>
-            <section>
-                <h1>Bienvenido a HomeFootball</h1>
-                <p>Tu fuente definitiva para seguir el fútbol en vivo, con estadísticas detalladas, análisis de partidos y noticias de última hora.</p>
-                <a href="/home" class="btn">Explorar ahora</a>
-            </section>
-            <section>
-                <h2>¿Por qué elegir HomeFootball?</h2>
-                <ul class="landinglist">
-                    <li><strong>Partidos en vivo:</strong> Sigue los partidos en tiempo real con actualizaciones minuto a minuto.</li>
-                    <li><strong>Estadísticas detalladas:</strong> Accede a estadísticas completas de jugadores, equipos y ligas.</li>
-                    <li><strong>Análisis experto:</strong> Lee análisis profundos de cada partido y temporada.</li>
-                    <li><strong>Noticias de última hora:</strong> Mantente informado con las últimas noticias del mundo del fútbol.</li>
-                </ul>
-            </section>
-            <section>
-                <h2>Usuarios existentes registrados en la página</h2>
-                <p>Únete a nuestra comunidad de aficionados al fútbol y comparte tu pasión con otros usuarios.</p>
-                
-            </section>
-            <section>
-                <h2>Únete a la comunidad de HomeFootball</h2>
-                <p>Regístrate para personalizar tu experiencia, seguir tus equipos favoritos y recibir alertas en tiempo real.</p>
-                <a href="/register" class="btn">Registrarse</a>
-            </section>
-        </main>
-        <app-footer />
-    </body>
-</html>
+<!-- Landing Page - Componente Contenedor (Padre) -->
+<app-header></app-header>
+
+<main class="landing">
+  <!-- Hero Section -->
+  <section class="landing__hero">
+    <div class="landing__hero-content">
+      <h1 class="landing__title">Bienvenido a HomeFootball</h1>
+      <p class="landing__subtitle">{{ mensajeBienvenida() }}</p>
+      <p class="landing__description">
+        Tu fuente definitiva para seguir el fútbol en vivo, con estadísticas detalladas, 
+        análisis de partidos y noticias de última hora.
+      </p>
+      <div class="landing__buttons">
+        <a routerLink="/" class="btn btn--primary">Explorar ahora</a>
+        @if (!isLoggedIn()) {
+          <a routerLink="/register" class="btn btn--secondary">Registrarse</a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="landing__features">
+    <h2 class="landing__section-title">¿Por qué elegir HomeFootball?</h2>
+    <ul class="landing__features-list">
+      <li class="landing__feature">
+        <span class="landing__feature-icon">⚽</span>
+        <strong>Partidos en vivo</strong>
+        <p>Sigue los partidos en tiempo real con actualizaciones minuto a minuto.</p>
+      </li>
+      <li class="landing__feature">
+        <span class="landing__feature-icon">📊</span>
+        <strong>Estadísticas detalladas</strong>
+        <p>Accede a estadísticas completas de jugadores, equipos y ligas.</p>
+      </li>
+      <li class="landing__feature">
+        <span class="landing__feature-icon">📰</span>
+        <strong>Noticias de última hora</strong>
+        <p>Mantente informado con las últimas noticias del mundo del fútbol.</p>
+      </li>
+      <li class="landing__feature">
+        <span class="landing__feature-icon">⭐</span>
+        <strong>Equipos favoritos</strong>
+        <p>Sigue a tus equipos favoritos y recibe alertas personalizadas.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Componente Hijo (Minilanding) - Recibe datos vía @Input -->
+  <app-minilanding
+    [equipoDestacado]="equipoDestacado()"
+    [usuarios]="usuariosRegistrados()"
+    [totalUsuarios]="totalUsuarios()"
+    [loading]="loading()"
+    [error]="error()">
+  </app-minilanding>
+
+  <!-- CTA Section -->
+  <section class="landing__cta">
+    <h2 class="landing__cta-title">Únete a la comunidad de HomeFootball</h2>
+    <p class="landing__cta-text">
+      Regístrate para personalizar tu experiencia, seguir tus equipos favoritos 
+      y recibir alertas en tiempo real.
+    </p>
+    @if (!isLoggedIn()) {
+      <a routerLink="/register" class="btn btn--primary btn--large">Crear cuenta gratis</a>
+    } @else {
+      <a routerLink="/favoritos" class="btn btn--primary btn--large">Ver mis favoritos</a>
+    }
+  </section>
+</main>
+
+<app-footer></app-footer>

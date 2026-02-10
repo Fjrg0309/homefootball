@@ -65,3 +65,24 @@
     transform: scale(1);
   }
 }
+
+// Navegación del footer
+.footer__nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.footer__link {
+  color: var(--color-text-secondary, #666);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: var(--color-primary, #1a5f2a);
+    text-decoration: underline;
+  }
+}

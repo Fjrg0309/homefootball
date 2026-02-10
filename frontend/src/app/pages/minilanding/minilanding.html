@@ -1,29 +1,104 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Información extra</title>
-        <meta charset="utf-8">
-    </head>
-    <body>
-        <app-header />
-        <main>
-            <section>
-                <h1>Información extra</h1>
-                <p>Curiosidades de la página HomeFootball</p>
-            </section>
-            <section>
-                <h2>¿Por qué HomeFootball?</h2>
-                <p>El nombre "HomeFootball" fue elegido para reflejar la idea de ser el "hogar" o punto de encuentro para los aficionados al fútbol, donde pueden encontrar toda la información y recursos relacionados con este deporte.</p>
-            </section>
-            <section>
-                <h2>¿Qué tecnologías se utilizaron?</h2>
-                <p>HomeFootball fue desarrollado utilizando Angular para el frontend, lo que permite una experiencia de usuario dinámica y responsiva. Para el backend, se utilizó Node.js con Express, proporcionando una API robusta para manejar las solicitudes de datos. Además, se integraron diversas APIs de terceros para obtener información en tiempo real sobre partidos, estadísticas y noticias.</p>
-            </section>
-            <section>
-                <h2>¿Cuál fue el mayor desafío?</h2>
-                <p>Uno de los mayores desafíos en el desarrollo de HomeFootball fue la integración de múltiples fuentes de datos en tiempo real, asegurando que la información mostrada a los usuarios sea precisa y actualizada. Esto requirió una cuidadosa planificación y optimización para manejar grandes volúmenes de datos sin afectar el rendimiento del sitio.</p>
-            </section>
-        </main>
-        <app-footer />
-    </body>
-</html>
+<!-- Minilanding - Componente Presentacional (Hijo) Standalone -->
+<!-- Recibe datos vía @Input desde el componente padre (Landing) -->
+
+<section class="minilanding">
+  <!-- Estado de carga -->
+  @if (loading) {
+    <div class="minilanding__loading">
+      <div class="minilanding__spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+  }
+
+  <!-- Estado de error -->
+  @if (error && !loading) {
+    <div class="minilanding__error">
+      <span class="minilanding__error-icon">⚠️</span>
+      <p>{{ error }}</p>
+      <p class="minilanding__error-hint">Inicia sesión para ver la información completa.</p>
+    </div>
+  }
+
+  <!-- Contenido principal cuando hay datos -->
+  @if (!loading && !error) {
+    <!-- Sección: Equipo Destacado con Escudo -->
+    @if (equipoDestacado) {
+      <article class="minilanding__equipo">
+        <h2 class="minilanding__section-title">
+          <span class="minilanding__icon">🏆</span>
+          Equipo Destacado
+        </h2>
+        
+        <div class="minilanding__equipo-content">
+          <!-- Escudo del equipo -->
+          <div class="minilanding__escudo-container">
+            <img 
+              [src]="equipoDestacado.escudoUrl" 
+              [alt]="'Escudo de ' + equipoDestacado.nombre"
+              class="minilanding__escudo"
+              loading="lazy"
+            />
+          </div>
+          
+          <!-- Información del equipo -->
+          <div class="minilanding__equipo-info">
+            <h3 class="minilanding__equipo-nombre">{{ equipoDestacado.nombre }}</h3>
+            <ul class="minilanding__equipo-detalles">
+              <li>
+                <span class="minilanding__label">Liga:</span>
+                <span class="minilanding__value">{{ equipoDestacado.ligaNombre }}</span>
+              </li>
+              <li>
+                <span class="minilanding__label">Fundado:</span>
+                <span class="minilanding__value">{{ equipoDestacado.fechaFundacion }}</span>
+              </li>
+              <li>
+                <span class="minilanding__label">Entrenador:</span>
+                <span class="minilanding__value">{{ equipoDestacado.entrenadorNombre }}</span>
+              </li>
+              <li>
+                <span class="minilanding__label">Jugadores:</span>
+                <span class="minilanding__value">{{ equipoDestacado.totalJugadores }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    }
+
+    <!-- Sección: Usuarios Registrados -->
+    <article class="minilanding__usuarios">
+      <h2 class="minilanding__section-title">
+        <span class="minilanding__icon">👥</span>
+        Comunidad HomeFootball
+      </h2>
+      
+      <div class="minilanding__stats">
+        <div class="minilanding__stat-card">
+          <span class="minilanding__stat-number">{{ totalUsuarios }}</span>
+          <span class="minilanding__stat-label">Usuarios registrados</span>
+        </div>
+      </div>
+
+      @if (usuarios && usuarios.length > 0) {
+        <div class="minilanding__usuarios-lista">
+          <h3 class="minilanding__usuarios-title">Miembros de la comunidad:</h3>
+          <ul class="minilanding__usuarios-grid">
+            @for (usuario of usuarios; track usuario.id) {
+              <li class="minilanding__usuario-item">
+                <span class="minilanding__usuario-avatar">
+                  {{ usuario.username.charAt(0).toUpperCase() }}
+                </span>
+                <span class="minilanding__usuario-name">{{ usuario.username }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      } @else {
+        <p class="minilanding__empty">
+          Inicia sesión para ver la lista de miembros de la comunidad.
+        </p>
+      }
+    </article>
+  }
+</section>

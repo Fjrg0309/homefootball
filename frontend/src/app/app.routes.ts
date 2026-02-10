@@ -13,12 +13,17 @@ import { ProductDetail } from './pages/product-detail/product-detail';
 import { ProductForm } from './pages/product-form/product-form';
 import { productResolver } from './resolvers/product.resolver';
 import { LeagueMatches } from './pages/league-matches/league-matches';
-import { Landing } from './pages/landing/landing';
-import { Minilanding } from './pages/minilanding/minilanding';
 
 export const routes: Routes = [
   // Página principal
   { path: '', component: Home, data: { breadcrumb: 'Inicio' } },
+  
+  // Landing Page - LAZY LOADING (Prueba Práctica DWEC)
+  { 
+    path: 'landing', 
+    loadComponent: () => import('./pages/landing/landing').then(m => m.Landing),
+    data: { breadcrumb: 'Landing' }
+  },
   
   // Página en construcción (para rutas sin contenido)
   { path: 'en-construccion', component: UnderConstruction, data: { breadcrumb: 'En construcción' } },
