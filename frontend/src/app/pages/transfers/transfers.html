@@ -130,7 +130,7 @@
                       [attr.aria-label]="'Ver detalles del equipo de origen: ' + transfer.fromTeam.name">
                       <img 
                         [src]="transfer.fromTeam.logo" 
-                        [alt]="transfer.fromTeam.name"
+                        [alt]="'Escudo del equipo de origen: ' + transfer.fromTeam.name"
                         class="transfer-card__team-logo"
                         loading="lazy"
                         onerror="this.src='assets/images/default-team.png'"
@@ -152,7 +152,7 @@
                       [attr.aria-label]="'Ver detalles del equipo de destino: ' + transfer.toTeam.name">
                       <img 
                         [src]="transfer.toTeam.logo" 
-                        [alt]="transfer.toTeam.name"
+                        [alt]="'Escudo del equipo de destino: ' + transfer.toTeam.name"
                         class="transfer-card__team-logo"
                         loading="lazy"
                         onerror="this.src='assets/images/default-team.png'"

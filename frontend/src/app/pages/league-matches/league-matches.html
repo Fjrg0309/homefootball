@@ -137,7 +137,7 @@
                    [title]="'Ver equipo ' + match.homeTeam"
                    [attr.aria-label]="'Ver información del equipo ' + match.homeTeam"
                    (click)="$event.stopPropagation()">
-                  <img [src]="match.homeLogo" [alt]="match.homeTeam" class="match-row__logo">
+                  <img [src]="match.homeLogo" [alt]="'Escudo del equipo local ' + match.homeTeam" class="match-row__logo">
                   <span class="match-row__name">{{ match.homeTeam }}</span>
                 </a>
                 
@@ -166,7 +166,7 @@
                    [attr.aria-label]="'Ver información del equipo ' + match.awayTeam"
                    (click)="$event.stopPropagation()">
                   <span class="match-row__name">{{ match.awayTeam }}</span>
-                  <img [src]="match.awayLogo" [alt]="match.awayTeam" class="match-row__logo">
+                  <img [src]="match.awayLogo" [alt]="'Escudo del equipo visitante ' + match.awayTeam" class="match-row__logo">
                 </a>
               </article>
             }

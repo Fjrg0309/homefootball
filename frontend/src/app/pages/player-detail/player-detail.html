@@ -38,7 +38,7 @@
           <div class="player-card__photo-wrapper">
             <img 
               [src]="player()!.photo" 
-              [alt]="player()!.name"
+              [alt]="'Foto del jugador ' + player()!.name"
               class="player-card__photo"
               loading="lazy"
               onerror="this.src='assets/images/default-player.png'"
@@ -62,7 +62,7 @@
           <div class="player-card__team">
             <img 
               [src]="stats()!.teamLogo" 
-              [alt]="stats()!.team"
+              [alt]="'Escudo del equipo ' + stats()!.team"
               class="player-card__team-logo"
               loading="lazy"
             >

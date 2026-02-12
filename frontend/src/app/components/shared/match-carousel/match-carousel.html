@@ -18,7 +18,7 @@
       aria-label="Ver partidos anteriores"
       title="Ir a partidos anteriores"
     >
-      <img src="/assets/images/flechaback.svg" alt="" role="presentation" class="match-carousel__arrow-icon">
+      <img src="/assets/images/flechaback.svg" alt="Flecha para ver partidos anteriores" class="match-carousel__arrow-icon">
     </button>
 
     <!-- Contenedor del carrusel -->
@@ -51,7 +51,7 @@
                   @if (match.homeLogo) {
                     <img 
                       [src]="match.homeLogo" 
-                      [alt]="match.homeTeam"
+                      [alt]="'Escudo del equipo local ' + match.homeTeam"
                       class="carousel-match-card__logo"
                       loading="lazy"
                     >
@@ -78,7 +78,7 @@
                   @if (match.awayLogo) {
                     <img 
                       [src]="match.awayLogo" 
-                      [alt]="match.awayTeam"
+                      [alt]="'Escudo del equipo visitante ' + match.awayTeam"
                       class="carousel-match-card__logo"
                       loading="lazy"
                     >
@@ -109,7 +109,7 @@
       aria-label="Ver siguientes partidos"
       title="Ir a siguientes partidos"
     >
-      <img src="/assets/images/flechanext.svg" alt="" role="presentation" class="match-carousel__arrow-icon">
+      <img src="/assets/images/flechanext.svg" alt="Flecha para ver siguientes partidos" class="match-carousel__arrow-icon">
     </button>
   </div>
 

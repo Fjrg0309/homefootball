@@ -19,7 +19,7 @@
     <img 
       [src]="imageSrc"
       [srcset]="optimizedSrcset || imageSrcset"
-      [alt]="imageAlt || ''"
+      [alt]="imageAlt || title || 'Imagen de contenido'"
       [loading]="lazyLoad ? 'lazy' : 'eager'"
       decoding="async"
       class="card__image">

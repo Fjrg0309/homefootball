@@ -35,7 +35,7 @@
            [attr.aria-label]="'Ver información del equipo ' + fixture()!.teams.home.name">
           <img 
             [src]="fixture()!.teams.home.logo" 
-            [alt]="fixture()!.teams.home.name"
+            [alt]="'Escudo del equipo local ' + fixture()!.teams.home.name"
             class="match-score__logo"
             loading="lazy"
           />
@@ -56,7 +56,7 @@
            [attr.aria-label]="'Ver información del equipo ' + fixture()!.teams.away.name">
           <img 
             [src]="fixture()!.teams.away.logo" 
-            [alt]="fixture()!.teams.away.name"
+            [alt]="'Escudo del equipo visitante ' + fixture()!.teams.away.name"
             class="match-score__logo"
             loading="lazy"
           />
